@@ -22,5 +22,5 @@ else:
 
 if _config_ok:
     _log.info("starting server")
-    web.run_server()
+    web.run_server(log_facility = _log)
     _log.info("server exited")
