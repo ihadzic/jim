@@ -39,7 +39,7 @@ if _config_ok:
     _cfg = read_config(_config_file_parser)
     _log.info("server configuration: {}".format(_cfg))
     _log.info("starting server")
-    web.run_server(log_facility = _log)
+    web.run_server(http_port = _cfg.get('http_port'), https_port = _cfg.get('https_port'), log_facility = _log)
     _log.info("server exited")
 else:
     _log.error("configuration error")
