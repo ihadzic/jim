@@ -6,6 +6,7 @@ from tornado import web, httpserver
 
 _http_server = None
 _https_server = None
+_html_root = './'
 _log = None
 
 class DefaultHandler(tornado.web.RequestHandler):
@@ -14,7 +15,17 @@ class DefaultHandler(tornado.web.RequestHandler):
         _log.info("matched default match: {}".format(match))
         self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.set_header("Connection", "close")
-        self.finish("OK")
+        if match:
+            fname = _html_root + '/' + match
+        else:
+            fname = _html_root + '/index.html'
+        try:
+            with open(fname, 'rb') as fd:
+                content = fd.read()
+            self.finish(content)
+        except:
+            self.set_status(404)
+            self.finish("Not found: {}".format(match))
 
 _app = tornado.web.Application([
         ('/(.*)', DefaultHandler)
@@ -25,7 +36,7 @@ _app = tornado.web.Application([
 # ssl_options['keyfile'] - server key
 # ssl_options['ca_certs'] - CA certificate
 
-def run_server(ssl_options = {}, http_port = 80, https_port = 443, log_facility = None):
+def run_server(ssl_options = {}, http_port = 80, https_port = 443, log_facility = None, html_root = './'):
     global _http_server
     global _https_server
     global _log
