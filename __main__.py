@@ -14,10 +14,16 @@ def read_config(parser):
         https_port = parser.get("web", "https_port")
     except:
         https_port = None
+    try:
+        html_root = parser.get("web", "html_root")
+    except:
+        html_root = None
     if http_port:
         cfg['http_port'] = int(http_port)
     if https_port:
         cfg['https_port'] = int(https_port)
+    if html_root:
+        cfg['html_root'] = html_root
     _log.info(cfg)
     return cfg
 
@@ -39,7 +45,7 @@ if _config_ok:
     _cfg = read_config(_config_file_parser)
     _log.info("server configuration: {}".format(_cfg))
     _log.info("starting server")
-    web.run_server(http_port = _cfg.get('http_port'), https_port = _cfg.get('https_port'), log_facility = _log)
+    web.run_server(http_port = _cfg.get('http_port'), https_port = _cfg.get('https_port'), log_facility = _log, html_root = _cfg.get('html_root'))
     _log.info("server exited")
 else:
     _log.error("configuration error")
