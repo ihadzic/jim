@@ -45,6 +45,7 @@ def run_server(ssl_options = {}, http_port = 80, https_port = 443, log_facility 
     global _https_server
     global _log
     global _magic
+    global _html_root
 
     # http://www.zak.co.il/tddpirate/2013/03/03/the-python-module-for-file-type-identification-called-magic-is-not-standardized/
     try:
@@ -58,6 +59,7 @@ def run_server(ssl_options = {}, http_port = 80, https_port = 443, log_facility 
         _log = log_facility
     else:
         _log = log.TrivialLogger()
+    _html_root = html_root
     _log.info("creating servers")
     _http_server = tornado.httpserver.HTTPServer(_app, no_keep_alive = False)
     _https_server = tornado.httpserver.HTTPServer(_app, no_keep_alive = False, ssl_options = ssl_options)
