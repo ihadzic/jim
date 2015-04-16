@@ -7,23 +7,17 @@ import ConfigParser
 def read_config(parser):
     cfg = {}
     try:
-        http_port = parser.get("web", "http_port")
+        cfg['http_port'] = int(parser.get("web", "http_port"))
     except:
-        http_port = None
+        cfg['http_port'] = None
     try:
-        https_port = parser.get("web", "https_port")
+        cfg['https_port'] = int(parser.get("web", "https_port"))
     except:
-        https_port = None
+        cfg['https_port'] = None
     try:
-        html_root = parser.get("web", "html_root")
+        cfg['html_root'] = parser.get("web", "html_root")
     except:
-        html_root = None
-    if http_port:
-        cfg['http_port'] = int(http_port)
-    if https_port:
-        cfg['https_port'] = int(https_port)
-    if html_root:
-        cfg['html_root'] = html_root
+        cfg['html_root'] = None
     _log.info(cfg)
     return cfg
 
