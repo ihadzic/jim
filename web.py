@@ -2,12 +2,14 @@
 
 import tornado
 import log
+import magic
 from tornado import web, httpserver
 
 _http_server = None
 _https_server = None
 _html_root = './'
 _log = None
+_magic = None
 
 class DefaultHandler(tornado.web.RequestHandler):
     def get(self, match):
@@ -22,6 +24,8 @@ class DefaultHandler(tornado.web.RequestHandler):
         try:
             with open(fname, 'rb') as fd:
                 content = fd.read()
+            mime_type = _magic.file(fname)
+            self.set_header("Content-type",  mime_type)
             self.finish(content)
         except:
             self.set_status(404)
@@ -40,6 +44,15 @@ def run_server(ssl_options = {}, http_port = 80, https_port = 443, log_facility 
     global _http_server
     global _https_server
     global _log
+    global _magic
+
+    # http://www.zak.co.il/tddpirate/2013/03/03/the-python-module-for-file-type-identification-called-magic-is-not-standardized/
+    try:
+        _magic = magic.open(magic.MAGIC_MIME_TYPE)
+        _magic.load()
+    except AttributeError,e:
+        _magic = magic.Magic(mime=True)
+        _magic.file = _magic.from_file
 
     if log_facility:
         _log = log_facility
