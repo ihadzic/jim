@@ -21,6 +21,7 @@ class DefaultHandler(tornado.web.RequestHandler):
             fname = _html_root + '/' + match
         else:
             fname = _html_root + '/index.html'
+        _log.info("fname: {}".format(fname))
         try:
             with open(fname, 'rb') as fd:
                 content = fd.read()
