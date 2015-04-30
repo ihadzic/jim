@@ -9,17 +9,16 @@ _http_server = None
 _https_server = None
 _html_root = './'
 _log = None
-
-# TODO: SSL needs this
-# ssl_options['certfile'] - server certificate
-# ssl_options['keyfile'] - server key
-# ssl_options['ca_certs'] - CA certificate
+# This is default (test-only) certificate located in ./certs directory.
+# default certificate is self-signed, so we don't have 'ca_cert' field
+# in the dictionary. Normally, we need one to point to the 'CA'
+_test_ssl_options = { 'certfile' : './certs/cert.pem', 'keyfile': './certs/key.pem' }
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
         self.redirect('/index.html', permanent = True)
 
-def run_server(ssl_options = {}, http_port = 80, https_port = 443, log_facility = None, html_root = './'):
+def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './'):
     global _http_server
     global _https_server
     global _log
