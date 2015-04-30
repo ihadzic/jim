@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python2
 
 import tornado
@@ -14,13 +15,19 @@ _log = None
 # ssl_options['keyfile'] - server key
 # ssl_options['ca_certs'] - CA certificate
 
+class RootHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.redirect('/index.html', permanent = True)
+
 def run_server(ssl_options = {}, http_port = 80, https_port = 443, log_facility = None, html_root = './'):
     global _http_server
     global _https_server
     global _log
 
     # list handlers for REST calls here
-    handlers = []
+    handlers = [
+        ('/', RootHandler)
+        ]
 
     if log_facility:
         _log = log_facility
