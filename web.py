@@ -16,7 +16,7 @@ class RootHandler(tornado.web.RequestHandler):
     def get(self):
         self.redirect('/index.html', permanent = True)
 
-def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './'):
+def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './html'):
     global _http_server
     global _https_server
     global _log
