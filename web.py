@@ -6,7 +6,6 @@ from tornado import web, httpserver
 
 _http_server = None
 _https_server = None
-_html_root = './'
 _log = None
 # This is default (test-only) certificate located in ./certs directory.
 # default certificate is self-signed, so we don't have 'ca_cert' field
