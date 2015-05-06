@@ -6,6 +6,7 @@ from tornado import web, httpserver
 
 _http_server = None
 _https_server = None
+_template_root = './templates'
 _log = None
 # This is default (test-only) certificate located in ./certs directory.
 # default certificate is self-signed, so we don't have 'ca_cert' field
@@ -16,7 +17,7 @@ class RootHandler(tornado.web.RequestHandler):
     def get(self):
         self.redirect('/index.html', permanent = True)
 
-def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './html'):
+def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './html', template_root = './templates'):
     global _http_server
     global _https_server
     global _log

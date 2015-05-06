@@ -18,6 +18,10 @@ def read_config(parser):
         cfg['html_root'] = parser.get("web", "html_root")
     except:
         cfg['html_root'] = None
+    try:
+        cfg['template_root'] = parser.get("web", "template_root")
+    except:
+        cfg['template_root'] = None
     _log.info(cfg)
     return cfg
 
