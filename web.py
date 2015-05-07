@@ -2,6 +2,7 @@
 
 import tornado
 import log
+import datetime
 from tornado import web, httpserver
 
 _http_server = None
@@ -17,6 +18,10 @@ class RootHandler(tornado.web.RequestHandler):
     def get(self):
         self.redirect('/index.html', permanent = True)
 
+class DateHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('date.html', date_string = str(datetime.datetime.now()))
+
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './html', template_root = './templates'):
     global _http_server
     global _https_server
@@ -24,7 +29,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
 
     # list handlers for REST calls here
     handlers = [
-        ('/', RootHandler)
+        ('/', RootHandler),
+        ('/date', DateHandler)
         ]
 
     if log_facility:
@@ -33,7 +39,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         _log = log.TrivialLogger()
 
     handlers.append(('/(.*)', web.StaticFileHandler, {'path': html_root}))
-    app = tornado.web.Application(handlers)
+    app = tornado.web.Application(handlers = handlers, template_path = template_root)
     _log.info("creating servers")
     _http_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False)
     _https_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False, ssl_options = ssl_options)
