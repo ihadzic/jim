@@ -20,6 +20,9 @@ class RootHandler(tornado.web.RequestHandler):
 
 class DateHandler(tornado.web.RequestHandler):
     def get(self):
+        self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+        self.set_header("Pragma", "no-cache")
+        self.set_header("Expires", "0")
         self.render('date.html', date_string = str(datetime.datetime.now()))
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './html', template_root = './templates'):
