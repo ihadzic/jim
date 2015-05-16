@@ -3,6 +3,8 @@
 import tornado
 import log
 import datetime
+import os
+import binascii
 from tornado import web, httpserver
 
 _http_server = None
@@ -45,7 +47,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         _log = log.TrivialLogger()
 
     handlers.append(('/(.*)', web.StaticFileHandler, {'path': html_root}))
-    app = tornado.web.Application(handlers = handlers, template_path = template_root)
+    app = tornado.web.Application(handlers = handlers, template_path = template_root,
+                                  cookie_secret = binascii.b2a_hex(os.urandom(32)))
     _log.info("creating servers")
     _http_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False)
     _https_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False, ssl_options = ssl_options)
