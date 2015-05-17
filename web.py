@@ -27,7 +27,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
-        self.redirect('/index.html', permanent = True)
+        self.redirect('/login', permanent = True)
 
 class LoginHandler(DynamicBaseHandler):
     def get(self):
