@@ -22,13 +22,37 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         self.set_header("Pragma", "no-cache")
         self.set_header("Expires", "0")
 
+    def get_current_user(self):
+        return self.get_secure_cookie('user')
+
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
         self.redirect('/index.html', permanent = True)
 
+class LoginHandler(DynamicBaseHandler):
+    def get(self):
+        if self.current_user:
+            self.redirect('/date')
+        else:
+            self.write('<html><body><form action="/login" method="post">'
+                       'Name: <input type="text" name="name">'
+                       '<input type="submit" value="Sign in">'
+                       '</form></body></html>')
+
+    def post(self):
+        # TODO: check the password here
+        self.set_secure_cookie('user', self.get_argument('name'))
+        self.redirect('/date')
+
 class DateHandler(DynamicBaseHandler):
     def get(self):
-        self.render('date.html', date_string = str(datetime.datetime.now()))
+        if self.current_user:
+            name = tornado.escape.xhtml_escape(self.current_user)
+        else:
+            name = 'nobody'
+        self.render('date.html',
+                    date_string = str(datetime.datetime.now()),
+                    user_string = name)
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './html', template_root = './templates'):
     global _http_server
@@ -38,6 +62,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
     # list handlers for REST calls here
     handlers = [
         ('/', RootHandler),
+        ('/login', LoginHandler),
         ('/date', DateHandler)
         ]
 
