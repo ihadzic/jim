@@ -34,10 +34,7 @@ class LoginHandler(DynamicBaseHandler):
         if self.current_user:
             self.redirect('/date')
         else:
-            self.write('<html><body><form action="/login" method="post">'
-                       'Name: <input type="text" name="name">'
-                       '<input type="submit" value="Sign in">'
-                       '</form></body></html>')
+            self.render('login.html')
 
     def post(self):
         # TODO: check the password here
