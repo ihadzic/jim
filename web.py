@@ -44,6 +44,11 @@ class LoginHandler(DynamicBaseHandler):
         self.set_secure_cookie('user', self.get_argument('name'))
         self.redirect('/date')
 
+class LogoutHandler(DynamicBaseHandler):
+    def get(self):
+        self.clear_cookie('user')
+        self.redirect('/login')
+
 class DateHandler(DynamicBaseHandler):
     def get(self):
         if self.current_user:
@@ -63,6 +68,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
     handlers = [
         ('/', RootHandler),
         ('/login', LoginHandler),
+        ('/logout', LogoutHandler),
         ('/date', DateHandler)
         ]
 
