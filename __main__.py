@@ -1,7 +1,7 @@
 #/usr/bin/env python2
 
+import logging
 import web
-import log
 import ConfigParser
 
 def read_config(parser):
@@ -25,7 +25,8 @@ def read_config(parser):
     _log.info(cfg)
     return cfg
 
-_log = log.TrivialLogger()
+logging.basicConfig(level=logging.DEBUG)
+_log = logging.getLogger("main")
 _config_file_list = ['./jim.cfg', '/etc/jim.cfg']
 _config_file_parser = ConfigParser.RawConfigParser()
 _config_ok = True
@@ -43,7 +44,7 @@ if _config_ok:
     _cfg = read_config(_config_file_parser)
     _log.info("server configuration: {}".format(_cfg))
     _log.info("starting server")
-    web.run_server(http_port = _cfg.get('http_port'), https_port = _cfg.get('https_port'), log_facility = _log, html_root = _cfg.get('html_root'))
+    web.run_server(http_port = _cfg.get('http_port'), https_port = _cfg.get('https_port'), html_root = _cfg.get('html_root'))
     _log.info("server exited")
 else:
     _log.error("configuration error")

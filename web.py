@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 import tornado
-import log
+import logging
 import datetime
 import os
 import binascii
@@ -56,7 +56,7 @@ class DateHandler(DynamicBaseHandler):
                     date_string = str(datetime.datetime.now()),
                     user_string = name)
 
-def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, log_facility = None, html_root = './html', template_root = './templates'):
+def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = './html', template_root = './templates'):
     global _http_server
     global _https_server
     global _log
@@ -69,11 +69,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/date', DateHandler)
         ]
 
-    if log_facility:
-        _log = log_facility
-    else:
-        _log = log.TrivialLogger()
-
+    _log = logging.getLogger("web")
     handlers.append(('/(.*)', web.StaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
                                   cookie_secret = binascii.b2a_hex(os.urandom(32)))
