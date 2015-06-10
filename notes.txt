@@ -1,4 +1,0 @@
-packages required:
-
-tornado
-python-magic
