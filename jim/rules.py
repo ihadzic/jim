@@ -19,9 +19,15 @@ def process_match(cid, oid, cgames, ogames):
     owset = 0
     for s in set_results(cgames, ogames):
         if s in [(6, 0), (6, 1), (6, 2), (6, 3), (6, 4), (7, 5), (7, 6)]:
-            cwset = cwset + 1
+            if cwset < 2 and owset < 2:
+                cwset = cwset + 1
+            else:
+                return None, "third set played after a player already won two sets"
         elif s in [(0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 7), (6, 7)]:
-            owset = owset + 1
+            if cwset < 2 and owset < 2:
+                owset = owset + 1
+            else:
+                return None, "third set played after a player already won two sets"
         else:
             return None, "invalid set score: {}".format(s)
     _log.info("cwset={}, owset={}".format(cwset, owset))
