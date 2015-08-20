@@ -6,6 +6,7 @@ import datetime
 import os
 import sys
 import binascii
+import rules
 from tornado import web, httpserver
 
 _http_server = None
@@ -66,18 +67,6 @@ class DateHandler(DynamicBaseHandler):
                     date_string = str(datetime.datetime.now()),
                     user_string = name)
 
-def process_match(cid, oid, cgames, ogames):
-    if cid == oid:
-        return None, "players cannot play against themselves"
-    if len(cgames) != len(ogames):
-        return None, "two players cannot play different number of games"
-    if len(cgames) > 3:
-        return None, "cannot play more than three sets"
-    if len(cgames) < 2:
-        return None, "must play at least two sets"
-    # TODO: really process the match
-    return 42, None
-
 class MatchResultHandler(DynamicBaseHandler):
     def get(self):
         try:
@@ -107,7 +96,7 @@ class MatchResultHandler(DynamicBaseHandler):
         except:
             self.finish_failure("list of games won by opponent missing or invalid")
             return
-        winner_id, err = process_match(challenger_id, opponent_id, cgames, ogames)
+        winner_id, err = rules.process_match(challenger_id, opponent_id, cgames, ogames)
         if err:
             self.finish_failure(err)
             return
