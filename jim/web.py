@@ -18,6 +18,15 @@ _log = None
 _test_ssl_options = { 'certfile' : sys.prefix + '/var/jim/certs/cert.pem', 'keyfile': sys.prefix + '/var/jim/certs/key.pem' }
 
 class DynamicBaseHandler(tornado.web.RequestHandler):
+    def finish_failure(self, err = None):
+        retval = { 'result': 'failure', 'reason': err }
+        self.finish(retval)
+
+    def finish_success(self, args = {}):
+        retval = { 'result': 'success' }
+        retval.update(args)
+        self.finish(retval)
+
     def initialize(self):
         self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.set_header("Pragma", "no-cache")
@@ -57,6 +66,58 @@ class DateHandler(DynamicBaseHandler):
                     date_string = str(datetime.datetime.now()),
                     user_string = name)
 
+def process_match(cid, oid, cgames, ogames):
+    if cid == oid:
+        return None, "players cannot play against themselves"
+    if len(cgames) != len(ogames):
+        return None, "two players cannot play different number of games"
+    if len(cgames) > 3:
+        return None, "cannot play more than three sets"
+    if len(cgames) < 2:
+        return None, "must play at least two sets"
+    # TODO: really process the match
+    return 42, None
+
+class MatchResultHandler(DynamicBaseHandler):
+    def get(self):
+        try:
+            args = self.request.query_arguments
+        except:
+            self.finish_failure("query parse error")
+            return
+        try:
+            challenger_id = int(args['challenger'][0])
+        except:
+            self.finish_failure("challenger ID missing or invalid")
+            return
+        try:
+            opponent_id = int(args['opponent'][0])
+        except:
+            self.finish_failure("opponent ID missing or invalid")
+            return
+        try:
+            cgames_str = args['cgames']
+            cgames = [ int(g) for g in cgames_str ]
+        except:
+            self.finish_failure("list of games won by challenger missing or invalid")
+            return
+        try:
+            ogames_str = args['ogames']
+            ogames = [ int(g) for g in ogames_str ]
+        except:
+            self.finish_failure("list of games won by opponent missing or invalid")
+            return
+        winner_id, err = process_match(challenger_id, opponent_id, cgames, ogames)
+        if err:
+            self.finish_failure(err)
+            return
+        # TODO: do the database transaction
+        self.finish_success({'opponent_id': opponent_id,
+                             'challenger_id': challenger_id,
+                             'winner_id': winner_id,
+                             'cgames': cgames,
+                             'ogames': ogames})
+
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
     global _https_server
@@ -73,7 +134,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/', RootHandler),
         ('/login', LoginHandler),
         ('/logout', LogoutHandler),
-        ('/date', DateHandler)
+        ('/date', DateHandler),
+        ('/match_result', MatchResultHandler)
         ]
 
     _log = logging.getLogger("web")
