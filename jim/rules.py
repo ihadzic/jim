@@ -22,11 +22,13 @@ def process_match(cid, oid, cgames, ogames):
             if cwset < 2 and owset < 2:
                 cwset = cwset + 1
             else:
+                _log.error("spurious set detected #1")
                 return None, "third set played after a player already won two sets"
         elif s in [(0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 7), (6, 7)]:
             if cwset < 2 and owset < 2:
                 owset = owset + 1
             else:
+                _log.error("spurious set detected #2")
                 return None, "third set played after a player already won two sets"
         else:
             return None, "invalid set score: {}".format(s)
