@@ -96,7 +96,7 @@ class MatchResultHandler(DynamicBaseHandler):
         except:
             self.finish_failure("list of games won by opponent missing or invalid")
             return
-        winner_id, err = rules.process_match(challenger_id, opponent_id, cgames, ogames)
+        winner_id, cpoints, opoints, err = rules.process_match(challenger_id, opponent_id, cgames, ogames)
         if err:
             self.finish_failure(err)
             return
@@ -105,7 +105,9 @@ class MatchResultHandler(DynamicBaseHandler):
                              'challenger_id': challenger_id,
                              'winner_id': winner_id,
                              'cgames': cgames,
-                             'ogames': ogames})
+                             'ogames': ogames,
+                             'cpoints': cpoints,
+                             'opoints': opoints})
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
