@@ -9,6 +9,7 @@ import binascii
 import rules
 import util
 from tornado import web, httpserver
+from datetime import datetime
 
 _http_server = None
 _https_server = None
@@ -111,7 +112,12 @@ class MatchResultHandler(DynamicBaseHandler):
                 return
         except:
             retired = False
-        winner_id, cpoints, opoints, err = rules.process_match(challenger_id, opponent_id, cgames, ogames, retired, forfeited)
+        try:
+            date = datetime.strptime(args['date'][0], '%Y-%m-%d')
+        except:
+            self.finish_failure("match date missing")
+            return
+        winner_id, cpoints, opoints, err = rules.process_match(challenger_id, opponent_id, cgames, ogames, retired, forfeited, date)
         if err:
             self.finish_failure(err)
             return
@@ -124,7 +130,8 @@ class MatchResultHandler(DynamicBaseHandler):
                              'cpoints': cpoints,
                              'opoints': opoints,
                              'retired': retired,
-                             'forfeited' : forfeited})
+                             'forfeited' : forfeited,
+                             'date': str(date).split()[0]})
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
