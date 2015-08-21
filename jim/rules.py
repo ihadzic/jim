@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 import logging
+from datetime import datetime
 
 _log = logging.getLogger("rules")
 
@@ -45,7 +46,11 @@ def process_forfeit(cid, oid, cgames, ogames):
     else:
         return None, None, None, "forfeited match score must be 6-0, 6-0"
 
-def process_match(cid, oid, cgames, ogames, retired = False, forfeited = False):
+def process_match(cid, oid, cgames, ogames, retired = False, forfeited = False, date = None):
+    if not date:
+        date = datetime.now()
+    if date > datetime.now():
+        return None, None, None, "match date cannot be in the future"
     if cid == oid:
         return None, None, None, "players cannot play against themselves"
     if len(cgames) != len(ogames):
