@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 import logging
 
 _log = logging.getLogger("rules")
