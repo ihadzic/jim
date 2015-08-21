@@ -7,6 +7,7 @@ import os
 import sys
 import binascii
 import rules
+import util
 from tornado import web, httpserver
 
 _http_server = None
@@ -96,7 +97,21 @@ class MatchResultHandler(DynamicBaseHandler):
         except:
             self.finish_failure("list of games won by opponent missing or invalid")
             return
-        winner_id, cpoints, opoints, err = rules.process_match(challenger_id, opponent_id, cgames, ogames)
+        try:
+            forfeited = util.str_to_bool(args['forfeited'][0])
+            if forfeited == None:
+                self.finish_failure("forfeited-flag must be boolean")
+                return
+        except:
+            forfeited = False
+        try:
+            retired = util.str_to_bool(args['retired'][0])
+            if retired == None:
+                self.finish_failure("retired-flag must be boolean")
+                return
+        except:
+            retired = False
+        winner_id, cpoints, opoints, err = rules.process_match(challenger_id, opponent_id, cgames, ogames, retired, forfeited)
         if err:
             self.finish_failure(err)
             return
