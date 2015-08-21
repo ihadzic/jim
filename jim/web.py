@@ -113,11 +113,18 @@ class MatchResultHandler(DynamicBaseHandler):
         except:
             retired = False
         try:
+            tournament = util.str_to_bool(args['tournament'][0])
+            if tournament == None:
+                self.finish_failure("tournament-flag must be boolean")
+                return
+        except:
+            tournament = False
+        try:
             date = datetime.strptime(args['date'][0], '%Y-%m-%d')
         except:
             self.finish_failure("match date missing")
             return
-        winner_id, cpoints, opoints, err = rules.process_match(challenger_id, opponent_id, cgames, ogames, retired, forfeited, date)
+        winner_id, cpoints, opoints, err = rules.process_match(challenger_id, opponent_id, cgames, ogames, retired, forfeited, date, tournament)
         if err:
             self.finish_failure(err)
             return
@@ -131,7 +138,8 @@ class MatchResultHandler(DynamicBaseHandler):
                              'opoints': opoints,
                              'retired': retired,
                              'forfeited' : forfeited,
-                             'date': str(date).split()[0]})
+                             'date': str(date).split()[0],
+                             'tournament': tournament})
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server

@@ -46,7 +46,8 @@ def process_forfeit(cid, oid, cgames, ogames):
     else:
         return None, None, None, "forfeited match score must be 6-0, 6-0"
 
-def process_match(cid, oid, cgames, ogames, retired = False, forfeited = False, date = None):
+def process_match(cid, oid, cgames, ogames, retired = False, forfeited = False, date = None, tournament = False):
+    # TODO: tournament flag is just a placeholder for now
     if not date:
         date = datetime.now()
     if date > datetime.now():
