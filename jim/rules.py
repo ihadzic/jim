@@ -25,7 +25,7 @@ def loser_points(games_won, challenge_points = False):
         points = 5
     return points
 
-def process_match(cid, oid, cgames, ogames):
+def process_match(cid, oid, cgames, ogames, retired = False):
     if cid == oid:
         return None, None, None, "players cannot play against themselves"
     if len(cgames) != len(ogames):
@@ -57,7 +57,10 @@ def process_match(cid, oid, cgames, ogames):
         return cid, winner_points(), loser_points(ogames, False), None
     elif owset == 2 and cwset in [0, 1]:
         # opponent (non-challenger) won
-        # TODO: if challenger retired do not credit challenge points
-        return oid, loser_points(cgames, True), winner_points(), None
+        # challenger points credited to loser only if match completed
+        if retired:
+            return oid, loser_points(cgames, False), winner_points(), None
+        else:
+            return oid, loser_points(cgames, True), winner_points(), None
     else:
         return None, None, None, "invalid match score: ({}, {})".format(cwset, owset)
