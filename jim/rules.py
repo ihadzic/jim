@@ -5,6 +5,7 @@ import logging
 _log = logging.getLogger("rules")
 
 def set_results(cgames, ogames):
+    assert len(ogames) == len(cgames)
     for i in range(0, len(ogames)):
         yield (cgames[i], ogames[i])
 
