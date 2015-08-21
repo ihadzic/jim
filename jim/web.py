@@ -122,7 +122,9 @@ class MatchResultHandler(DynamicBaseHandler):
                              'cgames': cgames,
                              'ogames': ogames,
                              'cpoints': cpoints,
-                             'opoints': opoints})
+                             'opoints': opoints,
+                             'retired': retired,
+                             'forfeited' : forfeited})
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
