@@ -30,6 +30,14 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         retval.update(args)
         self.finish(retval)
 
+    def get_args(self):
+        try:
+            args = self.request.query_arguments
+            return args
+        except:
+            self.finish_failure("query parse error")
+            return None
+
     def initialize(self):
         self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.set_header("Pragma", "no-cache")
@@ -71,10 +79,8 @@ class DateHandler(DynamicBaseHandler):
 
 class MatchResultHandler(DynamicBaseHandler):
     def get(self):
-        try:
-            args = self.request.query_arguments
-        except:
-            self.finish_failure("query parse error")
+        args = self.get_args()
+        if args == None:
             return
         try:
             challenger_id = int(args['challenger'][0])
