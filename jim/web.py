@@ -41,6 +41,73 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             self.finish_failure("query parse error")
             return None
 
+    def get_player_args(self):
+        args = self.get_args()
+        if args == None:
+            return None
+        try:
+            first_name = args['first_name'][0]
+        except:
+            self.finish_failure("player fist name missing")
+            return None
+        try:
+            last_name = args['last_name'][0]
+        except:
+            self.finish_failure("player last name missing")
+            return None
+        try:
+            home_phone = args['home_phone'][0]
+        except:
+            home_phone = None
+        try:
+            cell_phone = args['cell_phone'][0]
+        except:
+            cell_phone = None
+        try:
+            work_phone = args['work_phone'][0]
+        except:
+            work_phone = None
+        if not (home_phone or cell_phone or work_phone):
+            self.finish_failure("at least one phone number is required")
+            return None
+        try:
+            email = args['email'][0]
+        except:
+            self.finish_failure("e-mail is required")
+            return None
+        try:
+            ladder = args['ladder'][0].lower()
+        except:
+            ladder = 'unranked'
+        try:
+            company = args['company'][0]
+        except:
+            self.finish_failure("company name is required")
+            return None
+        if not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
+            self.finish_failure("invalid ladder category")
+            return None
+        try:
+            initial_points_str = args['initial_points'][0]
+        except:
+            initial_points_str = '0'
+        try:
+            initial_points = int(initial_points_str)
+        except:
+            self.finish_failure("initial ladder points must be an integer")
+            return None
+        if initial_points < 0:
+            self.finish_failure("initial ladder points cannot be negative")
+            return None
+        return {'name': first_name + ' ' + last_name,
+                'email' : email,
+                'home_phone' : home_phone,
+                'work_phone' : work_phone,
+                'cell_phone' : cell_phone,
+                'company': company,
+                'ladder': ladder,
+                'initial_points': initial_points}
+
     def initialize(self):
         self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.set_header("Pragma", "no-cache")
@@ -82,76 +149,13 @@ class DateHandler(DynamicBaseHandler):
 
 class AddPlayerHandler(DynamicBaseHandler):
     def get(self):
-        args = self.get_args()
-        if args == None:
-            return
-        try:
-            first_name = args['first_name'][0]
-        except:
-            self.finish_failure("player fist name missing")
-            return
-        try:
-            last_name = args['last_name'][0]
-        except:
-            self.finish_failure("player last name missing")
-            return
-        try:
-            home_phone = args['home_phone'][0]
-        except:
-            home_phone = None
-        try:
-            cell_phone = args['cell_phone'][0]
-        except:
-            cell_phone = None
-        try:
-            work_phone = args['work_phone'][0]
-        except:
-            work_phone = None
-        if not (home_phone or cell_phone or work_phone):
-            self.finish_failure("at least one phone number is required")
-            return
-        try:
-            email = args['email'][0]
-        except:
-            self.finish_failure("e-mail is required")
-            return
-        try:
-            ladder = args['ladder'][0].lower()
-        except:
-            ladder = 'unranked'
-        try:
-            company = args['company'][0]
-        except:
-            self.finish_failure("company name is required")
-            return
-        if not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
-            self.finish_failure("invalid ladder category")
-            return
-        try:
-            initial_points_str = args['initial_points'][0]
-        except:
-            initial_points_str = '0'
-        try:
-            initial_points = int(initial_points_str)
-        except:
-            self.finish_failure("initial ladder points must be an integer")
-            return
-        if initial_points < 0:
-            self.finish_failure("initial ladder points cannot be negative")
-            return
+        player = self.get_player_args()
         # REVISIT: player ID comes from the database after adding the
         #          new record, for now we have this placeholder function
         #          that will go away after we add the real DB backend
         player_id = get_player_id()
-        self.finish_success({'name': first_name + ' ' + last_name,
-                             'email' : email,
-                             'home_phone' : home_phone,
-                             'work_phone' : work_phone,
-                             'cell_phone' : cell_phone,
-                             'player_id': player_id,
-                             'company': company,
-                             'ladder': ladder,
-                             'initial_points': initial_points})
+        player.update({'player_id': player_id})
+        self.finish_success(player)
 
 class MatchResultHandler(DynamicBaseHandler):
     def get(self):
