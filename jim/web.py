@@ -127,6 +127,13 @@ class AddPlayerHandler(DynamicBaseHandler):
         if not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
             self.finish_failure("invalid ladder category")
             return
+        try:
+            initial_points = int(args['initial_points'][0])
+        except:
+            initial_points = 0
+        if initial_points < 0:
+            self.finish_failure("initial ladder points cannot be negative")
+            return
         # REVISIT: player ID comes from the database after adding the
         #          new record, for now we have this placeholder function
         #          that will go away after we add the real DB backend
@@ -138,7 +145,8 @@ class AddPlayerHandler(DynamicBaseHandler):
                              'cell_phone' : cell_phone,
                              'player_id': player_id,
                              'company': company,
-                             'ladder': ladder})
+                             'ladder': ladder,
+                             'initial_points': initial_points})
 
 class MatchResultHandler(DynamicBaseHandler):
     def get(self):
