@@ -128,9 +128,14 @@ class AddPlayerHandler(DynamicBaseHandler):
             self.finish_failure("invalid ladder category")
             return
         try:
-            initial_points = int(args['initial_points'][0])
+            initial_points_str = args['initial_points'][0]
         except:
-            initial_points = 0
+            initial_points_str = '0'
+        try:
+            initial_points = int(initial_points_str)
+        except:
+            self.finish_failure("initial ladder points must be an integer")
+            return
         if initial_points < 0:
             self.finish_failure("initial ladder points cannot be negative")
             return
