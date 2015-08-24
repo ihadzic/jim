@@ -20,6 +20,9 @@ _log = None
 # in the dictionary. Normally, we need one to point to the 'CA'
 _test_ssl_options = { 'certfile' : sys.prefix + '/var/jim/certs/cert.pem', 'keyfile': sys.prefix + '/var/jim/certs/key.pem' }
 
+def get_player_id():
+    return 42
+
 class DynamicBaseHandler(tornado.web.RequestHandler):
     def finish_failure(self, err = None):
         retval = { 'result': 'failure', 'reason': err }
@@ -76,6 +79,66 @@ class DateHandler(DynamicBaseHandler):
         self.render('date.html',
                     date_string = str(datetime.datetime.now()),
                     user_string = name)
+
+class AddPlayerHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        try:
+            first_name = args['first_name'][0]
+        except:
+            self.finish_failure("player fist name missing")
+            return
+        try:
+            last_name = args['last_name'][0]
+        except:
+            self.finish_failure("player last name missing")
+            return
+        try:
+            home_phone = args['home_phone'][0]
+        except:
+            home_phone = None
+        try:
+            cell_phone = args['cell_phone'][0]
+        except:
+            cell_phone = None
+        try:
+            work_phone = args['work_phone'][0]
+        except:
+            work_phone = None
+        if not (home_phone or cell_phone or work_phone):
+            self.finish_failure("at least one phone number is required")
+            return
+        try:
+            email = args['email'][0]
+        except:
+            self.finish_failure("e-mail is required")
+            return
+        try:
+            ladder = args['ladder'][0].lower()
+        except:
+            ladder = 'unranked'
+        try:
+            company = args['company'][0]
+        except:
+            self.finish_failure("company name is required")
+            return
+        if not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
+            self.finish_failure("invalid ladder category")
+            return
+        # REVISIT: player ID comes from the database after adding the
+        #          new record, for now we have this placeholder function
+        #          that will go away after we add the real DB backend
+        player_id = get_player_id()
+        self.finish_success({'name': first_name + ' ' + last_name,
+                             'email' : email,
+                             'home_phone' : home_phone,
+                             'work_phone' : work_phone,
+                             'cell_phone' : cell_phone,
+                             'player_id': player_id,
+                             'company': company,
+                             'ladder': ladder})
 
 class MatchResultHandler(DynamicBaseHandler):
     def get(self):
@@ -164,6 +227,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/login', LoginHandler),
         ('/logout', LogoutHandler),
         ('/date', DateHandler),
+        ('/add_player', AddPlayerHandler),
         ('/match_result', MatchResultHandler)
         ]
 
