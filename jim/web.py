@@ -41,10 +41,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             self.finish_failure("query parse error")
             return None
 
-    def get_player_args(self, mandatory):
-        args = self.get_args()
-        if args == None:
-            return None
+    def get_player_args(self, args, mandatory):
         try:
             first_name = args['first_name'][0]
         except:
@@ -174,7 +171,10 @@ class DateHandler(DynamicBaseHandler):
 
 class AddPlayerHandler(DynamicBaseHandler):
     def get(self):
-        player = self.get_player_args(True)
+        args = self.get_args()
+        if args == None:
+            return
+        player = self.get_player_args(args, True)
         if player == None:
             return
         # REVISIT: player ID comes from the database after adding the
