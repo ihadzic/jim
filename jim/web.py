@@ -120,14 +120,18 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                 return None
         else:
             initial_points = None
-        return {'name': first_name + ' ' + last_name,
-                'email' : email,
-                'home_phone' : home_phone,
-                'work_phone' : work_phone,
-                'cell_phone' : cell_phone,
-                'company': company,
-                'ladder': ladder,
-                'initial_points': initial_points}
+        player = {'name': first_name + ' ' + last_name,
+                  'email' : email,
+                  'home_phone' : home_phone,
+                  'work_phone' : work_phone,
+                  'cell_phone' : cell_phone,
+                  'company': company,
+                  'ladder': ladder,
+                  'initial_points': initial_points}
+        if mandatory:
+            return player
+        else:
+            return util.purge_null_fields(player)
 
     def initialize(self):
         self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
