@@ -117,6 +117,16 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                 return None
         else:
             initial_points = None
+        try:
+            active = util.str_to_bool(args['active'][0])
+            if active == None:
+                self.finish_failure("active-flag must be boolean")
+                return
+        except:
+            if mandatory:
+                active = True
+            else:
+                active = None
         player = {'name': first_name + ' ' + last_name,
                   'email' : email,
                   'home_phone' : home_phone,
@@ -124,7 +134,8 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                   'cell_phone' : cell_phone,
                   'company': company,
                   'ladder': ladder,
-                  'initial_points': initial_points}
+                  'initial_points': initial_points,
+                  'active': active}
         if mandatory:
             return player
         else:
