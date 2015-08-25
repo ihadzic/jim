@@ -184,6 +184,23 @@ class AddPlayerHandler(DynamicBaseHandler):
         player.update({'player_id': player_id})
         self.finish_success(player)
 
+class UpdatePlayerHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        player = self.get_player_args(args, False)
+        if player == None:
+            return
+        try:
+            player_id = int(args['id'][0])
+        except:
+            self.finish_failure("missing or invalid player ID")
+            return
+        player.update({'id': player_id})
+        # REVISIT: update player record in the database
+        self.finish_success(player)
+
 class MatchResultHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
@@ -272,6 +289,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/logout', LogoutHandler),
         ('/date', DateHandler),
         ('/add_player', AddPlayerHandler),
+        ('/update_player', UpdatePlayerHandler),
         ('/match_result', MatchResultHandler)
         ]
 
