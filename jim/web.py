@@ -41,20 +41,26 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             self.finish_failure("query parse error")
             return None
 
-    def get_player_args(self):
+    def get_player_args(self, mandatory):
         args = self.get_args()
         if args == None:
             return None
         try:
             first_name = args['first_name'][0]
         except:
-            self.finish_failure("player fist name missing")
-            return None
+            if mandatory:
+                self.finish_failure("player fist name missing")
+                return None
+            else:
+                first_name = None
         try:
             last_name = args['last_name'][0]
         except:
-            self.finish_failure("player last name missing")
-            return None
+            if mandatory:
+                self.finish_failure("player last name missing")
+                return None
+            else:
+                last_name = None
         try:
             home_phone = args['home_phone'][0]
         except:
@@ -67,38 +73,53 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             work_phone = args['work_phone'][0]
         except:
             work_phone = None
-        if not (home_phone or cell_phone or work_phone):
+        if mandatory and not (home_phone or cell_phone or work_phone):
             self.finish_failure("at least one phone number is required")
             return None
         try:
             email = args['email'][0]
         except:
-            self.finish_failure("e-mail is required")
-            return None
+            if mandatory:
+                self.finish_failure("e-mail is required")
+                return None
+            else:
+                email = None
         try:
             ladder = args['ladder'][0].lower()
         except:
-            ladder = 'unranked'
+            if mandatory:
+                ladder = 'unranked'
+            else:
+                ladder = None
         try:
             company = args['company'][0]
         except:
-            self.finish_failure("company name is required")
-            return None
+            if mandatory:
+                self.finish_failure("company name is required")
+                return None
+            else:
+                company = None
         if not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
             self.finish_failure("invalid ladder category")
             return None
         try:
             initial_points_str = args['initial_points'][0]
         except:
-            initial_points_str = '0'
-        try:
-            initial_points = int(initial_points_str)
-        except:
-            self.finish_failure("initial ladder points must be an integer")
-            return None
-        if initial_points < 0:
-            self.finish_failure("initial ladder points cannot be negative")
-            return None
+            if mandatory:
+                initial_points_str = '0'
+            else:
+                initial_points_str = None
+        if initial_points_str:
+            try:
+                initial_points = int(initial_points_str)
+            except:
+                self.finish_failure("initial ladder points must be an integer")
+                return None
+            if initial_points < 0:
+                self.finish_failure("initial ladder points cannot be negative")
+                return None
+        else:
+            initial_points = None
         return {'name': first_name + ' ' + last_name,
                 'email' : email,
                 'home_phone' : home_phone,
@@ -149,7 +170,7 @@ class DateHandler(DynamicBaseHandler):
 
 class AddPlayerHandler(DynamicBaseHandler):
     def get(self):
-        player = self.get_player_args()
+        player = self.get_player_args(True)
         if player == None:
             return
         # REVISIT: player ID comes from the database after adding the
