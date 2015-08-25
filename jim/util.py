@@ -9,4 +9,4 @@ def str_to_bool(s):
         return None
 
 def purge_null_fields(d):
-    return { f:d[f] for f in d if d[f]}
+    return { f:d[f] for f in d if d[f] != None}
