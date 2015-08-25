@@ -150,6 +150,8 @@ class DateHandler(DynamicBaseHandler):
 class AddPlayerHandler(DynamicBaseHandler):
     def get(self):
         player = self.get_player_args()
+        if player == None:
+            return
         # REVISIT: player ID comes from the database after adding the
         #          new record, for now we have this placeholder function
         #          that will go away after we add the real DB backend
