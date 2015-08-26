@@ -24,6 +24,9 @@ _test_ssl_options = { 'certfile' : sys.prefix + '/var/jim/certs/cert.pem', 'keyf
 def get_player_id():
     return 42
 
+def get_match_id():
+    return 42
+
 class DynamicBaseHandler(tornado.web.RequestHandler):
     def finish_failure(self, err = None):
         retval = { 'result': 'failure', 'reason': err }
@@ -315,18 +318,21 @@ class AddMatchHandler(DynamicBaseHandler):
         if err:
             self.finish_failure(err)
             return
-        # TODO: do the database transaction
-        self.finish_success({'opponent_id': opponent_id,
-                             'challenger_id': challenger_id,
-                             'winner_id': winner_id,
-                             'cgames': cgames,
-                             'ogames': ogames,
-                             'cpoints': cpoints,
-                             'opoints': opoints,
-                             'retired': retired,
-                             'forfeited' : forfeited,
-                             'date': str(date).split()[0],
-                             'tournament': tournament})
+        match = {'opponent_id': opponent_id,
+                 'challenger_id': challenger_id,
+                 'winner_id': winner_id,
+                 'cgames': cgames,
+                 'ogames': ogames,
+                 'cpoints': cpoints,
+                 'opoints': opoints,
+                 'retired': retired,
+                 'forfeited' : forfeited,
+                 'date': str(date).split()[0],
+                 'tournament': tournament}
+        # TODO: do the database transaction (match ID will come from the database)
+        match_id = get_match_id()
+        match.update({'match_id': match_id})
+        self.finish_success(match)
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
