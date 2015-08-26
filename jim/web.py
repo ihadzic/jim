@@ -10,6 +10,7 @@ import rules
 import util
 from tornado import web, httpserver
 from datetime import datetime
+from datetime import timedelta
 
 _http_server = None
 _https_server = None
@@ -379,6 +380,37 @@ class GetMatchHandler(DynamicBaseHandler):
         else:
             self.finish_failure("no valid keys specified")
 
+class GetReportHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        try:
+            latest = util.str_to_bool(args['latest'][0])
+            if latest == None:
+                latest = True
+        except:
+            latest = False
+        if latest:
+            # latest report spans two most recent report days
+            dates =  [ datetime.now() - timedelta(i) for i in range(0, 14) if (datetime.now() - timedelta(i)).weekday() == rules.report_day() ]
+            until = dates[0]
+            since = dates[1]
+        else:
+            try:
+                since = datetime.strptime(args['since'][0], '%Y-%m-%d')
+            except:
+                self.finish_failure("must specify the report start date")
+                return
+            try:
+                until = datetime.strptime(args['until'][0], '%Y-%m-%d')
+            except:
+                until = datetime.now()
+        ranges = {'since' : str(since).split()[0],
+                  'until' : str(until).split()[0]}
+        # TODO: do the series of database reads and construct the report
+        self.finish_success(ranges)
+
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
     global _https_server
@@ -402,7 +434,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/update_player', UpdatePlayerHandler),
         ('/add_match', AddMatchHandler),
         ('/del_match', DelMatchHandler),
-        ('/get_match', GetMatchHandler)
+        ('/get_match', GetMatchHandler),
+        ('/get_report', GetReportHandler)
         ]
 
     _log = logging.getLogger("web")
