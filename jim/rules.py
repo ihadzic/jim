@@ -94,3 +94,13 @@ def process_match(cid, oid, cgames, ogames, retired = False, forfeited = False, 
             return oid, loser_points(cgames, True), winner_points(), None
     else:
         return None, None, None, "invalid match score: ({}, {})".format(cwset, owset)
+
+# Rule 7: Weekly Ladder Status Processing - Valid match result reports will be
+# processed each week to produce an updated ladder status report. A ladder
+# week begins on Monday and ends the following Sunday. Match reports must be
+# in the hands of the scorer by 10:00 AM Monday of each week to ensure they
+# are reflected with the previous week's play. The updated report is usually
+# emailed to the membership on Monday.
+def report_day():
+    # uses datetime package nomenclature: 0 is Monday, 7 is Sunday
+    return 0
