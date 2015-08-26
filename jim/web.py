@@ -96,7 +96,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                 return None
             else:
                 company = None
-        if not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
+        if mandatory and not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
             self.finish_failure("invalid ladder category")
             return None
         try:
