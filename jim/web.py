@@ -331,6 +331,11 @@ class AddMatchHandler(DynamicBaseHandler):
                  'date': str(date).split()[0],
                  'tournament': tournament}
         # TODO: do the database transaction (match ID will come from the database)
+        # 1) add match to the database
+        # 2) promote the player if applicable
+        # 3) record the match ID that promoted the player to the current ladder
+        # 4) record the ladder from which the player came from (so that we can
+        #    demote him/her if the promoting match has been deleted
         match_id = get_match_id()
         match.update({'match_id': match_id})
         self.finish_success(match)
@@ -346,6 +351,8 @@ class DelMatchHandler(DynamicBaseHandler):
             self.finish_failure("missing or invalid match ID")
             return
         # TODO: remove the entry from the database
+        # don't forget that if we are deleting a match that promoted
+        # a player, that the player must be demoted to the rank it came from
         self.finish_success({'match_id': match_id})
 
 class GetMatchHandler(DynamicBaseHandler):
