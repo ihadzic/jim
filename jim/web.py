@@ -335,6 +335,19 @@ class AddMatchHandler(DynamicBaseHandler):
         match.update({'match_id': match_id})
         self.finish_success(match)
 
+class DelMatchHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        try:
+            match_id = int(args['match_id'][0])
+        except:
+            self.finish_failure("missing or invalid match ID")
+            return
+        # TODO: remove the entry from the database
+        self.finish_success({'match_id': match_id})
+
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
     global _https_server
@@ -356,7 +369,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
         ('/update_player', UpdatePlayerHandler),
-        ('/add_match', AddMatchHandler)
+        ('/add_match', AddMatchHandler),
+        ('/del_match', DelMatchHandler)
         ]
 
     _log = logging.getLogger("web")
