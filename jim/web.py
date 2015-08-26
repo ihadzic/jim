@@ -206,11 +206,11 @@ class DelPlayerHandler(DynamicBaseHandler):
         if args == None:
             return
         try:
-            player_id = int(args['id'][0])
+            player_id = int(args['player_id'][0])
         except:
             self.finish_failure("missing or invalid player ID")
             return
-        self.finish_success({'id': player_id})
+        self.finish_success({'player_id': player_id})
 
 class UpdatePlayerHandler(DynamicBaseHandler):
     def get(self):
@@ -221,11 +221,11 @@ class UpdatePlayerHandler(DynamicBaseHandler):
         if player == None:
             return
         try:
-            player_id = int(args['id'][0])
+            player_id = int(args['player_id'][0])
         except:
             self.finish_failure("missing or invalid player ID")
             return
-        player.update({'id': player_id})
+        player.update({'player_id': player_id})
         # REVISIT: update player record in the database
         self.finish_success(player)
 
@@ -239,11 +239,11 @@ class GetPlayerHandler(DynamicBaseHandler):
         if player == None:
             player = {}
         try:
-            player_id = int(args['id'][0])
+            player_id = int(args['player_id'][0])
         except:
             player_id = None
         if player_id:
-            player.update({'id': player_id})
+            player.update({'player_id': player_id})
         if not player:
             self.finish_failure("must specify at least one search key")
             return
