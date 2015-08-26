@@ -348,6 +348,30 @@ class DelMatchHandler(DynamicBaseHandler):
         # TODO: remove the entry from the database
         self.finish_success({'match_id': match_id})
 
+class GetMatchHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        try:
+            players  = args['player']
+            if len(players) > 2:
+                self.finish_failure("cannot have more than two players")
+                return
+        except:
+            players = None
+        try:
+            date = datetime.strptime(args['date'][0], '%Y-%m-%d')
+        except:
+            date = None
+        keys =  util.purge_null_fields({ 'players': players,
+                                         'date': str(date).split()[0] if date else None })
+        # TODO: lookup match here
+        if keys:
+            self.finish_success(keys)
+        else:
+            self.finish_failure("no valid keys specified")
+
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
     global _https_server
@@ -370,7 +394,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/get_player', GetPlayerHandler),
         ('/update_player', UpdatePlayerHandler),
         ('/add_match', AddMatchHandler),
-        ('/del_match', DelMatchHandler)
+        ('/del_match', DelMatchHandler),
+        ('/get_match', GetMatchHandler)
         ]
 
     _log = logging.getLogger("web")
