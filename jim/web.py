@@ -127,7 +127,8 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                 active = True
             else:
                 active = None
-        player = {'name': first_name + ' ' + last_name,
+        player = {'first_name': first_name,
+                  'last_name' : last_name,
                   'email' : email,
                   'home_phone' : home_phone,
                   'work_phone' : work_phone,
