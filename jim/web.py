@@ -257,7 +257,7 @@ class GetPlayerHandler(DynamicBaseHandler):
         #       and apply the specified operator
         self.finish_success(player)
 
-class MatchResultHandler(DynamicBaseHandler):
+class AddMatchHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
@@ -348,7 +348,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
         ('/update_player', UpdatePlayerHandler),
-        ('/match_result', MatchResultHandler)
+        ('/add_match', AddMatchHandler)
         ]
 
     _log = logging.getLogger("web")
