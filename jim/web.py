@@ -230,13 +230,31 @@ class GetPlayerHandler(DynamicBaseHandler):
         args = self.get_args()
         if args == None:
             return
+        # everything is optional except an empty set
+        player = self.get_player_args(args, False)
+        if player == None:
+            player = {}
         try:
             player_id = int(args['id'][0])
         except:
-            self.finish_failure("missing or invalid player ID")
+            player_id = None
+        if player_id:
+            player.update({'id': player_id})
+        if not player:
+            self.finish_failure("must specify at least one search key")
             return
-        player = {} # TODO: this should be a database lookup
-        player.update({'id': player_id})
+        try:
+            op = args['op'][0].lower()
+        except:
+            op = 'and'
+        if not op:
+            op = 'and'
+        elif op != 'and' and op != 'or':
+            self.finish_failure("invalid search operator")
+            return
+        _log.info("get_player: search operator is '{}'".format(op))
+        # TODO: database lookup comes here (use dictionary elements as keys
+        #       and apply the specified operator
         self.finish_success(player)
 
 class MatchResultHandler(DynamicBaseHandler):
