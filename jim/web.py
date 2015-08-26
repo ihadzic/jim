@@ -210,6 +210,7 @@ class DelPlayerHandler(DynamicBaseHandler):
         except:
             self.finish_failure("missing or invalid player ID")
             return
+        # TODO: remove the entry from the database
         self.finish_success({'player_id': player_id})
 
 class UpdatePlayerHandler(DynamicBaseHandler):
