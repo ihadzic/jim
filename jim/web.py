@@ -20,6 +20,7 @@ _log = None
 # in the dictionary. Normally, we need one to point to the 'CA'
 _test_ssl_options = { 'certfile' : sys.prefix + '/var/jim/certs/cert.pem', 'keyfile': sys.prefix + '/var/jim/certs/key.pem' }
 
+# TODO: these are placeholders until we bring up the database backend
 def get_player_id():
     return 42
 
