@@ -460,6 +460,19 @@ class AddAccountHandler(DynamicBaseHandler):
         else:
             self.finish_failure("could not add account to database")
 
+class DelAccountHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        try:
+            account_id = int(args['account_id'][0])
+        except:
+            self.finish_failure("missing or invalid account ID")
+            return
+        # TODO: remove the entry from the database
+        self.finish_success({'account_id': account_id})
+
 class GetReportHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
@@ -516,6 +529,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/del_match', DelMatchHandler),
         ('/get_match', GetMatchHandler),
         ('/add_account', AddAccountHandler),
+        ('/del_account', DelAccountHandler),
         ('/get_report', GetReportHandler)
         ]
 
