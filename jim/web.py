@@ -152,11 +152,18 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         try:
             username = args['username'][0]
         except:
-            self.finish_failure('username missing')
-            return None
+            if mandatory:
+                self.finish_failure('username missing')
+                return None
+            else:
+                username = None
         if not account_type:
             # can happen only for account updates
-            player_id = args.get('player_id')
+            player_ids = args.get('player_id')
+            if player_ids:
+                player_id = player_ids[0]
+            else:
+                player_id = None
         elif account_type == 'admin':
             if args.get('player_id'):
                 self.finish_failure('admin account cannot be associated with a player')
@@ -167,14 +174,14 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             except:
                 self.finish_failure('regular account must be associated with a player')
                 return None
-        try:
-             password = args['password'][0]
-        except:
-            if mandatory:
+        if mandatory:
+            try:
+                password = args['password'][0]
+            except:
                 self.finish_failure('password missing')
                 return None
-            else:
-                password = None
+        else:
+            password = None
         if account_type == 'admin':
             account = {'type' : account_type,
                        'username' : username,
