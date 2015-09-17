@@ -498,6 +498,16 @@ class GetAccountHandler(DynamicBaseHandler):
         if not account:
             self.finish_failure("must specify at least one search key")
             return
+        try:
+            op = args['op'][0].lower()
+        except:
+            op = 'and'
+        if not op:
+            op = 'and'
+        elif op != 'and' and op != 'or':
+            self.finish_failure("invalid search operator")
+            return
+        _log.info("get_account: search operator is '{}'".format(op))
         # TODO: database lookup comes here (use dictionary elements as keys
         #       and apply the specified operator)
         self.finish_success(account)
