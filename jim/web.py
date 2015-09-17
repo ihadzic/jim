@@ -473,6 +473,28 @@ class DelAccountHandler(DynamicBaseHandler):
         # TODO: remove the entry from the database
         self.finish_success({'account_id': account_id})
 
+class GetAccountHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        # everything is optional except an empty set
+        account = self.get_account_args(args, False)
+        if account == None:
+            account = {}
+        try:
+            account_id = int(args['account_id'][0])
+        except:
+            account_id = None
+        if account_id:
+            account.update({'account_id': account_id})
+        if not account:
+            self.finish_failure("must specify at least one search key")
+            return
+        # TODO: database lookup comes here (use dictionary elements as keys
+        #       and apply the specified operator)
+        self.finish_success(account)
+
 class GetReportHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
@@ -530,6 +552,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/get_match', GetMatchHandler),
         ('/add_account', AddAccountHandler),
         ('/del_account', DelAccountHandler),
+        ('/get_account', GetAccountHandler),
         ('/get_report', GetReportHandler)
         ]
 
