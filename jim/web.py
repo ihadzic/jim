@@ -512,6 +512,23 @@ class GetAccountHandler(DynamicBaseHandler):
         #       and apply the specified operator)
         self.finish_success(account)
 
+class UpdateAccountHandler(DynamicBaseHandler):
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        account = self.get_account_args(args, False)
+        if account == None:
+            return
+        try:
+            account_id = int(args['account_id'][0])
+        except:
+            self.finish_failure("missing or invalid account ID")
+            return
+        account.update({'account_id': account_id})
+        # REVISIT: update account record in the database
+        self.finish_success(account)
+
 class GetReportHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
@@ -570,6 +587,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/add_account', AddAccountHandler),
         ('/del_account', DelAccountHandler),
         ('/get_account', GetAccountHandler),
+        ('/update_account', UpdateAccountHandler),
         ('/get_report', GetReportHandler)
         ]
 
