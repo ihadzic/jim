@@ -39,11 +39,11 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             self.finish_failure("query parse error")
             return None
 
-    def get_player_args(self, args, mandatory):
+    def get_player_args(self, args, add_flag):
         try:
             first_name = args['first_name'][0]
         except:
-            if mandatory:
+            if add_flag:
                 self.finish_failure("player fist name missing")
                 return None
             else:
@@ -51,7 +51,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         try:
             last_name = args['last_name'][0]
         except:
-            if mandatory:
+            if add_flag:
                 self.finish_failure("player last name missing")
                 return None
             else:
@@ -68,13 +68,13 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             work_phone = args['work_phone'][0]
         except:
             work_phone = None
-        if mandatory and not (home_phone or cell_phone or work_phone):
+        if add_flag and not (home_phone or cell_phone or work_phone):
             self.finish_failure("at least one phone number is required")
             return None
         try:
             email = args['email'][0]
         except:
-            if mandatory:
+            if add_flag:
                 self.finish_failure("e-mail is required")
                 return None
             else:
@@ -82,25 +82,25 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         try:
             ladder = args['ladder'][0].lower()
         except:
-            if mandatory:
+            if add_flag:
                 ladder = 'unranked'
             else:
                 ladder = None
         try:
             company = args['company'][0]
         except:
-            if mandatory:
+            if add_flag:
                 self.finish_failure("company name is required")
                 return None
             else:
                 company = None
-        if mandatory and not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
+        if add_flag and not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
             self.finish_failure("invalid ladder category")
             return None
         try:
             initial_points_str = args['initial_points'][0]
         except:
-            if mandatory:
+            if add_flag:
                 initial_points_str = '0'
             else:
                 initial_points_str = None
@@ -121,7 +121,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                 self.finish_failure("active-flag must be boolean")
                 return
         except:
-            if mandatory:
+            if add_flag:
                 active = True
             else:
                 active = None
@@ -135,16 +135,16 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                   'ladder': ladder,
                   'initial_points': initial_points,
                   'active': active}
-        if mandatory:
+        if add_flag:
             return player
         else:
             return util.purge_null_fields(player)
 
-    def get_account_args(self, args, mandatory):
+    def get_account_args(self, args, add_flag):
         try:
             account_type = args['type'][0]
         except:
-            if mandatory:
+            if add_flag:
                 self.finish_failure('account type missing')
                 return None
             else:
@@ -152,7 +152,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         try:
             username = args['username'][0]
         except:
-            if mandatory:
+            if add_flag:
                 self.finish_failure('username missing')
                 return None
             else:
@@ -174,7 +174,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             except:
                 self.finish_failure('regular account must be associated with a player')
                 return None
-        if mandatory:
+        if add_flag:
             try:
                 password = args['password'][0]
             except:
@@ -191,7 +191,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                        'username' : username,
                        'player_id' : player_id,
                        'password' : password }
-        if mandatory:
+        if add_flag:
             return account
         else:
             return util.purge_null_fields(account)
