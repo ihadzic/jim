@@ -142,14 +142,6 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
 
     def get_account_args(self, args, add_flag):
         try:
-            account_type = args['type'][0]
-        except:
-            if add_flag:
-                self.finish_failure('account type missing')
-                return None
-            else:
-                account_type = None
-        try:
             username = args['username'][0]
         except:
             if add_flag:
@@ -157,43 +149,33 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                 return None
             else:
                 username = None
-        if not account_type:
-            # can happen only for account updates
-            player_ids = args.get('player_id')
-            if player_ids:
-                player_id = player_ids[0]
-            else:
-                player_id = None
-        elif account_type == 'admin':
-            if args.get('player_id'):
-                self.finish_failure('admin account cannot be associated with a player')
-                return None
-        else:
-            try:
-                player_id = args['player_id'][0]
-            except:
-                self.finish_failure('regular account must be associated with a player')
-                return None
-        if add_flag:
-            try:
-                password = args['password'][0]
-            except:
+        try:
+            password = args['password'][0]
+        except:
+            if add_flag:
                 self.finish_failure('password missing')
                 return None
+            else:
+                password = None
+        if not add_flag:
+            try:
+                account_id = int(args['account_id'][0])
+            except:
+                account_id = None
         else:
-            password = None
-        if account_type == 'admin':
-            account = {'type' : account_type,
-                       'username' : username,
-                       'password' : password }
-        else:
-            account = {'type' : account_type,
-                       'username' : username,
-                       'player_id' : player_id,
-                       'password' : password }
+            account_id = None
         if add_flag:
+            account = {
+                'username' : username,
+                'password' : password
+                }
             return account
         else:
+            account = {
+                'username' : username,
+                'password' : password,
+                'account_id' : account_id
+                }
             return util.purge_null_fields(account)
 
     def initialize(self):
@@ -466,7 +448,6 @@ class AddAccountHandler(DynamicBaseHandler):
         if account == None:
             return
         # TODO: check that the username is not in use
-                # TODO: check if a player has already been associated with an account
         if self.update_database(account):
             self.finish_success(account)
         else:
@@ -492,14 +473,11 @@ class GetAccountHandler(DynamicBaseHandler):
             return
         # everything is optional except an empty set
         account = self.get_account_args(args, False)
-        if account == None:
-            account = {}
         try:
-            account_id = int(args['account_id'][0])
+            # don't let some bozo search us by password
+            del account['password']
         except:
-            account_id = None
-        if account_id:
-            account.update({'account_id': account_id})
+            pass
         if not account:
             self.finish_failure("must specify at least one search key")
             return
@@ -525,12 +503,9 @@ class UpdateAccountHandler(DynamicBaseHandler):
         account = self.get_account_args(args, False)
         if account == None:
             return
-        try:
-            account_id = int(args['account_id'][0])
-        except:
+        if not account.get('account_id'):
             self.finish_failure("missing or invalid account ID")
             return
-        account.update({'account_id': account_id})
         # REVISIT: update account record in the database
         self.finish_success(account)
 
