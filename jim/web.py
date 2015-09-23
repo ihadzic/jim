@@ -41,6 +41,22 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
 
     def get_player_args(self, args, add_flag):
         try:
+            username = args['username'][0]
+        except:
+            if add_flag:
+                self.finish_failure('username missing')
+                return None
+            else:
+                username = None
+        try:
+            password = args['password'][0]
+        except:
+            if add_flag:
+                self.finish_failure('password missing')
+                return None
+            else:
+                password = None
+        try:
             first_name = args['first_name'][0]
         except:
             if add_flag:
@@ -125,16 +141,18 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                 active = True
             else:
                 active = None
-        player = {'first_name': first_name,
-                  'last_name' : last_name,
-                  'email' : email,
-                  'home_phone' : home_phone,
-                  'work_phone' : work_phone,
-                  'cell_phone' : cell_phone,
-                  'company': company,
-                  'ladder': ladder,
-                  'initial_points': initial_points,
-                  'active': active}
+        player = { 'username': username,
+                   'password': password,
+                   'first_name': first_name,
+                   'last_name' : last_name,
+                   'email' : email,
+                   'home_phone' : home_phone,
+                   'work_phone' : work_phone,
+                   'cell_phone' : cell_phone,
+                   'company': company,
+                   'ladder': ladder,
+                   'initial_points': initial_points,
+                   'active': active}
         if add_flag:
             return player
         else:
@@ -276,6 +294,11 @@ class GetPlayerHandler(DynamicBaseHandler):
             return
         # everything is optional except an empty set
         player = self.get_player_args(args, False)
+        try:
+            # don't let some bozo search us by password
+            del player['password']
+        except:
+            pass
         if player == None:
             player = {}
         try:
