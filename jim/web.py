@@ -39,7 +39,47 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             self.finish_failure("query parse error")
             return None
 
-    def get_player_args(self, args, add_flag):
+    def initialize(self):
+        self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+        self.set_header("Pragma", "no-cache")
+        self.set_header("Expires", "0")
+
+    def get_current_user(self):
+        return self.get_secure_cookie('user')
+
+class RootHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.redirect('/login', permanent = True)
+
+class LoginHandler(DynamicBaseHandler):
+    def get(self):
+        if self.current_user:
+            self.redirect('/date')
+        else:
+            self.render('login.html')
+
+    def post(self):
+        # TODO: check the password here
+        self.set_secure_cookie('user', self.get_argument('name'))
+        self.redirect('/date')
+
+class LogoutHandler(DynamicBaseHandler):
+    def get(self):
+        self.clear_cookie('user')
+        self.redirect('/login')
+
+class DateHandler(DynamicBaseHandler):
+    def get(self):
+        if self.current_user:
+            name = tornado.escape.xhtml_escape(self.current_user)
+        else:
+            name = 'nobody'
+        self.render('date.html',
+                    date_string = str(datetime.datetime.now()),
+                    user_string = name)
+
+class PlayerBaseHandler(DynamicBaseHandler):
+    def parse_args(self, args, add_flag):
         try:
             username = args['username'][0]
         except:
@@ -158,84 +198,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         else:
             return util.purge_null_fields(player)
 
-    def get_account_args(self, args, add_flag):
-        try:
-            username = args['username'][0]
-        except:
-            if add_flag:
-                self.finish_failure('username missing')
-                return None
-            else:
-                username = None
-        try:
-            password = args['password'][0]
-        except:
-            if add_flag:
-                self.finish_failure('password missing')
-                return None
-            else:
-                password = None
-        if not add_flag:
-            try:
-                account_id = int(args['account_id'][0])
-            except:
-                account_id = None
-        else:
-            account_id = None
-        if add_flag:
-            account = {
-                'username' : username,
-                'password' : password
-                }
-            return account
-        else:
-            account = {
-                'username' : username,
-                'password' : password,
-                'account_id' : account_id
-                }
-            return util.purge_null_fields(account)
-
-    def initialize(self):
-        self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
-        self.set_header("Pragma", "no-cache")
-        self.set_header("Expires", "0")
-
-    def get_current_user(self):
-        return self.get_secure_cookie('user')
-
-class RootHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.redirect('/login', permanent = True)
-
-class LoginHandler(DynamicBaseHandler):
-    def get(self):
-        if self.current_user:
-            self.redirect('/date')
-        else:
-            self.render('login.html')
-
-    def post(self):
-        # TODO: check the password here
-        self.set_secure_cookie('user', self.get_argument('name'))
-        self.redirect('/date')
-
-class LogoutHandler(DynamicBaseHandler):
-    def get(self):
-        self.clear_cookie('user')
-        self.redirect('/login')
-
-class DateHandler(DynamicBaseHandler):
-    def get(self):
-        if self.current_user:
-            name = tornado.escape.xhtml_escape(self.current_user)
-        else:
-            name = 'nobody'
-        self.render('date.html',
-                    date_string = str(datetime.datetime.now()),
-                    user_string = name)
-
-class AddPlayerHandler(DynamicBaseHandler):
+class AddPlayerHandler(PlayerBaseHandler):
 
     # TODO: this is a placeholders until we bring up the database backend
     def update_database(self, player):
@@ -249,7 +212,7 @@ class AddPlayerHandler(DynamicBaseHandler):
         args = self.get_args()
         if args == None:
             return
-        player = self.get_player_args(args, True)
+        player = self.parse_args(args, True)
         if player == None:
             return
         if self.update_database(player):
@@ -257,7 +220,7 @@ class AddPlayerHandler(DynamicBaseHandler):
         else:
             self.finish_failure("could not add player to the database")
 
-class DelPlayerHandler(DynamicBaseHandler):
+class DelPlayerHandler(PlayerBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
@@ -270,12 +233,12 @@ class DelPlayerHandler(DynamicBaseHandler):
         # TODO: remove the entry from the database
         self.finish_success({'player_id': player_id})
 
-class UpdatePlayerHandler(DynamicBaseHandler):
+class UpdatePlayerHandler(PlayerBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
             return
-        player = self.get_player_args(args, False)
+        player = self.parse_args(args, False)
         if player == None:
             return
         try:
@@ -287,13 +250,13 @@ class UpdatePlayerHandler(DynamicBaseHandler):
         # REVISIT: update player record in the database
         self.finish_success(player)
 
-class GetPlayerHandler(DynamicBaseHandler):
+class GetPlayerHandler(PlayerBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
             return
         # everything is optional except an empty set
-        player = self.get_player_args(args, False)
+        player = self.parse_args(args, False)
         try:
             # don't let some bozo search us by password
             del player['password']
@@ -456,7 +419,46 @@ class UpdateMatchHandler(DynamicBaseHandler):
         self.finish_failure("operation not supported")
         return
 
-class AddAccountHandler(DynamicBaseHandler):
+class AccountBaseHandler(DynamicBaseHandler):
+    def parse_args(self, args, add_flag):
+        try:
+            username = args['username'][0]
+        except:
+            if add_flag:
+                self.finish_failure('username missing')
+                return None
+            else:
+                username = None
+        try:
+            password = args['password'][0]
+        except:
+            if add_flag:
+                self.finish_failure('password missing')
+                return None
+            else:
+                password = None
+        if not add_flag:
+            try:
+                account_id = int(args['account_id'][0])
+            except:
+                account_id = None
+        else:
+            account_id = None
+        if add_flag:
+            account = {
+                'username' : username,
+                'password' : password
+                }
+            return account
+        else:
+            account = {
+                'username' : username,
+                'password' : password,
+                'account_id' : account_id
+                }
+            return util.purge_null_fields(account)
+
+class AddAccountHandler(AccountBaseHandler):
     def update_database(self, account):
         # TODO: will be generated by the database
         account_id = 42
@@ -467,7 +469,7 @@ class AddAccountHandler(DynamicBaseHandler):
         args = self.get_args()
         if args == None:
             return
-        account = self.get_account_args(args, True)
+        account = self.parse_args(args, True)
         if account == None:
             return
         # TODO: check that the username is not in use
@@ -476,7 +478,7 @@ class AddAccountHandler(DynamicBaseHandler):
         else:
             self.finish_failure("could not add account to database")
 
-class DelAccountHandler(DynamicBaseHandler):
+class DelAccountHandler(AccountBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
@@ -489,13 +491,13 @@ class DelAccountHandler(DynamicBaseHandler):
         # TODO: remove the entry from the database
         self.finish_success({'account_id': account_id})
 
-class GetAccountHandler(DynamicBaseHandler):
+class GetAccountHandler(AccountBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
             return
         # everything is optional except an empty set
-        account = self.get_account_args(args, False)
+        account = self.parse_args(args, False)
         try:
             # don't let some bozo search us by password
             del account['password']
@@ -518,12 +520,12 @@ class GetAccountHandler(DynamicBaseHandler):
         #       and apply the specified operator)
         self.finish_success(account)
 
-class UpdateAccountHandler(DynamicBaseHandler):
+class UpdateAccountHandler(AccountBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
             return
-        account = self.get_account_args(args, False)
+        account = self.parse_args(args, False)
         if account == None:
             return
         if not account.get('account_id'):
