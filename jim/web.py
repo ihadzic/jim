@@ -83,35 +83,31 @@ class PlayerBaseHandler(DynamicBaseHandler):
         try:
             username = args['username'][0]
         except:
-            if add_flag:
-                self.finish_failure('username missing')
-                return None
-            else:
-                username = None
+            username = None
+        if add_flag and not username:
+            self.finish_failure('username missing')
+            return None
         try:
             password = args['password'][0]
         except:
-            if add_flag:
-                self.finish_failure('password missing')
-                return None
-            else:
-                password = None
+            password = None
+        if add_flag and not password:
+            self.finish_failure('password missing')
+            return None
         try:
             first_name = args['first_name'][0]
         except:
-            if add_flag:
-                self.finish_failure("player fist name missing")
-                return None
-            else:
-                first_name = None
+            first_name = None
+        if add_flag and not first_name:
+            self.finish_failure("player fist name missing")
+            return None
         try:
             last_name = args['last_name'][0]
         except:
-            if add_flag:
-                self.finish_failure("player last name missing")
-                return None
-            else:
-                last_name = None
+            last_name = None
+        if add_flag and not last_name:
+            self.finish_failure("player last name missing")
+            return None
         try:
             home_phone = args['home_phone'][0]
         except:
@@ -130,26 +126,23 @@ class PlayerBaseHandler(DynamicBaseHandler):
         try:
             email = args['email'][0]
         except:
-            if add_flag:
-                self.finish_failure("e-mail is required")
-                return None
-            else:
-                email = None
+            email = None
+        if add_flag and not email:
+            self.finish_failure("e-mail is required")
+            return None
         try:
             ladder = args['ladder'][0].lower()
         except:
-            if add_flag:
-                ladder = 'unranked'
-            else:
-                ladder = None
+            ladder = None
+        if add_flag and not ladder:
+            ladder = 'unranked'
         try:
             company = args['company'][0]
         except:
-            if add_flag:
-                self.finish_failure("company name is required")
-                return None
-            else:
-                company = None
+            company = None
+        if add_flag and not company:
+            self.finish_failure("company name is required")
+            return None
         if add_flag and not ladder in [ 'a', 'b', 'c', 'unranked', 'beginner' ]:
             self.finish_failure("invalid ladder category")
             return None
@@ -170,7 +163,10 @@ class PlayerBaseHandler(DynamicBaseHandler):
                 self.finish_failure("initial ladder points cannot be negative")
                 return None
         else:
-            initial_points = None
+            if add_flag:
+                initial_points = 0
+            else:
+                initial_points = None
         try:
             active = util.str_to_bool(args['active'][0])
             if active == None:
