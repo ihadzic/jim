@@ -5,7 +5,7 @@
 <title>Player Information</title>
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
 <script type="text/javascript" src="view.js"></script>
-
+<script type="text/javascript" src="form_handler.js"></script>
 </head>
 <body id="main_body" >
 
@@ -13,7 +13,9 @@
 	<div id="form_container">
 
 		<h1><a>Player Information</a></h1>
-		<form id="form_1056730" class="appnitro"  method="get" action="add_player">
+		<form id="form_enter_player" class="appnitro"
+                      method="get" action="add_player"
+                      onsubmit="return enter_player()">
 					<div class="form_description">
 			<h2>Player Information</h2>
 			<p></p>
@@ -96,7 +98,7 @@
 		</li>
 
 					<li class="buttons">
-			    <input type="hidden" name="form_id" value="1056730" />
+			    <input type="hidden" name="form_id" value="enter_player" />
 
 				<input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />
 		</li>
