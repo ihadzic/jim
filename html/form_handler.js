@@ -26,7 +26,7 @@ function process_submit_error()
     alert("submit error");
 }
 
-function enter_player()
+function process_submit_form(form_name)
 {
     var form, query;
     var xhttp = new XMLHttpRequest();
@@ -40,7 +40,7 @@ function enter_player()
             }
         }
     }
-    form = document.getElementById('form_enter_player');
+    form = document.getElementById(form_name);
     query = form_to_query(form);
     xhttp.open("GET", query, true);
     xhttp.send();
