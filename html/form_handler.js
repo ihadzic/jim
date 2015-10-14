@@ -21,14 +21,24 @@ function process_submit_response(response)
     alert("got this: " + response);
 }
 
+function process_submit_error()
+{
+    alert("submit error");
+}
+
 function enter_player()
 {
     var form, query;
     var xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
-        if (xhttp.readyState == 4 && xhttp.status == 200)
-            process_submit_response(xhttp.responseText);
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_submit_response(xhttp.responseText);
+            } else {
+                process_submit_error();
+            }
+        }
     }
     form = document.getElementById('form_enter_player');
     query = form_to_query(form);
