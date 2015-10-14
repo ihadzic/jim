@@ -16,17 +16,22 @@ function form_to_query(form)
     return q;
 }
 
-function process_submit_response(response)
+function process_submit_response(ok_string, response)
 {
-    alert("got this: " + response);
+    if (response.result == "success") {
+        // TODO: send something human-readable from the server and show it here
+	alert(ok_string);
+    } else {
+        alert("Error: " + response.reason);
+    }
 }
 
-function process_submit_error()
+function process_submit_error(err)
 {
-    alert("submit error");
+    alert("oops, something failed (error=" + err + ")");
 }
 
-function process_submit_form(form_name)
+function process_submit_form(ok_string, form_name)
 {
     var form, query;
     var xhttp = new XMLHttpRequest();
@@ -34,9 +39,9 @@ function process_submit_form(form_name)
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
             if (xhttp.status == 200) {
-                process_submit_response(xhttp.responseText);
+                process_submit_response(ok_string, JSON.parse(xhttp.responseText));
             } else {
-                process_submit_error();
+                process_submit_error(xhttp.status);
             }
         }
     }
