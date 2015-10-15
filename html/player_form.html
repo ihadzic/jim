@@ -13,7 +13,7 @@
 	<div id="form_container">
 
 		<h1><a>Player Information</a></h1>
-		<form id="form_enter_player" class="appnitro" method="get" action="/"
+		<form id="player_form" class="appnitro" method="get" action="/"
                       onsubmit="return false">
 		  <div class="form_description">
 			<h2>Player Information</h2>
@@ -97,9 +97,9 @@
 		</li>
 
 					<li class="buttons">
-			    <input type="hidden" name="form_id" value="enter_player" />
+			    <input type="hidden" name="form_id" value="player_form" />
 
-				<input id="add_player" class="button_text" type="submit" name="add_player" value="Add player" onclick="process_submit_form('add_player', 'Player successfully entered.', 'form_enter_player')" />
+				<input id="add_player" class="button_text" type="submit" name="button_name" value="Add" onclick="process_player_form('add_player')" />
 		</li>
 			</ul>
 		</form>
