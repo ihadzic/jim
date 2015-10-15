@@ -1,9 +1,10 @@
-function form_to_query(form)
+function form_to_query(form, command)
 {
     var i;
     var first_arg = true;
     var q = form.action;
 
+    q+= command;
     for (i = 0; i < form.length; i++)
         if (form[i].value) {
             if (first_arg) {
@@ -31,7 +32,7 @@ function process_submit_error(err)
     alert("oops, something failed (error=" + err + ")");
 }
 
-function process_submit_form(ok_string, form_name)
+function process_submit_form(command, ok_string, form_name)
 {
     var form, query;
     var xhttp = new XMLHttpRequest();
@@ -46,7 +47,7 @@ function process_submit_form(ok_string, form_name)
         }
     }
     form = document.getElementById(form_name);
-    query = form_to_query(form);
+    query = form_to_query(form, command);
     xhttp.open("GET", query, true);
     xhttp.send();
     // prevent default form submission (we do everything from this script)
