@@ -31,6 +31,11 @@
 			<input id="last_name" name= "last_name" class="element text" maxlength="255" size="14" value=""/>
 			<label>Last</label>
 		</span>
+		</li>		<li id="li_4_5" >
+		<label class="description" for="player_id">ID (for update and search only)</label>
+		<div>
+			<input id="player_id" name="player_id" class="element text" type="text" maxlength="8" size="8" value=""/>
+		</div>
 		</li>		<li id="li_5" >
 		<label class="description" for="username">Username </label>
 		<div>
@@ -100,6 +105,7 @@
 			    <input type="hidden" name="form_id" value="player_form" />
 
 				<input id="add_player" class="button_text" type="submit" name="button_name" value="Add" onclick="process_player_form('add_player')" />
+				<input id="update_player" class="button_text" type="submit" name="button_name" value="Update" onclick="process_player_form('update_player')" />
 		</li>
 			</ul>
 		</form>

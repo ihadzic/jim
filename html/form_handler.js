@@ -50,6 +50,11 @@ function process_player_form(command)
         }
     }
     form = document.getElementById(form_name);
+    if (command == "add_player")
+        if (form.player_id.value) {
+            alert("ID for a new player will be automatically assigned, please leave it blank.");
+            return;
+        }
     query = form_to_query(form, command);
     xhttp.open("GET", query, true);
     xhttp.send();
