@@ -6,13 +6,18 @@ function form_to_query(form, command)
 
     q+= command;
     for (i = 0; i < form.length; i++)
-        if (form[i].name && form[i].value) {
-            if (first_arg) {
-                q += "?";
-                first_arg = false;
-            } else
-                q += "&";
-            q += form[i].name + "=" + form[i].value;
+        if (form[i].name) {
+            if (form[i].value || form[i].type == "checkbox") {
+                if (first_arg) {
+                    q += "?";
+                    first_arg = false;
+                } else
+                    q += "&";
+                if (form[i].type == "checkbox")
+                    q += form[i].name + "=" + form[i].checked;
+                else
+                    q += form[i].name + "=" + form[i].value;
+            }
         }
     return q;
 }
