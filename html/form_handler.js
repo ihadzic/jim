@@ -21,7 +21,7 @@ function process_player_form_response(command, response)
 {
     var form_name = "player_form";
     if (response.result == "success") {
-	alert("player id is " + response.player_id);
+        alert("player id is " + response.player_id);
         form = document.getElementById(form_name);
         form.reset();
     } else {
