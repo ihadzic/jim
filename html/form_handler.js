@@ -26,9 +26,24 @@ function process_player_form_response(command, response)
 {
     var form_name = "player_form";
     if (response.result == "success") {
-        alert("player id is " + response.player_id);
         form = document.getElementById(form_name);
         form.reset();
+        switch (command) {
+        case "add_player":
+            alert("player id is " + response.player_id + ".");
+            break;
+        case "update_player":
+            alert("player with id " + response.player_id + " updated.");
+            break;
+        case "get_player":
+            // TODO: fill up the form or construct the list of players for multiple matches
+            break;
+        case "del_player":
+            alert("player with id " + response.player_id + " deleted.");
+            break;
+        default:
+            alert("should not happen, bug?");
+        }
     } else {
         alert("Error: " + response.reason);
     }
