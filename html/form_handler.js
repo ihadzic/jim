@@ -37,6 +37,7 @@ function process_player_form_response(command, response)
             break;
         case "get_player":
             // TODO: fill up the form or construct the list of players for multiple matches
+	    alert("got this: " + JSON.stringify(response));
             break;
         case "del_player":
             alert("player with id " + response.player_id + " deleted.");
