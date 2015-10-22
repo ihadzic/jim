@@ -76,6 +76,10 @@ function process_player_form(command)
             alert("ID for a new player will be automatically assigned, please leave it blank.");
             return;
         }
+    if (command == "del_player") {
+	if (!confirm("Are you sure you want to delete the player?\nUsually, just inactivating the player is good enough."))
+	    return;
+    }
     query = form_to_query(form, command);
     xhttp.open("GET", query, true);
     xhttp.send();
