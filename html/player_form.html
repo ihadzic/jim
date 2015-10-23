@@ -77,7 +77,7 @@
 		</li>		<li id="li_11" >
 		<label class="description" for="ladder">Ladder </label>
 		<div>
-		<select class="element select medium" id="ladder" name="ladder">
+		<select class="element select small" id="ladder" name="ladder">
 			<option value="" selected="selected"></option>
 <option value="a" >A</option>
 <option value="b" >B</option>
@@ -88,14 +88,17 @@
 		</select>
 		</div>
 		</li>		<li id="li_10" >
-		<label class="description" for="active"> </label>
-		<span>
-			<input id="active" name="active" class="element checkbox" type="checkbox" value="true" checked/>
-<label class="choice" for="active">Active</label>
 
-		</span>
+		<div>
+		  <label class="description" for="active">Active </label>
+		  <select class="element select small" id="active" name="active">
+		    <option value="" selected="selected"></option>
+                    <option value="true" >Yes</option>
+                    <option value="false" >No</option>
+		  </select>
+		</div>
 		</li>		<li id="li_9" >
-		<label class="description" for="initial_points">Initial Points </label>
+		  <label class="description" for="initial_points">Initial Points </label>
 		<div>
 			<input id="initial_points" name="initial_points" class="element text medium" type="text" maxlength="255" value=""/>
 		</div>
