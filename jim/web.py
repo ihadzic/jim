@@ -281,7 +281,7 @@ class GetPlayerHandler(PlayerBaseHandler):
         _log.info("get_player: search operator is '{}'".format(op))
         # TODO: database lookup comes here (use dictionary elements as keys
         #       and apply the specified operator
-        self.finish_success(player)
+        self.finish_success({'entries': [player]})
 
 class AddMatchHandler(DynamicBaseHandler):
     def update_database(self, match):
@@ -406,7 +406,7 @@ class GetMatchHandler(DynamicBaseHandler):
                                          'date': str(date).split()[0] if date else None })
         # TODO: lookup match here
         if keys:
-            self.finish_success(keys)
+            self.finish_success({'entries': [keys]})
         else:
             self.finish_failure("no valid keys specified")
 
@@ -514,7 +514,7 @@ class GetAccountHandler(AccountBaseHandler):
         _log.info("get_account: search operator is '{}'".format(op))
         # TODO: database lookup comes here (use dictionary elements as keys
         #       and apply the specified operator)
-        self.finish_success(account)
+        self.finish_success({'entries': [account]})
 
 class UpdateAccountHandler(AccountBaseHandler):
     def get(self):
@@ -559,7 +559,7 @@ class GetReportHandler(DynamicBaseHandler):
         ranges = {'since' : str(since).split()[0],
                   'until' : str(until).split()[0]}
         # TODO: do the series of database reads and construct the report
-        self.finish_success(ranges)
+        self.finish_success({'entries': [ranges]})
 
 def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
     global _http_server
