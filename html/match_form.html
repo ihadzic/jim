@@ -90,42 +90,42 @@
           <li id="li_3" >
           </li>
           <li id="li_5" >
-            <label class="description" for="element_5">Date match completed </label>
+            <label class="description" for="match_date">Date match completed </label>
             <span>
-              <input id="element_5_1" name="element_5_1" class="element text" size="2" maxlength="2" value="" type="text"> /
-                <label for="element_5_1">MM</label>
+              <input id="match_date_1" name="match_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
+                <label for="match_date_1">MM</label>
               </span>
               <span>
-                <input id="element_5_2" name="element_5_2" class="element text" size="2" maxlength="2" value="" type="text"> /
-                  <label for="element_5_2">DD</label>
+                <input id="match_date_2" name="match_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
+                  <label for="match_date_2">DD</label>
                 </span>
                 <span>
-                  <input id="element_5_3" name="element_5_3" class="element text" size="4" maxlength="4" value="" type="text">
-                    <label for="element_5_3">YYYY</label>
+                  <input id="match_date_3" name="match_date_3" class="element text" size="4" maxlength="4" value="" type="text">
+                    <label for="match_date_3">YYYY</label>
                   </span>
 
-                  <span id="calendar_5">
-                    <img id="cal_img_5" class="datepicker" src="calendar.gif" alt="Pick a date.">
+                  <span id="calendar_match">
+                    <img id="cal_img_match" class="datepicker" src="calendar.gif" alt="Pick a date.">
                     </span>
                     <script type="text/javascript">
                       Calendar.setup({
-                      inputField         : "element_5_3",
-                      baseField    : "element_5",
-                      displayArea  : "calendar_5",
-                      button                 : "cal_img_5",
+                      inputField         : "match_date_3",
+                      baseField    : "match_date",
+                      displayArea  : "calendar_match",
+                      button                 : "cal_img_match",
                       ifFormat         : "%B %e, %Y",
                       onSelect         : selectDate
                       });
                     </script>
                   </li>                <li id="li_12" >
-                    <label class="description" for="element_12">Match outcome </label>
+                    <label class="description" for="match_outcome">Match outcome </label>
                     <span>
-                      <input id="element_12_1" name="element_12" class="element radio" type="radio" value="1" />
-                      <label class="choice" for="element_12_1">Completed normally</label>
-                      <input id="element_12_2" name="element_12" class="element radio" type="radio" value="2" />
-                      <label class="choice" for="element_12_2">Opponent retired</label>
-                      <input id="element_12_3" name="element_12" class="element radio" type="radio" value="3" />
-                      <label class="choice" for="element_12_3">No-show or forfeit</label>
+                      <input id="match_outcome_1" name="match_outcome" class="element radio" type="radio" value="1" />
+                      <label class="choice" for="match_outcome_1">Completed normally</label>
+                      <input id="match_outcome_2" name="match_outcome" class="element radio" type="radio" value="2" />
+                      <label class="choice" for="match_outcome_2">Opponent retired</label>
+                      <input id="match_outcome_3" name="match_outcome" class="element radio" type="radio" value="3" />
+                      <label class="choice" for="match_outcome_3">No-show or forfeit</label>
 
                     </span>
                   </li>
