@@ -6,13 +6,15 @@
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
 <script type="text/javascript" src="view.js"></script>
 <script type="text/javascript" src="calendar.js"></script>
+<script type="text/javascript" src="form_handler.js"></script>
 </head>
 <body id="main_body" >
   <img id="top" src="top.png" alt="">
     <div id="form_container">
 
       <h1><a>Match Entry Form</a></h1>
-      <form id="match_form" class="appnitro"  method="post" action="">
+      <form id="match_form" class="appnitro"  method="post" action="/"
+            onsubmit="return false">
         <div class="form_description">
           <h2>Match Entry Form</h2>
           <p>Enter match results.</p>
@@ -132,7 +134,7 @@
                   <li class="buttons">
                     <input type="hidden" name="form_id" value="1066362" />
 
-                    <input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" />
+                    <input id="saveForm" class="button_text" type="submit" name="submit" value="Submit" onclick="process_match_form('add_match')"/>
                   </li>
                 </ul>
               </form>

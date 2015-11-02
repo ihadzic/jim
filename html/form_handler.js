@@ -50,6 +50,18 @@ function process_player_form_response(command, response)
     }
 }
 
+function process_match_form_response(command, response)
+{
+    var form_name = "match_form";
+    if (response.result == "success") {
+        form = document.getElementById(form_name);
+        form.reset();
+        alert("TODO: process successful match submission");
+    } else {
+        alert("Error: " + response.reason);
+    }
+}
+
 function process_submit_error(err)
 {
     alert("oops, something failed (error=" + err + ")");
@@ -80,6 +92,27 @@ function process_player_form(command)
         if (!confirm("Are you sure you want to delete the player?\nUsually, just inactivating the player is good enough."))
             return;
     }
+    query = form_to_query(form, command);
+    xhttp.open("GET", query, true);
+    xhttp.send();
+}
+
+function process_match_form(command)
+{
+    var form, query;
+    var xhttp = new XMLHttpRequest();
+    var form_name = "match_form";
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_match_form_response(command, JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    form = document.getElementById(form_name);
     query = form_to_query(form, command);
     xhttp.open("GET", query, true);
     xhttp.send();
