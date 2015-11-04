@@ -1,4 +1,4 @@
-function form_to_query(form, command)
+function universal_form_to_query(form, command)
 {
     var i;
     var first_arg = true;
@@ -19,6 +19,61 @@ function form_to_query(form, command)
                     q += form[i].name + "=" + form[i].value;
             }
         }
+    return q;
+}
+
+function match_form_to_query(form, command)
+{
+    var q = form.action;
+    var challenger = "nobody";
+    var opponent = "nobody";
+    q+= command;
+
+    // determine the challenger
+    if (document.getElementById('player_1_challenger').checked) {
+        challenger = "player_1";
+        opponent = "player_2";
+    }
+    if (document.getElementById('player_2_challenger').checked) {
+        if (challenger == "player_1") {
+            alert("Huh? Two challengers?");
+            return null;
+        }
+        challenger = "player_2";
+        opponent = "player_1";
+    }
+    if (challenger == "nobody") {
+        alert("No challengers ... please!");
+        return null;
+    }
+    console.log("challenger is " + challenger);
+    console.log("opponent is " + opponent);
+
+    challenger_id = document.getElementById(challenger + '_id').value;
+    opponent_id = document.getElementById(opponent + '_id').value;
+
+    // extract the match score, HTML IDs follow the pattern set_N_player_M_score,
+    // which we synthesise from challenger/opponent strings (generated above)
+    cgames1 = document.getElementById('set_1_' + challenger + '_score').value;
+    cgames2 = document.getElementById('set_2_' + challenger + '_score').value;
+    cgames3 = document.getElementById('set_3_' + challenger + '_score').value;
+    ogames1 = document.getElementById('set_1_' + opponent + '_score').value;
+    ogames2 = document.getElementById('set_2_' + opponent + '_score').value;
+    ogames3 = document.getElementById('set_3_' + opponent + '_score').value;
+    console.log("set 1 score is: " + cgames1 + ":" + ogames1);
+    console.log("set 2 score is: " + cgames2 + ":" + ogames2);
+    console.log("set 3 score is: " + cgames3 + ":" + ogames3);
+
+    q += '?challenger=' + challenger_id;
+    q += '&opponent=' + opponent_id;
+    if (cgames1 && ogames1)
+        q += '&cgames=' + cgames1 + '&ogames=' + ogames1;
+    if (cgames2 && ogames2)
+        q += '&cgames=' + cgames2 + '&ogames=' + ogames2;
+    if (cgames3 && ogames3)
+        q += '&cgames=' + cgames3 + '&ogames=' + ogames3;
+
+    console.log("query is " + q);
     return q;
 }
 
@@ -92,7 +147,7 @@ function process_player_form(command)
         if (!confirm("Are you sure you want to delete the player?\nUsually, just inactivating the player is good enough."))
             return;
     }
-    query = form_to_query(form, command);
+    query = universal_form_to_query(form, command);
     xhttp.open("GET", query, true);
     xhttp.send();
 }
@@ -113,7 +168,9 @@ function process_match_form(command)
         }
     }
     form = document.getElementById(form_name);
-    query = form_to_query(form, command);
-    xhttp.open("GET", query, true);
-    xhttp.send();
+    query = match_form_to_query(form, command);
+    if (query) {
+        xhttp.open("GET", query, true);
+        xhttp.send();
+    }
 }
