@@ -27,6 +27,8 @@ function match_form_to_query(form, command)
     var q = form.action;
     var challenger = "nobody";
     var opponent = "nobody";
+    var i;
+
     q+= command;
 
     // determine the challenger
@@ -52,26 +54,18 @@ function match_form_to_query(form, command)
     challenger_id = document.getElementById(challenger + '_id').value;
     opponent_id = document.getElementById(opponent + '_id').value;
 
+    q += '?challenger=' + challenger_id + '&opponent=' + opponent_id;
+
     // extract the match score, HTML IDs follow the pattern set_N_player_M_score,
     // which we synthesise from challenger/opponent strings (generated above)
-    cgames1 = document.getElementById('set_1_' + challenger + '_score').value;
-    cgames2 = document.getElementById('set_2_' + challenger + '_score').value;
-    cgames3 = document.getElementById('set_3_' + challenger + '_score').value;
-    ogames1 = document.getElementById('set_1_' + opponent + '_score').value;
-    ogames2 = document.getElementById('set_2_' + opponent + '_score').value;
-    ogames3 = document.getElementById('set_3_' + opponent + '_score').value;
-    console.log("set 1 score is: " + cgames1 + ":" + ogames1);
-    console.log("set 2 score is: " + cgames2 + ":" + ogames2);
-    console.log("set 3 score is: " + cgames3 + ":" + ogames3);
+    for (i = 1; i < 4; i++) {
+        cgames = document.getElementById('set_' + i + '_' + challenger + '_score').value;
+        ogames = document.getElementById('set_' + i + '_' + opponent + '_score').value;
+        console.log("set " + i + " score is: " + cgames + ":" + ogames);
+        if (cgames && ogames)
+        q += '&cgames=' + cgames + '&ogames=' + ogames;
+    }
 
-    q += '?challenger=' + challenger_id;
-    q += '&opponent=' + opponent_id;
-    if (cgames1 && ogames1)
-        q += '&cgames=' + cgames1 + '&ogames=' + ogames1;
-    if (cgames2 && ogames2)
-        q += '&cgames=' + cgames2 + '&ogames=' + ogames2;
-    if (cgames3 && ogames3)
-        q += '&cgames=' + cgames3 + '&ogames=' + ogames3;
 
     console.log("query is " + q);
     return q;
