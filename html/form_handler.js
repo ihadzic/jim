@@ -65,7 +65,10 @@ function match_form_to_query(form, command)
         if (cgames && ogames)
         q += '&cgames=' + cgames + '&ogames=' + ogames;
     }
-
+    match_date = document.getElementById('match_date_3').value + '-' +
+        document.getElementById('match_date_1').value + '-' +
+        document.getElementById('match_date_2').value;
+    q += '&date=' + match_date;
 
     console.log("query is " + q);
     return q;
