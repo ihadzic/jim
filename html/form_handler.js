@@ -68,6 +68,10 @@ function match_form_to_query(form, command)
     match_date = document.getElementById('match_date_3').value + '-' +
         document.getElementById('match_date_1').value + '-' +
         document.getElementById('match_date_2').value;
+    if (document.getElementById('match_outcome_2').checked)
+        q += '&retired=true';
+    if (document.getElementById('match_outcome_3').checked)
+        q+= '&forfeited=true';
     q += '&date=' + match_date;
 
     console.log("query is " + q);
