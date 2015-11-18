@@ -22,6 +22,13 @@ function universal_form_to_query(form, command)
     return q;
 }
 
+function reset_checkbox(id)
+{
+    checkbox = document.getElementById(id);
+    if (checkbox)
+        checkbox.checked = false;
+}
+
 function match_form_to_query(form, command)
 {
     var q = form.action;
