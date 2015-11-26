@@ -25,6 +25,10 @@ def read_config(parser):
         cfg['template_root'] = parser.get("web", "template_root")
     except:
         cfg['template_root'] = None
+    try:
+        cfg['db_file'] = parser.get("db", "db_file")
+    except:
+        cfg['db_file'] = "./jim.db"
     _log.info(cfg)
     return cfg
 
