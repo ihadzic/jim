@@ -39,11 +39,13 @@ class Database:
         else:
             db_version = _get_db_version(self._cursor)
         self._log.info("DB version is {}".format(db_version))
-        v = db_version + 1
+        v = db_version
         for t in _schema[db_version:]:
+            v = v + 1
             self._log.debug("upgrading schema to version {}".format(v))
             for q in t:
                 self._log.info("  {}".format(q))
                 self._cursor.execute(q)
-            v = v + 1
         self._conn.commit()
+        db_version = _get_db_version(self._cursor)
+        assert db_version == v
