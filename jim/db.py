@@ -18,16 +18,17 @@ _schema = [
 
 ]
 
-
-def _get_db_version(c):
-    c.execute('SELECT max(id) FROM REVISIONS;')
-    v = c.fetchone()
-    if not v:
-        v = 0
-    assert len(v) == 1
-    return v[0]
-
 class Database:
+
+    def get_db_version(self):
+        self._cursor.execute('SELECT max(id) FROM REVISIONS;')
+        v = self._cursor.fetchall()
+        if not v:
+            return 0
+        assert len(v) == 1
+        v = v[0]
+        assert len(v) == 1
+        return v[0]
 
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
@@ -42,7 +43,7 @@ class Database:
         if new_db:
             db_version = 0
         else:
-            db_version = _get_db_version(self._cursor)
+            db_version = self.get_db_version()
         self._log.info("DB version is {}".format(db_version))
         v = db_version
         for t in _schema[db_version:]:
@@ -52,5 +53,5 @@ class Database:
                 self._log.info("  {}".format(q))
                 self._cursor.execute(q)
         self._conn.commit()
-        db_version = _get_db_version(self._cursor)
+        db_version = self.get_db_version()
         assert db_version == v
