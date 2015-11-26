@@ -4,6 +4,7 @@ import logging
 import web
 import ConfigParser
 import os
+import db
 
 _log = None
 
@@ -53,6 +54,7 @@ def main():
         cfg = read_config(config_file_parser)
         _log.info("server configuration: {}".format(cfg))
         _log.info("starting server")
+        database = db.Database(cfg.get('db_file'))
         web.run_server(http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), html_root = cfg.get('html_root'))
         _log.info("server exited")
     else:
