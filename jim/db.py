@@ -30,6 +30,27 @@ class Database:
         assert len(v) == 1
         return v[0]
 
+    def add_player(self, player):
+        # construct the tuple for the database (first the straightforward ones)
+        fields_tuple = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active' )
+        values_tuple = tuple([ player.get(f) for f in fields_tuple ])
+        # next fields that need some massage
+
+        # TODO: need to separate initial points from points
+        fields_tuple = fields_tuple + ('points',)
+        values_tuple = values_tuple + (player.get('initial_points'),)
+        # TODO obfuscate the password with password_seed
+        fields_tuple = fields_tuple + ('password_hash',)
+        values_tuple = values_tuple + (player.get('password'),)
+        assert(len(fields_tuple) == len(values_tuple))
+        values_pattern = ('?,' * len(values_tuple))[:-1]
+        self._log.info("add_player: fields are {}".format(fields_tuple))
+        self._log.info("add_player: values are {}".format(values_tuple))
+        # TODO hit the SQL query
+        self._cursor.execute("INSERT INTO players {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
+        self._conn.commit()
+        return self._cursor.lastrowid
+
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
         if os.path.isfile(db_file):
