@@ -16,6 +16,7 @@ _http_server = None
 _https_server = None
 _template_root = sys.prefix + '/var/jim/templates'
 _log = None
+_database = None
 # This is default (test-only) certificate located in ./certs directory.
 # default certificate is self-signed, so we don't have 'ca_cert' field
 # in the dictionary. Normally, we need one to point to the 'CA'
@@ -561,10 +562,11 @@ class GetReportHandler(DynamicBaseHandler):
         # TODO: do the series of database reads and construct the report
         self.finish_success({'entries': [ranges]})
 
-def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates'):
+def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = None):
     global _http_server
     global _https_server
     global _log
+    global _database
 
     # if some bozo calls us with None specified as an argument
     if template_root == None:
@@ -594,6 +596,10 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ]
 
     _log = logging.getLogger("web")
+    if not database:
+        _log.error('cannot run without the database')
+        return
+    _database = database
     handlers.append(('/(.*)', web.StaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
                                   cookie_secret = binascii.b2a_hex(os.urandom(32)))
