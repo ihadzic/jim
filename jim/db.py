@@ -21,7 +21,7 @@ _schema = [
 class Database:
 
     def get_db_version(self):
-        self._cursor.execute('SELECT max(id) FROM REVISIONS;')
+        self._cursor.execute('SELECT max(id) FROM REVISIONS')
         v = self._cursor.fetchall()
         if not v:
             return 0
