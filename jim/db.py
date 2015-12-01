@@ -32,7 +32,7 @@ class Database:
 
     def add_player(self, player):
         # construct the tuple for the database (first the straightforward ones)
-        fields_tuple = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active' )
+        fields_tuple = self._common_player_fields
         values_tuple = tuple([ player.get(f) for f in fields_tuple ])
         # next fields that need some massage
 
@@ -76,3 +76,4 @@ class Database:
         self._conn.commit()
         db_version = self.get_db_version()
         assert db_version == v
+        self._common_player_fields = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active' )
