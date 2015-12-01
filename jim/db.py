@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+import string
 import os
 
 # each time the schema is changed, add a new entry here
@@ -44,12 +45,34 @@ class Database:
         values_tuple = values_tuple + (player.get('password'),)
         assert(len(fields_tuple) == len(values_tuple))
         values_pattern = ('?,' * len(values_tuple))[:-1]
-        self._log.info("add_player: fields are {}".format(fields_tuple))
-        self._log.info("add_player: values are {}".format(values_tuple))
+        self._log.debug("add_player: fields are {}".format(fields_tuple))
+        self._log.debug("add_player: values are {}".format(values_tuple))
         # TODO hit the SQL query
         self._cursor.execute("INSERT INTO players {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
         return self._cursor.lastrowid
+
+    def lookup_player(self, fields, operator):
+        select_fields = string.join(self._common_player_fields, ',')
+        api_fields = self._common_player_fields
+        match_tuple = ()
+        where_list = []
+        for w in fields and self._common_player_fields:
+            f = fields.get(w)
+            if f:
+                match_tuple = match_tuple + (f,)
+                where_list = where_list + ['{} = ?'.format(w)]
+        where_string = string.join(where_list, ' OR ' if operator == 'or' else ' AND ')
+        self._log.debug("lookup_player: where string is {}".format(where_string))
+        self._log.debug("lookup_player: match tuple is {}".format(match_tuple))
+        self._log.debug("lookup_player: select fields are {}".format(select_fields))
+        if where_string:
+            self._cursor.execute("SELECT {} FROM players WHERE {}".format(select_fields, where_string), match_tuple)
+        else:
+            self._cursor.execute("SELECT {} FROM players".format(select_fields))
+        r = [ dict(zip(api_fields, record)) for record in self._cursor.fetchall() ]
+        self._log.debug("lookup_player: result is {}".format(r))
+        return r
 
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
