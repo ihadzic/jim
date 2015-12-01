@@ -67,10 +67,9 @@ class Database:
         self._log.debug("lookup_player: match tuple is {}".format(match_tuple))
         self._log.debug("lookup_player: select fields are {}".format(select_fields))
         if where_string:
-            self._cursor.execute("SELECT {} FROM players WHERE {}".format(select_fields, where_string), match_tuple)
+            r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE {}".format(select_fields, where_string), match_tuple) ]
         else:
-            self._cursor.execute("SELECT {} FROM players".format(select_fields))
-        r = [ dict(zip(api_fields, record)) for record in self._cursor.fetchall() ]
+            r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM players".format(select_fields)) ]
         self._log.debug("lookup_player: result is {}".format(r))
         return r
 
