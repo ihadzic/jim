@@ -57,7 +57,7 @@ class Database:
         api_fields = self._common_player_fields
         match_tuple = ()
         where_list = []
-        for w in fields and self._common_player_fields:
+        for w in fields and api_fields:
             f = fields.get(w)
             if f:
                 match_tuple = match_tuple + (f,)
