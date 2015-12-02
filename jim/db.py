@@ -53,15 +53,18 @@ class Database:
         return self._cursor.lastrowid
 
     def lookup_player(self, fields, operator):
-        select_fields = string.join(self._common_player_fields, ',')
-        api_fields = self._common_player_fields
+        tfk = tuple(t for t in self._translated_player_fields)
+        tfs = tuple(self._translated_player_fields.get(t) for t in tfk)
+        api_fields = self._common_player_fields + tfk
+        select_fields = string.join(self._common_player_fields + tfs, ', ')
         match_tuple = ()
         where_list = []
         for w in fields and api_fields:
             f = fields.get(w)
             if f:
                 match_tuple = match_tuple + (f,)
-                where_list = where_list + ['{} = ?'.format(w)]
+                wt = self._translated_player_fields.get(w)
+                where_list = where_list + ['{} = ?'.format(wt if wt else w)]
         where_string = string.join(where_list, ' OR ' if operator == 'or' else ' AND ')
         self._log.debug("lookup_player: where string is {}".format(where_string))
         self._log.debug("lookup_player: match tuple is {}".format(match_tuple))
@@ -99,3 +102,4 @@ class Database:
         db_version = self.get_db_version()
         assert db_version == v
         self._common_player_fields = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active' )
+        self._translated_player_fields = { 'player_id' : 'id' }
