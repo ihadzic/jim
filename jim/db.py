@@ -69,6 +69,7 @@ class Database:
         self._log.debug("lookup_player: where string is {}".format(where_string))
         self._log.debug("lookup_player: match tuple is {}".format(match_tuple))
         self._log.debug("lookup_player: select fields are {}".format(select_fields))
+        self._log.debug("look_player: api fields are {}".format(api_fields))
         if where_string:
             r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE {}".format(select_fields, where_string), match_tuple) ]
         else:
