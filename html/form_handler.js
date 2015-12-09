@@ -1,3 +1,8 @@
+function universal_json_to_form(form, data)
+{
+    alert("got this: " + JSON.stringify(data));
+}
+
 function universal_form_to_query(form, command)
 {
     var i;
@@ -99,8 +104,17 @@ function process_player_form_response(command, response)
             alert("player with id " + response.player_id + " updated.");
             break;
         case "get_player":
-            // TODO: fill up the form or construct the list of players for multiple matches
-            alert("got this: " + JSON.stringify(response));
+            if (response.result == "success") {
+                var data = response.entries;
+                if (data.length == 0)
+                    alert("no players found");
+                else if (data.length == 1)
+                    universal_json_to_form(form, data[0]);
+                else
+                    alert("multiple players matched, not implemented yet");
+            } else {
+                alert("oops:" + response.reason)
+            }
             break;
         case "del_player":
             alert("player with id " + response.player_id + " deleted.");
