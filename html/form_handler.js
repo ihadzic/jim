@@ -1,6 +1,11 @@
 function universal_json_to_form(form, data)
 {
-    alert("got this: " + JSON.stringify(data));
+    var i, p;
+    for (i = 0; i < form.length; i++) {
+        p = form[i].name;
+        if (data.hasOwnProperty(p))
+            form[i].value = data[p];
+    }
 }
 
 function universal_form_to_query(form, command)
