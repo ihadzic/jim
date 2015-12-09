@@ -264,9 +264,6 @@ class GetPlayerHandler(PlayerBaseHandler):
             player_id = None
         if player_id:
             player.update({'player_id': player_id})
-        if not player:
-            self.finish_failure("must specify at least one search key")
-            return
         try:
             op = args['op'][0].lower()
         except:
