@@ -1,3 +1,4 @@
+import util
 import sqlite3
 import logging
 import string
@@ -75,7 +76,7 @@ class Database:
         else:
             r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM players".format(select_fields)) ]
         self._log.debug("lookup_player: result is {}".format(r))
-        return r
+        return [util.purge_null_fields(e) for e in r]
 
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
