@@ -95,6 +95,26 @@ function match_form_to_query(form, command)
     return q;
 }
 
+function clear_player_list()
+{
+    var player_list = document.getElementById("player_list");
+    player_list.innerHTML = "";
+}
+
+function populate_player_list(data)
+{
+    var i, s;
+    var player_list = document.getElementById("player_list");
+    player_list.innerHTML = "<h3>Multiple Matches</h3><ul>"
+    for (i = 0; i < data.length; i++) {
+        s = "<li><div id=" + data[i].player_id + ">";
+        s +=  "" + data[i].player_id + ": " + data[i].first_name + " " + data[i].last_name;
+        s += "</div></li>";
+        player_list.innerHTML += s;
+    }
+    player_list.innerHTML += '</ul><div class="form_description"><p></p></div>';
+}
+
 function process_player_form_response(command, response)
 {
     var form_name = "player_form";
@@ -103,6 +123,7 @@ function process_player_form_response(command, response)
         form.reset();
         switch (command) {
         case "add_player":
+            clear_player_list();
             alert("player id is " + response.player_id + ".");
             break;
         case "update_player":
@@ -113,15 +134,18 @@ function process_player_form_response(command, response)
                 var data = response.entries;
                 if (data.length == 0)
                     alert("no players found");
-                else if (data.length == 1)
+                else if (data.length == 1) {
+                    clear_player_list();
                     universal_json_to_form(form, data[0]);
-                else
-                    alert("multiple players matched, not implemented yet");
+                } else {
+                    populate_player_list(data);
+                }
             } else {
                 alert("oops:" + response.reason)
             }
             break;
         case "del_player":
+            clear_player_list();
             alert("player with id " + response.player_id + " deleted.");
             break;
         default:
