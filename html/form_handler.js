@@ -101,11 +101,17 @@ function clear_player_list()
     player_list.innerHTML = "";
 }
 
-function populate_player_form_with_data(data)
+function clear_player_form()
 {
     var form_name = "player_form";
     form = document.getElementById(form_name);
     form.reset();
+    return form;
+}
+
+function populate_player_form_with_data(data)
+{
+    form = clear_player_form()
     universal_json_to_form(form, data);
 }
 
