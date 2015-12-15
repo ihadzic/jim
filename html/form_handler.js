@@ -101,6 +101,14 @@ function clear_player_list()
     player_list.innerHTML = "";
 }
 
+function populate_player_form_with_data(data)
+{
+    var form_name = "player_form";
+    form = document.getElementById(form_name);
+    form.reset();
+    universal_json_to_form(form, data);
+}
+
 function populate_player_list(data)
 {
     var i, s;
@@ -109,6 +117,11 @@ function populate_player_list(data)
     for (i = 0; i < data.length; i++) {
         s = "<li><div id=" + data[i].player_id + ">";
         s +=  "" + data[i].player_id + ": " + data[i].first_name + " " + data[i].last_name;
+        s += "&nbsp&nbsp&nbsp";
+        s += "<image src='pencil_edit.png' height='16' width='16'";
+        s += "title='Edit " + data[i].first_name + " " + data[i].last_name;
+        s += "' alt='edit' onclick='"
+        s += "populate_player_form_with_data(" + JSON.stringify(data[i]) + ")'>";
         s += "</div></li>";
         player_list.innerHTML += s;
     }
