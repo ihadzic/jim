@@ -21,8 +21,15 @@
                   </div>
 
 			<ul >
+		<li class="buttons">
+			    <input type="hidden" name="form_id" value="player_form" />
 
-					<li id="li_1" >
+				<input id="add_player_1" class="button_text" type="submit" value="Add" onclick="process_player_form('add_player')" />
+				<input id="update_player_1" class="button_text" type="submit" value="Update" onclick="process_player_form('update_player')" />
+				<input id="get_player_1" class="button_text" type="submit" value="Find" onclick="process_player_form('get_player')" />
+				<input id="del_player_1" class="button_text" type="submit" value="Delete" onclick="process_player_form('del_player')" />
+		</li>
+		<li id="li_1" >
 		<label class="description" for="name">Name </label>
 		<span>
 			<input id="first_name" name= "first_name" class="element text" maxlength="255" size="8" value=""/>
@@ -105,13 +112,13 @@
 		</div>
 		</li>
 
-					<li class="buttons">
+		<li class="buttons">
 			    <input type="hidden" name="form_id" value="player_form" />
 
-				<input id="add_player" class="button_text" type="submit" value="Add" onclick="process_player_form('add_player')" />
-				<input id="update_player" class="button_text" type="submit" value="Update" onclick="process_player_form('update_player')" />
-				<input id="get_player" class="button_text" type="submit" value="Find" onclick="process_player_form('get_player')" />
-				<input id="del_player" class="button_text" type="submit" value="Delete" onclick="process_player_form('del_player')" />
+				<input id="add_player_2" class="button_text" type="submit" value="Add" onclick="process_player_form('add_player')" />
+				<input id="update_player_2" class="button_text" type="submit" value="Update" onclick="process_player_form('update_player')" />
+				<input id="get_player_2" class="button_text" type="submit" value="Find" onclick="process_player_form('get_player')" />
+				<input id="del_player_2" class="button_text" type="submit" value="Delete" onclick="process_player_form('del_player')" />
 		</li>
 			</ul>
 		</form>
