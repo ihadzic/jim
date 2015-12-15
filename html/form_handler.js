@@ -109,6 +109,12 @@ function clear_player_form()
     return form;
 }
 
+function clear_player_form_and_list()
+{
+    clear_player_list();
+    clear_player_form();
+}
+
 function populate_player_form_with_data(data)
 {
     form = clear_player_form()
