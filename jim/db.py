@@ -78,6 +78,16 @@ class Database:
         self._log.debug("lookup_player: result is {}".format(r))
         return [util.purge_null_fields(e) for e in r]
 
+    def delete_player(self, player_id):
+        self._log.debug("delete_player: trying to delete player with ID {}".format(player_id))
+        try:
+            self._cursor.execute("DELETE FROM players WHERE id=?", (player_id,))
+            self._conn.commit()
+        except:
+            self._log.error("delete_player: failed to delete player with ID {}".format(player_id))
+            return False
+        return True
+
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
         if os.path.isfile(db_file):

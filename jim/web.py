@@ -224,8 +224,10 @@ class DelPlayerHandler(PlayerBaseHandler):
         except:
             self.finish_failure("missing or invalid player ID")
             return
-        # TODO: remove the entry from the database
-        self.finish_success({'player_id': player_id})
+        if _database.delete_player(player_id):
+            self.finish_success({'player_id': player_id})
+        else:
+            self.finish_failure("could not delete selected player")
 
 class UpdatePlayerHandler(PlayerBaseHandler):
     def get(self):
