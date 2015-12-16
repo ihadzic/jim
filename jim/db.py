@@ -16,7 +16,11 @@ _schema = [
       'INSERT INTO revisions (date, comment) VALUES (date("now"), "empty database");' ],
 
     [ 'CREATE TABLE players (id INTEGER PRIMARY KEY  NOT NULL, last_name TEXT, first_name TEXT, username TEXT UNIQUE, password_hash TEXT, password_seed TEXT, cell_phone TEXT, home_phone TEXT, work_phone TEXT, email TEXT, company TEXT, ladder TEXT, active BOOL NOT NULL  DEFAULT false, points INTEGER NOT NULL  DEFAULT 0);',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add players table");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add players table");'],
+
+    [ 'ALTER TABLE players ADD COLUMN initial_points INTEGER NOT NULL DEFAULT 0;',
+      'UPDATE players SET initial_points = points;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add init_points column");']
 
 ]
 
@@ -38,7 +42,7 @@ class Database:
         values_tuple = tuple([ player.get(f) for f in fields_tuple ])
         # next fields that need some massage
 
-        # TODO: need to separate initial points from points
+        # set points to be the same as initial points when adding new player
         fields_tuple = fields_tuple + ('points',)
         values_tuple = values_tuple + (player.get('initial_points'),)
         # TODO obfuscate the password with password_seed
@@ -113,5 +117,5 @@ class Database:
         self._conn.commit()
         db_version = self.get_db_version()
         assert db_version == v
-        self._common_player_fields = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active' )
+        self._common_player_fields = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active', 'initial_points' )
         self._translated_player_fields = { 'player_id' : 'id' }
