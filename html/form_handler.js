@@ -8,6 +8,17 @@ function universal_json_to_form(form, data)
     }
 }
 
+function player_json_to_form(form, data)
+{
+    if (data.hasOwnProperty("active")) {
+        if (data["active"]) {
+            form.active[1].selected = true;
+        } else {
+            form.active[2].selected = true;
+        }
+    }
+}
+
 function universal_form_to_query(form, command)
 {
     var i;
@@ -117,8 +128,9 @@ function clear_player_form_and_list()
 
 function populate_player_form_with_data(data)
 {
-    form = clear_player_form()
+    form = clear_player_form();
     universal_json_to_form(form, data);
+    player_json_to_form(form, data);
 }
 
 function populate_player_list(data)
@@ -162,6 +174,7 @@ function process_player_form_response(command, response)
                 else if (data.length == 1) {
                     clear_player_list();
                     universal_json_to_form(form, data[0]);
+                    player_json_to_form(form, data[0]);
                 } else {
                     populate_player_list(data);
                 }
