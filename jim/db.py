@@ -62,7 +62,7 @@ class Database:
         where_list = []
         for w in fields and api_fields:
             f = fields.get(w)
-            if f:
+            if f != None:
                 match_tuple = match_tuple + (f,)
                 wt = self._translated_player_fields.get(w)
                 where_list = where_list + ['{} = ?'.format(wt if wt else w)]
