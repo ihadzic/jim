@@ -211,6 +211,50 @@ function process_submit_error(err)
     alert("oops, something failed (error=" + err + ")");
 }
 
+function add_player_pre_check()
+{
+    var q, form;
+    var xhttp = new XMLHttpRequest();
+    var form_name = "player_form";
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                check_existing_player(JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    form = document.getElementById(form_name);
+    q = form.action;
+    q += "get_player?";
+    q += "first_name=" + form.first_name.value;
+    q += "&last_name=" + form.last_name.value;
+    xhttp.open("GET", q, true);
+    xhttp.send();
+}
+
+function check_existing_player(response)
+{
+    var data = response.entries;
+    var cstr;
+    if (response.result == "success") {
+        if (data.length == 0) {
+            process_player_form("add_player");
+        } else {
+            if (data.length == 1)
+                cstr = " player ";
+            else
+                cstr = " players ";
+            if (confirm("Found " + data.length + cstr + "with the same name! Really add?"))
+                process_player_form("add_player");
+        }
+    } else {
+        alert("oops:" + response.reason)
+    }
+}
+
 function process_player_form(command)
 {
     var form, query;
