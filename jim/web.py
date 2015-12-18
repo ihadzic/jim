@@ -198,9 +198,12 @@ class PlayerBaseHandler(DynamicBaseHandler):
 class AddPlayerHandler(PlayerBaseHandler):
 
     def update_database(self, player):
-        player_id = _database.add_player(player)
-        player.update({'player_id': player_id})
-        return True
+        player_id, err = _database.add_player(player)
+        if player_id > 0:
+            player.update({'player_id': player_id})
+            return True, err
+        else:
+            return False, err
 
     def get(self):
         args = self.get_args()
@@ -209,8 +212,11 @@ class AddPlayerHandler(PlayerBaseHandler):
         player = self.parse_args(args, True)
         if player == None:
             return
-        if self.update_database(player):
+        r, err = self.update_database(player)
+        if r:
             self.finish_success(player)
+        elif err:
+            self.finish_failure(err)
         else:
             self.finish_failure("could not add player to the database")
 
