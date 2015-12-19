@@ -81,7 +81,10 @@ class DateHandler(DynamicBaseHandler):
 class RankingHandler(DynamicBaseHandler):
     def get(self):
         self.render('ranking.html',
-                    date_string = datetime.ctime(datetime.now())
+                    date_string = datetime.ctime(datetime.now()),
+                    a_ladder = _database.get_ladder('a'),
+                    b_ladder = _database.get_ladder('b'),
+                    c_ladder = _database.get_ladder('c')
                     )
 class PlayerBaseHandler(DynamicBaseHandler):
     def parse_args(self, args, add_flag):

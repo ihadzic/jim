@@ -36,6 +36,10 @@ class Database:
         assert len(v) == 1
         return v[0]
 
+    def get_ladder(self, ladder):
+        # TODO: pick it up from database
+        return []
+
     def add_player(self, player):
         # construct the tuple for the database (first the straightforward ones)
         fields_tuple = self._common_player_fields
