@@ -2,7 +2,6 @@
 
 import tornado
 import logging
-import datetime
 import os
 import sys
 import binascii
@@ -76,7 +75,7 @@ class DateHandler(DynamicBaseHandler):
         else:
             name = 'nobody'
         self.render('date.html',
-                    date_string = str(datetime.datetime.now()),
+                    date_string = str(datetime.now()),
                     user_string = name)
 
 class PlayerBaseHandler(DynamicBaseHandler):
