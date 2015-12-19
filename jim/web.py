@@ -78,9 +78,9 @@ class DateHandler(DynamicBaseHandler):
                     date_string = str(datetime.now()),
                     user_string = name)
 
-class RankingHandler(DynamicBaseHandler):
+class LadderHandler(DynamicBaseHandler):
     def get(self):
-        self.render('ranking.html',
+        self.render('ladder.html',
                     date_string = datetime.ctime(datetime.now()),
                     a_ladder = _database.get_ladder('a'),
                     b_ladder = _database.get_ladder('b'),
@@ -588,7 +588,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/login', LoginHandler),
         ('/logout', LogoutHandler),
         ('/date', DateHandler),
-        ('/ranking', RankingHandler),
+        ('/ladder', LadderHandler),
         ('/add_player', AddPlayerHandler),
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
