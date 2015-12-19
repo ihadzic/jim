@@ -78,6 +78,11 @@ class DateHandler(DynamicBaseHandler):
                     date_string = str(datetime.now()),
                     user_string = name)
 
+class RankingHandler(DynamicBaseHandler):
+    def get(self):
+        self.render('ranking.html',
+                    date_string = datetime.ctime(datetime.now())
+                    )
 class PlayerBaseHandler(DynamicBaseHandler):
     def parse_args(self, args, add_flag):
         try:
@@ -580,6 +585,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/login', LoginHandler),
         ('/logout', LogoutHandler),
         ('/date', DateHandler),
+        ('/ranking', RankingHandler),
         ('/add_player', AddPlayerHandler),
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
