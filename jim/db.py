@@ -37,8 +37,10 @@ class Database:
         return v[0]
 
     def get_ladder(self, ladder):
-        # TODO: pick it up from database
-        return []
+        fields = ["first_name", "last_name", "points", "id"]
+        fields_string = string.join(fields, ',')
+        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? ORDER BY points DESC".format(fields_string), (ladder,)) ]
+        return r
 
     def add_player(self, player):
         # construct the tuple for the database (first the straightforward ones)
