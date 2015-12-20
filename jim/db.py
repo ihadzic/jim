@@ -72,7 +72,14 @@ class Database:
             self._conn.commit()
             return self._cursor.lastrowid, None
         else:
-            return -1, "update not implemented yet"
+            check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (player_id,)) ]
+            if len(check) == 0:
+                return -1, "player ID not found"
+            fields_string = string.join([ f + "=?" for f in fields_tuple ], ', ')
+            values_tuple += (player_id,)
+            self._cursor.execute("UPDATE players SET {} WHERE id=?".format(fields_string), values_tuple)
+            self._conn.commit()
+            return player_id, None
 
     def lookup_player(self, fields, operator):
         tfk = tuple(t for t in self._translated_player_fields)
