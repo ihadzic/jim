@@ -255,6 +255,7 @@ class UpdatePlayerHandler(PlayerBaseHandler):
     def update_database(self, player, player_id):
         player_id, err = _database.update_player(player, player_id)
         if player_id > 0:
+            player.update({'player_id': player_id})
             return True, err
         else:
             return False, err
