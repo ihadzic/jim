@@ -42,6 +42,12 @@ class Database:
         r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? ORDER BY points DESC".format(fields_string), (ladder,)) ]
         return r
 
+    def get_roster(self):
+        fields = ["first_name", "last_name", "cell_phone", "home_phone", "work_phone", "email", "id", "ladder", "company"]
+        fields_string = string.join(fields, ',')
+        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE active=1 ORDER BY last_name".format(fields_string)) ]
+        return r
+
     def add_player(self, player):
         # construct the tuple for the database (first the straightforward ones)
         fields_tuple = self._common_player_fields

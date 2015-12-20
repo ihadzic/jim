@@ -86,6 +86,14 @@ class LadderHandler(DynamicBaseHandler):
                     b_ladder = _database.get_ladder('b'),
                     c_ladder = _database.get_ladder('c')
                     )
+
+class RosterHandler(DynamicBaseHandler):
+    def get(self):
+        self.render('roster.html',
+                    date_string = datetime.ctime(datetime.now()),
+                    roster = _database.get_roster()
+                    )
+
 class PlayerBaseHandler(DynamicBaseHandler):
     def parse_args(self, args, add_flag):
         try:
@@ -589,6 +597,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/logout', LogoutHandler),
         ('/date', DateHandler),
         ('/ladder', LadderHandler),
+        ('/roster', RosterHandler),
         ('/add_player', AddPlayerHandler),
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
