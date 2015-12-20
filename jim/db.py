@@ -48,7 +48,7 @@ class Database:
         r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE active=1 ORDER BY last_name".format(fields_string)) ]
         return r
 
-    def add_player(self, player):
+    def update_player(self, player, player_id = None):
         # construct the tuple for the database (first the straightforward ones)
         fields_tuple = self._common_player_fields
         values_tuple = tuple([ player.get(f) for f in fields_tuple ])
@@ -62,14 +62,17 @@ class Database:
         values_tuple = values_tuple + (player.get('password'),)
         assert(len(fields_tuple) == len(values_tuple))
         values_pattern = ('?,' * len(values_tuple))[:-1]
-        self._log.debug("add_player: fields are {}".format(fields_tuple))
-        self._log.debug("add_player: values are {}".format(values_tuple))
-        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE username=? COLLATE NOCASE", (player.get('username'),)) ]
-        if len(check) > 0:
-            return -1, "username conflict"
-        self._cursor.execute("INSERT INTO players {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
-        self._conn.commit()
-        return self._cursor.lastrowid, None
+        self._log.debug("update_player: fields are {}".format(fields_tuple))
+        self._log.debug("update_player: values are {}".format(values_tuple))
+        if player_id == None:
+            check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE username=? COLLATE NOCASE", (player.get('username'),)) ]
+            if len(check) > 0:
+                return -1, "username conflict"
+            self._cursor.execute("INSERT INTO players {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
+            self._conn.commit()
+            return self._cursor.lastrowid, None
+        else:
+            return -1, "update not implemented yet"
 
     def lookup_player(self, fields, operator):
         tfk = tuple(t for t in self._translated_player_fields)
