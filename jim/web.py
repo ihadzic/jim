@@ -251,6 +251,14 @@ class DelPlayerHandler(PlayerBaseHandler):
             self.finish_failure("could not delete selected player")
 
 class UpdatePlayerHandler(PlayerBaseHandler):
+
+    def update_database(self, player, player_id):
+        player_id, err = _database.update_player(player, player_id)
+        if player_id > 0:
+            return True, err
+        else:
+            return False, err
+
     def get(self):
         args = self.get_args()
         if args == None:
@@ -263,9 +271,13 @@ class UpdatePlayerHandler(PlayerBaseHandler):
         except:
             self.finish_failure("missing or invalid player ID")
             return
-        player.update({'player_id': player_id})
-        # REVISIT: update player record in the database
-        self.finish_success(player)
+        r, err = self.update_database(player, player_id)
+        if r:
+            self.finish_success(player)
+        elif err:
+            self.finish_failure(err)
+        else:
+            self.finish_failure("could not add player to the database")
 
 class GetPlayerHandler(PlayerBaseHandler):
     def get(self):
