@@ -34,10 +34,10 @@
             <td>{{ escape(str(a.get('id'))) }}</td>
             <td>{{ escape(str(a.get('first_name')) + " " + str(a.get('last_name'))) }}</td>
             <td>{{ escape(str(a.get('points'))) }}</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
+            <td>{{ escape(str(a.get('ladder_wins'))) }}</td>
+            <td>{{ escape(str(a.get('ladder_losses'))) }}</td>
+            <td>{{ escape(str(a.get('wins'))) }}</td>
+            <td>{{ escape(str(a.get('losses'))) }}</td>
           </tr>
         {% end %}
       {% end %}
@@ -63,10 +63,10 @@
             <td>{{ escape(str(b.get('id'))) }}</td>
             <td>{{ escape(str(b.get('first_name')) + " " + str(b.get('last_name'))) }}</td>
             <td>{{ escape(str(b.get('points'))) }}</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
+            <td>{{ escape(str(a.get('ladder_wins'))) }}</td>
+            <td>{{ escape(str(a.get('ladder_losses'))) }}</td>
+            <td>{{ escape(str(a.get('wins'))) }}</td>
+            <td>{{ escape(str(a.get('losses'))) }}</td>
           </tr>
         {% end %}
       {% end %}
@@ -92,10 +92,10 @@
             <td>{{ escape(str(c.get('id'))) }}</td>
             <td>{{ escape(str(c.get('first_name')) + " " + str(c.get('last_name'))) }}</td>
             <td>{{ escape(str(c.get('points'))) }}</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
+            <td>{{ escape(str(a.get('ladder_wins'))) }}</td>
+            <td>{{ escape(str(a.get('ladder_losses'))) }}</td>
+            <td>{{ escape(str(a.get('wins'))) }}</td>
+            <td>{{ escape(str(a.get('losses'))) }}</td>
           </tr>
         {% end %}
       {% end %}

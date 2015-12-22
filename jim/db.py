@@ -43,7 +43,7 @@ class Database:
         return v[0]
 
     def get_ladder(self, ladder):
-        fields = ["first_name", "last_name", "points", "id"]
+        fields = ["first_name", "last_name", "points", "id", 'wins', 'losses', 'ladder_wins', 'ladder_losses']
         fields_string = string.join(fields, ',')
         r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? ORDER BY points DESC".format(fields_string), (ladder,)) ]
         return r
