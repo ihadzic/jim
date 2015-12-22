@@ -20,7 +20,13 @@ _schema = [
 
     [ 'ALTER TABLE players ADD COLUMN initial_points INTEGER NOT NULL DEFAULT 0;',
       'UPDATE players SET initial_points = points;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add init_points column");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add init_points column");'],
+
+    [ 'ALTER TABLE players ADD COLUMN wins INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN losses INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN ladder_wins INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN ladder_losses INTEGER NOT NULL DEFAULT 0;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add wins and losses count");']
 
 ]
 
