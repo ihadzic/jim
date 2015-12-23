@@ -49,7 +49,7 @@ setup(
     ],
     keywords='tennis rankings competition database',
     packages=find_packages(exclude=[]),
-    install_requires=['tornado'],
+    install_requires=['tornado', 'bcrypt'],
     package_data={
         'jim': ['jim.cfg']
     },
