@@ -60,7 +60,7 @@ class LoginHandler(DynamicBaseHandler):
 
     def post(self):
         # TODO: check the password here
-        self.set_secure_cookie('user', self.get_argument('name'))
+        self.set_secure_cookie('user', self.get_argument('name') + '/' + self.get_argument('password'))
         self.redirect('/date')
 
 class LogoutHandler(DynamicBaseHandler):
