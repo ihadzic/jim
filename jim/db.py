@@ -3,6 +3,7 @@ import sqlite3
 import logging
 import string
 import os
+import bcrypt
 
 # each time the schema is changed, add a new entry here
 # the last transaction must be adding to revisions table
@@ -63,9 +64,9 @@ class Database:
         # set points to be the same as initial points when adding new player
         fields_tuple = fields_tuple + ('points',)
         values_tuple = values_tuple + (player.get('initial_points'),)
-        # TODO obfuscate the password with password_seed
         fields_tuple = fields_tuple + ('password_hash',)
-        values_tuple = values_tuple + (player.get('password'),)
+        password_hash = bcrypt.hashpw(player.get('password'), bcrypt.gensalt())
+        values_tuple = values_tuple + (password_hash,)
         assert(len(fields_tuple) == len(values_tuple))
         values_pattern = ('?,' * len(values_tuple))[:-1]
         self._log.debug("update_player: fields are {}".format(fields_tuple))
