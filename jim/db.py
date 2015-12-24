@@ -27,7 +27,10 @@ _schema = [
       'ALTER TABLE players ADD COLUMN losses INTEGER NOT NULL DEFAULT 0;',
       'ALTER TABLE players ADD COLUMN ladder_wins INTEGER NOT NULL DEFAULT 0;',
       'ALTER TABLE players ADD COLUMN ladder_losses INTEGER NOT NULL DEFAULT 0;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add wins and losses count");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add wins and losses count");'],
+
+    [ 'CREATE TABLE admins (id INTEGER PRIMARY KEY NOT NULL, username TEXT, password_hash TEXT);',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add admin account table");']
 
 ]
 
