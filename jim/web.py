@@ -474,7 +474,7 @@ class UpdateMatchHandler(DynamicBaseHandler):
         return
 
 class AccountBaseHandler(DynamicBaseHandler):
-    def parse_args(self, args, add_flag):
+    def parse_args(self, args, add_flag, password):
         try:
             username = args['username'][0]
         except:
@@ -483,14 +483,9 @@ class AccountBaseHandler(DynamicBaseHandler):
                 return None
             else:
                 username = None
-        try:
-            password = args['password'][0]
-        except:
-            if add_flag:
-                self.finish_failure('password missing')
-                return None
-            else:
-                password = None
+        if not password and add_flag:
+            self.finish_failure('password missing')
+            return None
         if not add_flag:
             try:
                 account_id = int(args['account_id'][0])
@@ -519,11 +514,11 @@ class AddAccountHandler(AccountBaseHandler):
         account.update({'account_id': account_id})
         return True
 
-    def get(self):
+    def get_or_post(self, password):
         args = self.get_args()
         if args == None:
             return
-        account = self.parse_args(args, True)
+        account = self.parse_args(args, True, password)
         if account == None:
             return
         # TODO: check that the username is not in use
@@ -532,8 +527,18 @@ class AddAccountHandler(AccountBaseHandler):
         else:
             self.finish_failure("could not add account to database")
 
-class DelAccountHandler(AccountBaseHandler):
     def get(self):
+        self.get_or_post(None)
+
+    def post(self):
+        password = self.request.body
+        if password:
+            self.get_or_post(password)
+        else:
+            self.get_or_post(None)
+
+class DelAccountHandler(AccountBaseHandler):
+    def get_or_post(self):
         args = self.get_args()
         if args == None:
             return
@@ -545,13 +550,19 @@ class DelAccountHandler(AccountBaseHandler):
         # TODO: remove the entry from the database
         self.finish_success({'account_id': account_id})
 
-class GetAccountHandler(AccountBaseHandler):
     def get(self):
+        self.get_or_post()
+
+    def post(self):
+        self.get_or_post()
+
+class GetAccountHandler(AccountBaseHandler):
+    def get_or_post(self):
         args = self.get_args()
         if args == None:
             return
         # everything is optional except an empty set
-        account = self.parse_args(args, False)
+        account = self.parse_args(args, False, None)
         try:
             # don't let some bozo search us by password
             del account['password']
@@ -574,12 +585,18 @@ class GetAccountHandler(AccountBaseHandler):
         #       and apply the specified operator)
         self.finish_success({'entries': [account]})
 
-class UpdateAccountHandler(AccountBaseHandler):
     def get(self):
+        self.get_or_post()
+
+    def post(self):
+        self.get_or_post()
+
+class UpdateAccountHandler(AccountBaseHandler):
+    def get_or_post(self, password):
         args = self.get_args()
         if args == None:
             return
-        account = self.parse_args(args, False)
+        account = self.parse_args(args, False, password)
         if account == None:
             return
         if not account.get('account_id'):
@@ -587,6 +604,16 @@ class UpdateAccountHandler(AccountBaseHandler):
             return
         # REVISIT: update account record in the database
         self.finish_success(account)
+
+    def get(self):
+        self.get_or_post(None)
+
+    def post(self):
+        password = self.request.body
+        if password:
+            self.get_or_post(password)
+        else:
+            self.get_or_post(None)
 
 class GetReportHandler(DynamicBaseHandler):
     def get(self):
