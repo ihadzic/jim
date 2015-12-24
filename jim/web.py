@@ -95,7 +95,7 @@ class RosterHandler(DynamicBaseHandler):
                     )
 
 class PlayerBaseHandler(DynamicBaseHandler):
-    def parse_args(self, args, add_flag):
+    def parse_args(self, args, add_flag, password):
         try:
             username = args['username'][0]
         except:
@@ -103,10 +103,6 @@ class PlayerBaseHandler(DynamicBaseHandler):
         if add_flag and not username:
             self.finish_failure('username missing')
             return None
-        try:
-            password = args['password'][0]
-        except:
-            password = None
         if add_flag and not password:
             self.finish_failure('password missing')
             return None
@@ -220,11 +216,11 @@ class AddPlayerHandler(PlayerBaseHandler):
         else:
             return False, err
 
-    def get(self):
+    def get_or_post(self, password):
         args = self.get_args()
         if args == None:
             return
-        player = self.parse_args(args, True)
+        player = self.parse_args(args, True, password)
         if player == None:
             return
         r, err = self.update_database(player)
@@ -235,8 +231,18 @@ class AddPlayerHandler(PlayerBaseHandler):
         else:
             self.finish_failure("could not add player to the database")
 
-class DelPlayerHandler(PlayerBaseHandler):
+    def post(self):
+        password = self.request.body
+        if password:
+            self.get_or_post(password)
+        else:
+            self.get_or_post(None)
+
     def get(self):
+        self.get_or_post(None)
+
+class DelPlayerHandler(PlayerBaseHandler):
+    def get_or_post(self):
         args = self.get_args()
         if args == None:
             return
@@ -250,6 +256,12 @@ class DelPlayerHandler(PlayerBaseHandler):
         else:
             self.finish_failure("could not delete selected player")
 
+    def get(self):
+        self.get_or_post()
+
+    def post(self):
+        self.get_or_post()
+
 class UpdatePlayerHandler(PlayerBaseHandler):
 
     def update_database(self, player, player_id):
@@ -260,11 +272,11 @@ class UpdatePlayerHandler(PlayerBaseHandler):
         else:
             return False, err
 
-    def get(self):
+    def get_or_post(self, password):
         args = self.get_args()
         if args == None:
             return
-        player = self.parse_args(args, False)
+        player = self.parse_args(args, False, password)
         if player == None:
             return
         try:
@@ -280,13 +292,23 @@ class UpdatePlayerHandler(PlayerBaseHandler):
         else:
             self.finish_failure("could not add player to the database")
 
-class GetPlayerHandler(PlayerBaseHandler):
+    def post(self):
+        password = self.request.body
+        if password:
+            self.get_or_post(password)
+        else:
+            self.get_or_post(None)
+
     def get(self):
+        self.get_or_post(None)
+
+class GetPlayerHandler(PlayerBaseHandler):
+    def get_or_post(self):
         args = self.get_args()
         if args == None:
             return
         # everything is optional except an empty set
-        player = self.parse_args(args, False)
+        player = self.parse_args(args, False, None)
         try:
             # don't let some bozo search us by password
             del player['password']
@@ -312,6 +334,12 @@ class GetPlayerHandler(PlayerBaseHandler):
         _log.info("get_player: search operator is '{}'".format(op))
         matched_players = _database.lookup_player(player, op)
         self.finish_success({'entries': matched_players})
+
+    def get(self):
+        self.get_or_post()
+
+    def post(self):
+        self.get_or_post()
 
 class AddMatchHandler(DynamicBaseHandler):
     def update_database(self, match):

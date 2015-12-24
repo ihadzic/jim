@@ -37,7 +37,7 @@ function universal_form_to_query(form, command)
     q+= command;
     for (i = 0; i < form.length; i++)
         if (form[i].name) {
-            if (form[i].value || form[i].type == "checkbox") {
+            if (form[i].name != 'password' && (form[i].value || form[i].type == "checkbox")) {
                 if (first_arg) {
                     q += "?";
                     first_arg = false;
@@ -290,8 +290,9 @@ function process_player_form(command)
             return;
     }
     query = universal_form_to_query(form, command);
-    xhttp.open("GET", query, true);
-    xhttp.send();
+    password = universal_form_to_password(form);
+    xhttp.open("POST", query, true);
+    xhttp.send(password);
 }
 
 function process_match_form(command)
