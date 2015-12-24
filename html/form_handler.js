@@ -19,6 +19,15 @@ function player_json_to_form(form, data)
     }
 }
 
+function universal_form_to_password(form)
+{
+    var i;
+
+    for (i = 0; i < form.length; i++)
+        if (form[i].name && form[i].name == 'password')
+            return form[i].value;
+}
+
 function universal_form_to_query(form, command)
 {
     var i;
