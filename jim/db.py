@@ -126,6 +126,32 @@ class Database:
             return False
         return True
 
+    def update_account(self, account, old_username = None):
+        # construct tuples for the database
+        fields_tuple = ('username', 'password_hash')
+        password_hash = bcrypt.hashpw(account.get('password'), bcrypt.gensalt())
+        values_tuple = (account.get('username'), password_hash)
+        values_pattern = ('?,' * len(values_tuple))[:-1]
+        self._log.debug("update_account: fields are {}".format(fields_tuple))
+        self._log.debug("update_account: values are {}".format(values_tuple))
+        if old_username == None:
+            check = [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=? COLLATE NOCASE", (account.get('username'),)) ]
+            if len(check) > 0:
+                return -1, "username conflict"
+            self._cursor.execute("INSERT INTO admins {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
+            self._conn.commit()
+        else:
+            check = [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=?", (old_username,)) ]
+            if len(check) == 0:
+                return -1, "account not found"
+            elif len(check) > 1:
+                return -1, "cowardly refusing to modify conflicting accounts"
+            fields_string = string.join([ f + "=?" for f in fields_tuple ], ', ')
+            values_tuple += (old_username,)
+            self._cursor.execute("UPDATE admins SET {} WHERE username=?".format(fields_string), values_tuple)
+            self._conn.commit()
+        return self._cursor.lastrowid, None
+
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
         if os.path.isfile(db_file):
