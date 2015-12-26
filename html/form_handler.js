@@ -215,6 +215,18 @@ function process_match_form_response(command, response)
     }
 }
 
+function process_account_form_response(command, response)
+{
+    var form_name = "account_form";
+    if (response.result == "success") {
+        form = document.getElementById(form_name);
+        form.reset();
+        alert("TODO: process successful account submission");
+    } else {
+        alert("Error: " + response.reason);
+    }
+}
+
 function process_submit_error(err)
 {
     alert("oops, something failed (error=" + err + ")");
@@ -317,4 +329,28 @@ function process_match_form(command)
         xhttp.open("GET", query, true);
         xhttp.send();
     }
+}
+
+
+function process_account_form(command)
+{
+    var form, query;
+    var xhttp = new XMLHttpRequest();
+    var form_name = "account_form";
+    var password;
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_account_form_response(command, JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    form = document.getElementById(form_name);
+    query = universal_form_to_query(form, command);
+    password = universal_form_to_password(form);
+    xhttp.open("POST", query, true);
+    xhttp.send(password);
 }
