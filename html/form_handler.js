@@ -269,6 +269,7 @@ function process_player_form(command)
     var form, query;
     var xhttp = new XMLHttpRequest();
     var form_name = "player_form";
+    var password;
 
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
