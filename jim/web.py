@@ -608,7 +608,7 @@ class UpdateAccountHandler(AccountBaseHandler):
             return
         username = account.get('username')
         assert username
-        r = self.update_database(account, username)
+        r, err = self.update_database(account, username)
         if r:
             self.finish_success(account)
         else:

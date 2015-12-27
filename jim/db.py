@@ -140,6 +140,7 @@ class Database:
                 return -1, "username conflict"
             self._cursor.execute("INSERT INTO admins {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
             self._conn.commit()
+            return self._cursor.lastrowid, None
         else:
             check = [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=?", (old_username,)) ]
             if len(check) == 0:
@@ -150,7 +151,7 @@ class Database:
             values_tuple += (old_username,)
             self._cursor.execute("UPDATE admins SET {} WHERE username=?".format(fields_string), values_tuple)
             self._conn.commit()
-        return self._cursor.lastrowid, None
+            return check[0][0], None
 
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
