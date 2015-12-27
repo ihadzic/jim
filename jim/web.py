@@ -542,12 +542,15 @@ class DelAccountHandler(AccountBaseHandler):
         if args == None:
             return
         try:
-            account_id = int(args['account_id'][0])
+            username = args['username'][0]
         except:
-            self.finish_failure("missing or invalid account ID")
+            self.finish_failure("missing or invalid username")
             return
-        # TODO: remove the entry from the database
-        self.finish_success({'account_id': account_id})
+        r, err =  _database.delete_account(username)
+        if r > 0:
+            self.finish_success({'account_id': r})
+        else:
+            self.finish_failure(err)
 
     def get(self):
         self.get_or_post()

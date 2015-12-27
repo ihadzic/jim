@@ -234,7 +234,8 @@ function process_account_form_response(command, response)
             alert("TODO: process list account success");
             break;
         case "del_account":
-            alert("TODO: process del account success");
+            form.reset();
+            alert("account with id " + response.account_id + " deleted.");
             break;
         default:
             alert("should not happen, bug?");
@@ -364,6 +365,10 @@ function process_account_form(command)
                 process_submit_error(xhttp.status);
             }
         }
+    }
+    if (command == "del_account") {
+        if (!confirm("You are about to delete an admin account.\nPlease confirm that you know what you are doing."))
+            return;
     }
     form = document.getElementById(form_name);
     query = universal_form_to_query(form, command);
