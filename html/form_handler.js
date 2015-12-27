@@ -220,8 +220,25 @@ function process_account_form_response(command, response)
     var form_name = "account_form";
     if (response.result == "success") {
         form = document.getElementById(form_name);
-        form.reset();
-        alert("TODO: process successful account submission");
+        switch (command) {
+        case "add_account":
+            // TODO clear_account_list();
+            form.reset();
+            alert("account id is " + response.account_id + ".");
+            break;
+        case "update_account":
+            form.reset();
+            alert("account with id " + response.account_id + " updated.");
+            break;
+        case "list_account":
+            alert("TODO: process list account success");
+            break;
+        case "del_account":
+            alert("TODO: process del account success");
+            break;
+        default:
+            alert("should not happen, bug?");
+        }
     } else {
         alert("Error: " + response.reason);
     }
