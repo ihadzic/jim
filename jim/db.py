@@ -153,6 +153,22 @@ class Database:
             self._conn.commit()
             return check[0][0], None
 
+    def delete_account(self, username):
+        self._log.debug("delete_account: trying to delete account {}".format(username))
+        check = [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=?", (username,)) ]
+        if len(check) == 0:
+            return -1, "account not found"
+        elif len(check) > 1:
+            return -1, "cowardly refusing to delete conflicting accounts"
+        try:
+            self._cursor.execute("DELETE FROM admins WHERE username=?", (username,))
+            self._conn.commit()
+        except:
+            err = "failed to delete account {}".format(username)
+            self._log.error("delete_account: {}".format(err))
+            return -1, err
+        return check[0][0], None
+
     def __init__(self, db_file):
         self._log = logging.getLogger("db")
         if os.path.isfile(db_file):
