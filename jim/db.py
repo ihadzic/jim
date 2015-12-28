@@ -157,6 +157,9 @@ class Database:
             self._conn.commit()
             return check[0][0], None
 
+    def lookup_account(self, fields, operator):
+        return self.lookup_something(fields, operator, "admins", self._common_account_fields, self._translated_account_fields)
+
     def delete_account(self, username):
         self._log.debug("delete_account: trying to delete account {}".format(username))
         check = [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=?", (username,)) ]
@@ -200,3 +203,5 @@ class Database:
         assert db_version == v
         self._common_player_fields = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active', 'initial_points' )
         self._translated_player_fields = { 'player_id' : 'id' }
+        self._common_account_fields = ( 'username', )
+        self._translated_account_fields = { 'account_id' : 'id' }

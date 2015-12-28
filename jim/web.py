@@ -581,9 +581,8 @@ class GetAccountHandler(AccountBaseHandler):
             self.finish_failure("invalid search operator")
             return
         _log.info("get_account: search operator is '{}'".format(op))
-        # TODO: database lookup comes here (use dictionary elements as keys
-        #       and apply the specified operator)
-        self.finish_success({'entries': [account]})
+        matched_accounts = _database.lookup_account(account, op)
+        self.finish_success({'entries': matched_accounts})
 
     def get(self):
         self.get_or_post()
