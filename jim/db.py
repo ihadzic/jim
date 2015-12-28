@@ -91,30 +91,34 @@ class Database:
             self._conn.commit()
             return player_id, None
 
-    def lookup_player(self, fields, operator):
-        tfk = tuple(t for t in self._translated_player_fields)
-        tfs = tuple(self._translated_player_fields.get(t) for t in tfk)
-        api_fields = self._common_player_fields + tfk
-        select_fields = string.join(self._common_player_fields + tfs, ', ')
+    def lookup_something(self, fields, operator, table_name, common_fields, translated_fields):
+        tfk = tuple(t for t in translated_fields)
+        tfs = tuple(translated_fields.get(t) for t in tfk)
+        api_fields = common_fields + tfk
+        select_fields = string.join(common_fields + tfs, ', ')
         match_tuple = ()
         where_list = []
         for w in fields and api_fields:
             f = fields.get(w)
             if f != None:
                 match_tuple = match_tuple + (f,)
-                wt = self._translated_player_fields.get(w)
+                wt = translated_fields.get(w)
                 where_list = where_list + ['{} = ?'.format(wt if wt else w)]
         where_string = string.join(where_list, ' OR ' if operator == 'or' else ' AND ')
-        self._log.debug("lookup_player: where string is {}".format(where_string))
-        self._log.debug("lookup_player: match tuple is {}".format(match_tuple))
-        self._log.debug("lookup_player: select fields are {}".format(select_fields))
-        self._log.debug("look_player: api fields are {}".format(api_fields))
+        self._log.debug("lookup_something: where string is {}".format(where_string))
+        self._log.debug("lookup_something: match tuple is {}".format(match_tuple))
+        self._log.debug("lookup_something: select fields are {}".format(select_fields))
+        self._log.debug("lookup_something: api fields are {}".format(api_fields))
+        self._log.debug("lookup_something: table is {}".format(table_name))
         if where_string:
-            r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE {} COLLATE NOCASE".format(select_fields, where_string), match_tuple) ]
+            r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM {} WHERE {} COLLATE NOCASE".format(select_fields, table_name, where_string), match_tuple) ]
         else:
-            r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM players".format(select_fields)) ]
-        self._log.debug("lookup_player: result is {}".format(r))
+            r = [ dict(zip(api_fields, record)) for record in self._cursor.execute("SELECT {} FROM {}".format(select_fields, table_name)) ]
+        self._log.debug("lookup_something: result is {}".format(r))
         return [util.purge_null_fields(e) for e in r]
+
+    def lookup_player(self, fields, operator):
+        return self.lookup_something(fields, operator, "players", self._common_player_fields, self._translated_player_fields)
 
     def delete_player(self, player_id):
         self._log.debug("delete_player: trying to delete player with ID {}".format(player_id))
