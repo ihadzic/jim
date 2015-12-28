@@ -478,11 +478,9 @@ class AccountBaseHandler(DynamicBaseHandler):
         try:
             username = args['username'][0]
         except:
-            self.finish_failure('username missing')
-            return None
+            return None, "username missing"
         if not password:
-            self.finish_failure('password missing')
-            return None
+            return None, "password missing"
         if not add_flag:
             try:
                 account_id = int(args['account_id'][0])
@@ -495,14 +493,14 @@ class AccountBaseHandler(DynamicBaseHandler):
                 'username' : username,
                 'password' : password
                 }
-            return account
+            return account, None
         else:
             account = {
                 'username' : username,
                 'password' : password,
                 'account_id' : account_id
                 }
-            return util.purge_null_fields(account)
+            return util.purge_null_fields(account), None
 
 class AddAccountHandler(AccountBaseHandler):
     def update_database(self, account):
@@ -517,8 +515,9 @@ class AddAccountHandler(AccountBaseHandler):
         args = self.get_args()
         if args == None:
             return
-        account = self.parse_args(args, True, password)
+        account, err = self.parse_args(args, True, password)
         if account == None:
+            self.finish_failure(err)
             return
         r, err = self.update_database(account)
         if r:
@@ -563,16 +562,15 @@ class GetAccountHandler(AccountBaseHandler):
         args = self.get_args()
         if args == None:
             return
-        # everything is optional except an empty set
-        account = self.parse_args(args, False, None)
+        account, err = self.parse_args(args, False, None)
+        # even an empty set is optional
+        if account == None:
+            account = {}
         try:
             # don't let some bozo search us by password
             del account['password']
         except:
             pass
-        if not account:
-            self.finish_failure("must specify at least one search key")
-            return
         try:
             op = args['op'][0].lower()
         except:
@@ -606,8 +604,9 @@ class UpdateAccountHandler(AccountBaseHandler):
         args = self.get_args()
         if args == None:
             return
-        account = self.parse_args(args, False, password)
+        account, err = self.parse_args(args, False, password)
         if account == None:
+            self.finish_failure(err)
             return
         username = account.get('username')
         assert username
