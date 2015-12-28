@@ -221,8 +221,7 @@ function process_account_form_response(command, response)
         form = document.getElementById(form_name);
         switch (command) {
         case "add_account":
-            // TODO clear_account_list();
-            form.reset();
+            clear_form_and_list("account_form", "account_list");
             alert("account id is " + response.account_id + ".");
             break;
         case "update_account":
