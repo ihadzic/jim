@@ -115,29 +115,28 @@ function match_form_to_query(form, command)
     return q;
 }
 
-function clear_player_list()
+function clear_list(list_name)
 {
-    var player_list = document.getElementById("player_list");
+    var player_list = document.getElementById(list_name);
     player_list.innerHTML = "";
 }
 
-function clear_player_form()
+function clear_form(form_name)
 {
-    var form_name = "player_form";
     form = document.getElementById(form_name);
     form.reset();
     return form;
 }
 
-function clear_player_form_and_list()
+function clear_form_and_list(form_name, list_name)
 {
-    clear_player_list();
-    clear_player_form();
+    clear_list(list_name);
+    clear_form(form_name);
 }
 
 function populate_player_form_with_data(data)
 {
-    form = clear_player_form();
+    form = clear_form("player_form");
     universal_json_to_form(form, data);
     player_json_to_form(form, data);
 }
@@ -169,7 +168,7 @@ function process_player_form_response(command, response)
         form.reset();
         switch (command) {
         case "add_player":
-            clear_player_list();
+            clear_list("player_list");
             alert("player id is " + response.player_id + ".");
             break;
         case "update_player":
@@ -181,7 +180,7 @@ function process_player_form_response(command, response)
                 if (data.length == 0)
                     alert("no players found");
                 else if (data.length == 1) {
-                    clear_player_list();
+                    clear_list("player_list");
                     universal_json_to_form(form, data[0]);
                     player_json_to_form(form, data[0]);
                 } else {
@@ -192,7 +191,7 @@ function process_player_form_response(command, response)
             }
             break;
         case "del_player":
-            clear_player_list();
+            clear_list("player_list");
             alert("player with id " + response.player_id + " deleted.");
             break;
         default:
