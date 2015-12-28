@@ -369,8 +369,15 @@ function process_account_form(command)
             return;
     }
     form = document.getElementById(form_name);
-    query = universal_form_to_query(form, command);
-    password = universal_form_to_password(form);
-    xhttp.open("POST", query, true);
-    xhttp.send(password);
+    if (command == "list_account") {
+        // list_account is special: implemented through get_account
+        query="get_account";
+        xhttp.open("GET", query, true);
+        xhttp.send();
+    } else {
+        query = universal_form_to_query(form, command);
+        password = universal_form_to_password(form);
+        xhttp.open("POST", query, true);
+        xhttp.send(password);
+    }
 }
