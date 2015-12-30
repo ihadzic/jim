@@ -75,7 +75,8 @@ class Database:
         self._log.debug("update_player: fields are {}".format(fields_tuple))
         self._log.debug("update_player: values are {}".format(values_tuple))
         if player_id == None:
-            check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE username=? COLLATE NOCASE", (player.get('username'),)) ]
+            check_username = player.get('username')
+            check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE username=? COLLATE NOCASE", (check_username,))] + [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=? COLLATE NOCASE", (check_username,))]
             if len(check) > 0:
                 return -1, "username conflict"
             self._cursor.execute("INSERT INTO players {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
@@ -139,7 +140,8 @@ class Database:
         self._log.debug("update_account: fields are {}".format(fields_tuple))
         self._log.debug("update_account: values are {}".format(values_tuple))
         if old_username == None:
-            check = [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=? COLLATE NOCASE", (account.get('username'),)) ]
+            check_username = account.get('username')
+            check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE username=? COLLATE NOCASE", (check_username,))] + [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=? COLLATE NOCASE", (check_username,))]
             if len(check) > 0:
                 return -1, "username conflict"
             self._cursor.execute("INSERT INTO admins {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
