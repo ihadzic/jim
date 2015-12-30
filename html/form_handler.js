@@ -259,6 +259,7 @@ function process_account_form_response(command, response)
             break;
         case "del_account":
             form.reset();
+            clear_list("account_list");
             alert("account with id " + response.account_id + " deleted.");
             break;
         default:
