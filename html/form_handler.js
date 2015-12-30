@@ -250,6 +250,7 @@ function process_account_form_response(command, response)
             alert("account with id " + response.account_id + " updated.");
             break;
         case "list_account":
+            form.reset();
             var data = response.entries;
             if (data.length == 0)
                 alert("no accounts found");
