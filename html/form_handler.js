@@ -210,6 +210,31 @@ function process_match_form_response(command, response)
     }
 }
 
+function populate_account_form_with_data(data)
+{
+    form = clear_form("account_form");
+    universal_json_to_form(form, data);
+}
+
+function populate_account_list(data)
+{
+    var i, s;
+    var account_list = document.getElementById("account_list");
+    account_list.innerHTML = "<h3>Admin Accounts in the System</h3><ul>"
+    for (i = 0; i < data.length; i++) {
+        s = "<li><div id=" + data[i].account_id + ">";
+        s +=  "" + data[i].username;
+        s += "&nbsp&nbsp&nbsp";
+        s += "<image src='pencil_edit.png' height='16' width='16'";
+        s += "title='Edit " + data[i].username;
+        s += "' alt='edit' onclick='"
+        s += "populate_account_form_with_data(" + JSON.stringify(data[i]) + ")'>";
+        s += "</div></li>";
+        account_list.innerHTML += s;
+    }
+    account_list.innerHTML += '</ul><div class="form_description"><p></p></div>';
+}
+
 function process_account_form_response(command, response)
 {
     var form_name = "account_form";
@@ -225,7 +250,11 @@ function process_account_form_response(command, response)
             alert("account with id " + response.account_id + " updated.");
             break;
         case "list_account":
-            alert("TODO: process list account success");
+            var data = response.entries;
+            if (data.length == 0)
+                alert("no accounts found");
+            else
+                populate_account_list(data);
             break;
         case "del_account":
             form.reset();
