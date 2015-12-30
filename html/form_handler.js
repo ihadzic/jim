@@ -117,8 +117,8 @@ function match_form_to_query(form, command)
 
 function clear_list(list_name)
 {
-    var player_list = document.getElementById(list_name);
-    player_list.innerHTML = "";
+    var clear_me = document.getElementById(list_name);
+    clear_me.innerHTML = "";
 }
 
 function clear_form(form_name)
