@@ -175,19 +175,15 @@ function process_player_form_response(command, response)
             alert("player with id " + response.player_id + " updated.");
             break;
         case "get_player":
-            if (response.result == "success") {
-                var data = response.entries;
-                if (data.length == 0)
-                    alert("no players found");
-                else if (data.length == 1) {
-                    clear_list("player_list");
-                    universal_json_to_form(form, data[0]);
-                    player_json_to_form(form, data[0]);
-                } else {
-                    populate_player_list(data);
-                }
+            var data = response.entries;
+            if (data.length == 0)
+                alert("no players found");
+            else if (data.length == 1) {
+                clear_list("player_list");
+                universal_json_to_form(form, data[0]);
+                player_json_to_form(form, data[0]);
             } else {
-                alert("oops:" + response.reason)
+                populate_player_list(data);
             }
             break;
         case "del_player":
