@@ -57,7 +57,9 @@ class LoginHandler(DynamicBaseHandler):
         if self.current_user['id']:
             self.redirect('/date')
         else:
-            self.render('login.html')
+            self.render('login.html',
+                        color = 'black',
+                        please_log_in = 'Please log in')
 
     def post(self):
         username = self.get_argument('name')
