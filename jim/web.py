@@ -271,6 +271,8 @@ class AddPlayerHandler(PlayerBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -297,6 +299,8 @@ class AddPlayerHandler(PlayerBaseHandler):
 
 class DelPlayerHandler(PlayerBaseHandler):
     def get_or_post(self):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -327,6 +331,8 @@ class UpdatePlayerHandler(PlayerBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -358,6 +364,8 @@ class UpdatePlayerHandler(PlayerBaseHandler):
 
 class GetPlayerHandler(PlayerBaseHandler):
     def get_or_post(self):
+        if not self.authorized():
+            return
         args = self.get_args()
         if args == None:
             return
@@ -403,6 +411,8 @@ class AddMatchHandler(DynamicBaseHandler):
         return True
 
     def get(self):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -485,6 +495,8 @@ class AddMatchHandler(DynamicBaseHandler):
 
 class DelMatchHandler(DynamicBaseHandler):
     def get(self):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -500,6 +512,8 @@ class DelMatchHandler(DynamicBaseHandler):
 
 class GetMatchHandler(DynamicBaseHandler):
     def get(self):
+        if not self.authorized():
+            return
         args = self.get_args()
         if args == None:
             return
@@ -566,6 +580,8 @@ class AddAccountHandler(AccountBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -591,6 +607,8 @@ class AddAccountHandler(AccountBaseHandler):
 
 class DelAccountHandler(AccountBaseHandler):
     def get_or_post(self):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -613,6 +631,8 @@ class DelAccountHandler(AccountBaseHandler):
 
 class GetAccountHandler(AccountBaseHandler):
     def get_or_post(self):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -654,6 +674,8 @@ class UpdateAccountHandler(AccountBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        if not self.authorized(admin = True):
+            return
         args = self.get_args()
         if args == None:
             return
@@ -681,6 +703,8 @@ class UpdateAccountHandler(AccountBaseHandler):
 
 class GetReportHandler(DynamicBaseHandler):
     def get(self):
+        if not self.authorized():
+            return
         args = self.get_args()
         if args == None:
             return
