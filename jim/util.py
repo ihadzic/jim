@@ -8,5 +8,11 @@ def str_to_bool(s):
     else:
         return None
 
+def int_or_none(x):
+    if x == None:
+        return None
+    else:
+        return int(x)
+
 def purge_null_fields(d):
     return { f:d[f] for f in d if d[f] != None}
