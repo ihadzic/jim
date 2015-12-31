@@ -52,6 +52,23 @@ class Database:
         r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? ORDER BY points DESC".format(fields_string), (ladder,)) ]
         return r
 
+    def check_password(self, username, password, table):
+        self._log.debug("check_password: {} in {}".format(username, table))
+        fields = ["id", "password_hash"]
+        fields_string = string.join(fields, ',')
+        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM {} WHERE username=?".format(fields_string, table), (username,)) ]
+        assert len(r) < 2
+        if len(r) == 0:
+            self._log.debug("check_password: {} not found in {}".format(username, table))
+            return None
+        else:
+            if bcrypt.hashpw(str(password), str(r[0].get('password_hash'))) == str(r[0].get('password_hash')):
+                self._log.debug("check_password: {} authenticated in {}".format(username, table))
+                return r[0].get('id')
+            else:
+                self._log.debug("check_password: {} in {} password check failed".format(username, table))
+                return None
+
     def get_roster(self):
         fields = ["first_name", "last_name", "cell_phone", "home_phone", "work_phone", "email", "id", "ladder", "company"]
         fields_string = string.join(fields, ',')
