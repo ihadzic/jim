@@ -52,10 +52,17 @@ class RootHandler(tornado.web.RequestHandler):
     def get(self):
         self.redirect('/login', permanent = True)
 
+class MainMenuHandler(DynamicBaseHandler):
+    def get(self):
+        if self.current_user['id']:
+            self.render('main_menu.html')
+        else:
+            self.redirect('/login')
+
 class LoginHandler(DynamicBaseHandler):
     def get(self):
         if self.current_user['id']:
-            self.redirect('/date')
+            self.redirect('/main_menu')
         else:
             self.render('login.html',
                         color = 'black',
@@ -68,20 +75,20 @@ class LoginHandler(DynamicBaseHandler):
         if admin_id:
             self.set_secure_cookie('admin', 'True')
             self.set_secure_cookie('id', str(admin_id))
-            self.redirect('/date')
+            self.redirect('/main_menu')
         else:
             player_id = _database.check_password(username, password, 'players')
             if player_id:
                 self.set_secure_cookie('admin', 'False')
                 self.set_secure_cookie('id', str(player_id))
-                self.redirect('/date')
+                self.redirect('/main_menu')
             else:
                 self.redirect('/login_incorrect')
 
 class LoginIncorrectHandler(LoginHandler):
     def get(self):
         if self.current_user['id']:
-            self.redirect('/date')
+            self.redirect('/main_menu')
         else:
             self.render('login.html',
                         color = 'red',
@@ -717,7 +724,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/del_account', DelAccountHandler),
         ('/get_account', GetAccountHandler),
         ('/update_account', UpdateAccountHandler),
-        ('/get_report', GetReportHandler)
+        ('/get_report', GetReportHandler),
+        ('/main_menu', MainMenuHandler)
         ]
 
     _log = logging.getLogger("web")
