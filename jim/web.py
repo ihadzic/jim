@@ -45,7 +45,8 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         self.set_header("Expires", "0")
 
     def get_current_user(self):
-        return self.get_secure_cookie('user')
+        return { 'admin': util.bool_or_none(self.get_secure_cookie('admin')),
+                 'id': util.int_or_none(self.get_secure_cookie('id')) }
 
 class RootHandler(tornado.web.RequestHandler):
     def get(self):
@@ -53,25 +54,41 @@ class RootHandler(tornado.web.RequestHandler):
 
 class LoginHandler(DynamicBaseHandler):
     def get(self):
-        if self.current_user:
+        if self.current_user['id']:
             self.redirect('/date')
         else:
             self.render('login.html')
 
     def post(self):
-        # TODO: check the password here
-        self.set_secure_cookie('user', self.get_argument('name') + '/' + self.get_argument('password'))
-        self.redirect('/date')
+        username = self.get_argument('name')
+        password = self.get_argument('password')
+        admin_id = _database.check_password(username, password, 'admins')
+        if admin_id:
+            self.set_secure_cookie('admin', 'True')
+            self.set_secure_cookie('id', str(admin_id))
+            self.redirect('/date')
+        else:
+            player_id = _database.check_password(username, password, 'players')
+            if player_id:
+                self.set_secure_cookie('admin', 'False')
+                self.set_secure_cookie('id', str(player_id))
+                self.redirect('/date')
+            else:
+                self.redirect('/login')
 
 class LogoutHandler(DynamicBaseHandler):
     def get(self):
-        self.clear_cookie('user')
+        self.clear_cookie('admin')
+        self.clear_cookie('id')
         self.redirect('/login')
 
 class DateHandler(DynamicBaseHandler):
     def get(self):
-        if self.current_user:
-            name = tornado.escape.xhtml_escape(self.current_user)
+        if self.current_user['id']:
+            if self.current_user['admin']:
+                name = tornado.escape.xhtml_escape('admin:' + str(self.current_user['id']))
+            else:
+                name = tornado.escape.xhtml_escape('player:' + str(self.current_user['id']))
         else:
             name = 'nobody'
         self.render('date.html',
