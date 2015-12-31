@@ -14,5 +14,11 @@ def int_or_none(x):
     else:
         return int(x)
 
+def bool_or_none(s):
+    if s == None:
+        return None
+    else:
+        return str_to_bool(s)
+
 def purge_null_fields(d):
     return { f:d[f] for f in d if d[f] != None}
