@@ -76,7 +76,16 @@ class LoginHandler(DynamicBaseHandler):
                 self.set_secure_cookie('id', str(player_id))
                 self.redirect('/date')
             else:
-                self.redirect('/login')
+                self.redirect('/login_incorrect')
+
+class LoginIncorrectHandler(LoginHandler):
+    def get(self):
+        if self.current_user['id']:
+            self.redirect('/date')
+        else:
+            self.render('login.html',
+                        color = 'red',
+                        please_log_in = 'Login incorrect (please try again)')
 
 class LogoutHandler(DynamicBaseHandler):
     def get(self):
@@ -691,6 +700,7 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
     handlers = [
         ('/', RootHandler),
         ('/login', LoginHandler),
+        ('/login_incorrect', LoginIncorrectHandler),
         ('/logout', LogoutHandler),
         ('/date', DateHandler),
         ('/ladder', LadderHandler),
