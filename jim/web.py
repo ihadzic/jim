@@ -22,7 +22,9 @@ _database = None
 _test_ssl_options = { 'certfile' : sys.prefix + '/var/jim/certs/cert.pem', 'keyfile': sys.prefix + '/var/jim/certs/key.pem' }
 
 class DynamicBaseHandler(tornado.web.RequestHandler):
-    def finish_failure(self, err = None):
+    def finish_failure(self, err = None, status = None):
+        if status:
+            self.set_status(status)
         retval = { 'result': 'failure', 'reason': err }
         self.finish(retval)
 
