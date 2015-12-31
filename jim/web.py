@@ -524,7 +524,7 @@ class GetMatchHandler(DynamicBaseHandler):
 
 class UpdateMatchHandler(DynamicBaseHandler):
     def get(self):
-        self.finish_failure("operation not supported")
+        self.finish_failure("operation not supported", 400)
         return
 
 class AccountBaseHandler(DynamicBaseHandler):
