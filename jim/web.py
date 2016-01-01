@@ -139,7 +139,8 @@ class LadderHandler(DynamicBaseHandler):
                         date_string = datetime.ctime(datetime.now()),
                         a_ladder = _database.get_ladder('a'),
                         b_ladder = _database.get_ladder('b'),
-                        c_ladder = _database.get_ladder('c')
+                        c_ladder = _database.get_ladder('c'),
+                        u_ladder = _database.get_ladder('unranked')
                         )
         else:
             self.redirect('/login')
