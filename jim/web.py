@@ -134,21 +134,25 @@ class DateHandler(DynamicBaseHandler):
 
 class LadderHandler(DynamicBaseHandler):
     def get(self):
-        if self.authorized():
+        if self.authorized(quiet = True):
             self.render('ladder.html',
                         date_string = datetime.ctime(datetime.now()),
                         a_ladder = _database.get_ladder('a'),
                         b_ladder = _database.get_ladder('b'),
                         c_ladder = _database.get_ladder('c')
                         )
+        else:
+            self.redirect('/login')
 
 class RosterHandler(DynamicBaseHandler):
     def get(self):
-        if self.authorized():
+        if self.authorized(quiet = True):
             self.render('roster.html',
                         date_string = datetime.ctime(datetime.now()),
                         roster = _database.get_roster()
                         )
+        else:
+            self.redirect('/login')
 
 class PlayerBaseHandler(DynamicBaseHandler):
     def parse_args(self, args, add_flag, password):
