@@ -50,18 +50,20 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
         return { 'admin': util.bool_or_none(self.get_secure_cookie('admin')),
                  'id': util.int_or_none(self.get_secure_cookie('id')) }
 
-    def authorized(self, admin = False):
+    def authorized(self, admin = False, quiet = False):
         if self.current_user['id']:
             if admin:
                 if self.current_user['admin']:
                     return True
                 else:
-                    self.finish_failure('user is not admin', 401)
+                    if not quiet:
+                        self.finish_failure('user is not admin', 401)
                     return False
             else:
                 return True
         else:
-            self.finish_failure('user is not logged in', 401)
+            if not quiet:
+                self.finish_failure('user is not logged in', 401)
             return False
 
 class RootHandler(tornado.web.RequestHandler):
