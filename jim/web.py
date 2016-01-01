@@ -78,6 +78,25 @@ class MainMenuHandler(DynamicBaseHandler):
         else:
             self.redirect('/login')
 
+class GenericAdminFormHandler(DynamicBaseHandler):
+    def generic_get(self, form_filename):
+        if self.authorized(admin = True, quiet = True):
+            self.render(form_filename)
+        else:
+            self.redirect('/login')
+
+class AccountFormHandler(GenericAdminFormHandler):
+    def get(self):
+        self.generic_get('account_form.html')
+
+class PlayerFormHandler(GenericAdminFormHandler):
+    def get(self):
+        self.generic_get('player_form.html')
+
+class MatchFormHandler(GenericAdminFormHandler):
+    def get(self):
+        self.generic_get('match_form.html')
+
 class LoginHandler(DynamicBaseHandler):
     def get(self):
         if self.current_user['id']:
@@ -775,7 +794,10 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/get_account', GetAccountHandler),
         ('/update_account', UpdateAccountHandler),
         ('/get_report', GetReportHandler),
-        ('/main_menu', MainMenuHandler)
+        ('/main_menu', MainMenuHandler),
+        ('/match_form', MatchFormHandler),
+        ('/player_form', PlayerFormHandler),
+        ('/account_form', AccountFormHandler)
         ]
 
     _log = logging.getLogger("web")
