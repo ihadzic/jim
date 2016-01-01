@@ -84,9 +84,11 @@ class Database:
         # set points to be the same as initial points when adding new player
         fields_tuple = fields_tuple + ('points',)
         values_tuple = values_tuple + (player.get('initial_points'),)
-        fields_tuple = fields_tuple + ('password_hash',)
-        password_hash = bcrypt.hashpw(player.get('password'), bcrypt.gensalt())
-        values_tuple = values_tuple + (password_hash,)
+        player_password = player.get('password')
+        if player_password:
+            fields_tuple = fields_tuple + ('password_hash',)
+            password_hash = bcrypt.hashpw(player_password, bcrypt.gensalt())
+            values_tuple = values_tuple + (password_hash,)
         assert(len(fields_tuple) == len(values_tuple))
         values_pattern = ('?,' * len(values_tuple))[:-1]
         self._log.debug("update_player: fields are {}".format(fields_tuple))
