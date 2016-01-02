@@ -16,6 +16,7 @@ _https_server = None
 _template_root = sys.prefix + '/var/jim/templates'
 _log = None
 _database = None
+_bootstrap_token = None
 # This is default (test-only) certificate located in ./certs directory.
 # default certificate is self-signed, so we don't have 'ca_cert' field
 # in the dictionary. Normally, we need one to point to the 'CA'
@@ -109,19 +110,29 @@ class LoginHandler(DynamicBaseHandler):
     def post(self):
         username = self.get_argument('name')
         password = self.get_argument('password')
-        admin_id = _database.check_password(username, password, 'admins')
-        if admin_id:
-            self.set_secure_cookie('admin', 'True')
-            self.set_secure_cookie('id', str(admin_id))
-            self.redirect('/main_menu')
-        else:
-            player_id = _database.check_password(username, password, 'players')
-            if player_id:
-                self.set_secure_cookie('admin', 'False')
-                self.set_secure_cookie('id', str(player_id))
+        if _database.no_admins():
+            # if there are no admins in the system, only accept bootstrap token
+            if username == 'bootstrap' and password == _bootstrap_token:
+                self.set_secure_cookie('admin', 'True')
+                self.set_secure_cookie('id', '0')
                 self.redirect('/main_menu')
             else:
                 self.redirect('/login_incorrect')
+        else:
+            # otherwise, authenticate in a regular way
+            admin_id = _database.check_password(username, password, 'admins')
+            if admin_id:
+                self.set_secure_cookie('admin', 'True')
+                self.set_secure_cookie('id', str(admin_id))
+                self.redirect('/main_menu')
+            else:
+                player_id = _database.check_password(username, password, 'players')
+                if player_id:
+                    self.set_secure_cookie('admin', 'False')
+                    self.set_secure_cookie('id', str(player_id))
+                    self.redirect('/main_menu')
+                else:
+                    self.redirect('/login_incorrect')
 
 class LoginIncorrectHandler(LoginHandler):
     def get(self):
@@ -760,11 +771,12 @@ class GetReportHandler(DynamicBaseHandler):
         # TODO: do the series of database reads and construct the report
         self.finish_success({'entries': [ranges]})
 
-def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = None):
+def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = None, bootstrap_token = None):
     global _http_server
     global _https_server
     global _log
     global _database
+    global _bootstrap_token
 
     # if some bozo calls us with None specified as an argument
     if template_root == None:
@@ -799,6 +811,8 @@ def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443
         ('/player_form', PlayerFormHandler),
         ('/account_form', AccountFormHandler)
         ]
+
+    _bootstrap_token = bootstrap_token
 
     _log = logging.getLogger("web")
     if not database:

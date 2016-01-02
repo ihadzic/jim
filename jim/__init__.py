@@ -30,6 +30,10 @@ def read_config(parser):
         cfg['db_file'] = parser.get("db", "db_file")
     except:
         cfg['db_file'] = "./jim.db"
+    try:
+        cfg['bootstrap_token'] = parser.get("web", "bootstrap_token")
+    except:
+        cfg['bootstrap_token'] = 'jimimproved'
     _log.info(cfg)
     return cfg
 
@@ -55,7 +59,7 @@ def main():
         _log.info("server configuration: {}".format(cfg))
         _log.info("starting server")
         database = db.Database(cfg.get('db_file'))
-        web.run_server(http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), html_root = cfg.get('html_root'), database = database)
+        web.run_server(http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), html_root = cfg.get('html_root'), database = database, bootstrap_token = cfg.get('bootstrap_token'))
         _log.info("server exited")
     else:
         _log.error("configuration error")
