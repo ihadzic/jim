@@ -51,7 +51,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
                  'id': util.int_or_none(self.get_secure_cookie('id')) }
 
     def authorized(self, admin = False, quiet = False):
-        if self.current_user['id']:
+        if self.current_user['id'] != None:
             if admin:
                 if self.current_user['admin']:
                     return True
