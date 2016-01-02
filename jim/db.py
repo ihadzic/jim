@@ -52,6 +52,13 @@ class Database:
         r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? ORDER BY points DESC".format(fields_string), (ladder,)) ]
         return r
 
+    def no_admins(self):
+        check = [ record for record in self._cursor.execute("SELECT id FROM admins") ]
+        if len(check) == 0:
+            return True
+        else:
+            return False
+
     def check_password(self, username, password, table):
         self._log.debug("check_password: {} in {}".format(username, table))
         fields = ["id", "password_hash"]
