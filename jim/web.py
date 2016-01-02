@@ -72,7 +72,7 @@ class RootHandler(tornado.web.RequestHandler):
 
 class MainMenuHandler(DynamicBaseHandler):
     def get(self):
-        if self.current_user['id']:
+        if self.authorized(quiet = True):
             self.render('main_menu.html',
                         admin = self.current_user['admin'])
         else:
