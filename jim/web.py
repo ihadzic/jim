@@ -17,6 +17,12 @@ _database = None
 _bootstrap_token = None
 
 class DynamicBaseHandler(tornado.web.RequestHandler):
+    def log_request(self):
+        x_real_ip = self.request.headers.get("X-Real-IP")
+        remote_ip = x_real_ip or self.request.remote_ip
+        username = self.current_user.get('username') or 'nobody'
+        _log.info("log_request: {}@{} {}".format(username, remote_ip, self.request))
+
     def finish_failure(self, err = None, status = None):
         if status:
             self.set_status(status)
@@ -68,6 +74,7 @@ class RootHandler(tornado.web.RequestHandler):
 
 class MainMenuHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if self.authorized(quiet = True):
             self.render('main_menu.html',
                         admin = self.current_user['admin'])
@@ -76,6 +83,7 @@ class MainMenuHandler(DynamicBaseHandler):
 
 class GenericAdminFormHandler(DynamicBaseHandler):
     def generic_get(self, form_filename):
+        self.log_request()
         if self.authorized(admin = True, quiet = True):
             self.render(form_filename)
         else:
@@ -95,6 +103,7 @@ class MatchFormHandler(GenericAdminFormHandler):
 
 class LoginHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if self.current_user['id']:
             self.redirect('/main_menu')
         else:
@@ -103,6 +112,7 @@ class LoginHandler(DynamicBaseHandler):
                         please_log_in = 'Please log in')
 
     def post(self):
+        self.log_request()
         username = self.get_argument('name')
         password = self.get_argument('password')
         if _database.no_admins():
@@ -134,6 +144,7 @@ class LoginHandler(DynamicBaseHandler):
 
 class LoginIncorrectHandler(LoginHandler):
     def get(self):
+        self.log_request()
         if self.current_user['id']:
             self.redirect('/main_menu')
         else:
@@ -143,6 +154,7 @@ class LoginIncorrectHandler(LoginHandler):
 
 class LogoutHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         self.clear_cookie('admin')
         self.clear_cookie('username')
         self.clear_cookie('id')
@@ -150,6 +162,7 @@ class LogoutHandler(DynamicBaseHandler):
 
 class DateHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if self.current_user['id']:
             if self.current_user['admin']:
                 name = tornado.escape.xhtml_escape('admin:' + str(self.current_user['id']))
@@ -163,6 +176,7 @@ class DateHandler(DynamicBaseHandler):
 
 class LadderHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if self.authorized(quiet = True):
             self.render('ladder.html',
                         date_string = datetime.ctime(datetime.now()),
@@ -176,6 +190,7 @@ class LadderHandler(DynamicBaseHandler):
 
 class RosterHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if self.authorized(quiet = True):
             self.render('roster.html',
                         date_string = datetime.ctime(datetime.now()),
@@ -307,6 +322,7 @@ class AddPlayerHandler(PlayerBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -335,6 +351,7 @@ class AddPlayerHandler(PlayerBaseHandler):
 
 class DelPlayerHandler(PlayerBaseHandler):
     def get_or_post(self):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -367,6 +384,7 @@ class UpdatePlayerHandler(PlayerBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -400,6 +418,7 @@ class UpdatePlayerHandler(PlayerBaseHandler):
 
 class GetPlayerHandler(PlayerBaseHandler):
     def get_or_post(self):
+        self.log_request()
         if not self.authorized():
             return
         args = self.get_args()
@@ -447,6 +466,7 @@ class AddMatchHandler(DynamicBaseHandler):
         return True
 
     def get(self):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -531,6 +551,7 @@ class AddMatchHandler(DynamicBaseHandler):
 
 class DelMatchHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -548,6 +569,7 @@ class DelMatchHandler(DynamicBaseHandler):
 
 class GetMatchHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if not self.authorized():
             return
         args = self.get_args()
@@ -574,6 +596,7 @@ class GetMatchHandler(DynamicBaseHandler):
 
 class UpdateMatchHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         self.finish_failure("operation not supported", 400)
         return
 
@@ -616,6 +639,7 @@ class AddAccountHandler(AccountBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -643,6 +667,7 @@ class AddAccountHandler(AccountBaseHandler):
 
 class DelAccountHandler(AccountBaseHandler):
     def get_or_post(self):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -667,6 +692,7 @@ class DelAccountHandler(AccountBaseHandler):
 
 class GetAccountHandler(AccountBaseHandler):
     def get_or_post(self):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -710,6 +736,7 @@ class UpdateAccountHandler(AccountBaseHandler):
             return False, err
 
     def get_or_post(self, password):
+        self.log_request()
         if not self.authorized(admin = True):
             return
         args = self.get_args()
@@ -739,6 +766,7 @@ class UpdateAccountHandler(AccountBaseHandler):
 
 class GetReportHandler(DynamicBaseHandler):
     def get(self):
+        self.log_request()
         if not self.authorized():
             return
         args = self.get_args()
