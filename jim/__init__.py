@@ -9,6 +9,7 @@ import sys
 import util
 import daemon
 import rules
+import argparse
 
 _log = None
 
@@ -45,7 +46,7 @@ def read_config(parser):
     _log.info(cfg)
     return cfg
 
-def main():
+def do_main():
     global _log
     logging.basicConfig(level=logging.DEBUG)
     _log = util.get_syslog_logger("main")
@@ -78,6 +79,16 @@ def main():
         _log.info("server exited")
     else:
         _log.error("configuration error")
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", "--nodaemon", help="do not run as a daemon", action="store_true")
+    args = parser.parse_args()
+    if not args.nodaemon:
+        with daemon.DaemonContext():
+            do_main()
+    else:
+        do_main()
 
 if __name__ == "__main__":
     main()
