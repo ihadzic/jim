@@ -71,7 +71,7 @@ def main():
                             'keyfile': certs_path + '/key.pem' }
         else:
             ssl_options = util.test_ssl_options
-        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), html_root = cfg.get('html_root'), database = database, bootstrap_token = cfg.get('bootstrap_token'))
+        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), html_root = cfg.get('html_root'), template_root = cfg.get('template_root'), database = database, bootstrap_token = cfg.get('bootstrap_token'))
         _log.info("server exited")
     else:
         _log.error("configuration error")
