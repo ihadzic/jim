@@ -46,7 +46,7 @@ function universal_form_to_query(form, command)
                 if (form[i].type == "checkbox")
                     q += form[i].name + "=" + form[i].checked;
                 else
-                    q += form[i].name + "=" + form[i].value;
+                    q += form[i].name + "=" + encodeURIComponent(form[i].value);
             }
         }
     return q;
