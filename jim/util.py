@@ -33,11 +33,15 @@ def purge_null_fields(d):
     return { f:d[f] for f in d if d[f] != None}
 
 _handler = None
+_formatter = None
 
 def get_syslog_logger(name):
     global _handler
+    global _formatter
     logger = logging.getLogger("main")
     if not _handler:
         _handler = logging.handlers.SysLogHandler(address='/dev/log')
+        _formatter = logging.Formatter('%(name)s: %(levelname)s %(message)s')
+        _handler.setFormatter(_formatter)
     logger.addHandler(_handler)
     return logger
