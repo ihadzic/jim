@@ -1,6 +1,5 @@
 import util
 import sqlite3
-import logging
 import string
 import os
 import bcrypt
@@ -205,7 +204,7 @@ class Database:
         return check[0][0], None
 
     def __init__(self, db_file):
-        self._log = logging.getLogger("db")
+        self._log = util.get_syslog_logger("db")
         if os.path.isfile(db_file):
             self._log.info("found database file {}".format(db_file))
             new_db = False

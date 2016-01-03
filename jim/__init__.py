@@ -7,6 +7,8 @@ import os
 import db
 import sys
 import util
+import daemon
+import rules
 
 _log = None
 
@@ -46,7 +48,8 @@ def read_config(parser):
 def main():
     global _log
     logging.basicConfig(level=logging.DEBUG)
-    _log = logging.getLogger("main")
+    _log = util.get_syslog_logger("main")
+    rules.init()
     config_file_list = [ os.path.dirname(os.path.realpath(__file__)) + '/jim.cfg', '/etc/jim.cfg', './jim.cfg' ]
     config_file_parser = ConfigParser.RawConfigParser()
     config_ok = True

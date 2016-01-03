@@ -1,9 +1,13 @@
 #!/usr/bin/env python2
 
-import logging
+import util
 from datetime import datetime
 
-_log = logging.getLogger("rules")
+_log = None
+
+def init():
+    global _log
+    _log = util.get_syslog_logger("rules")
 
 def set_results(cgames, ogames):
     assert len(ogames) == len(cgames)

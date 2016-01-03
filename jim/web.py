@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 
 import tornado
-import logging
 import os
 import sys
 import binascii
@@ -812,7 +811,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ]
 
     _bootstrap_token = bootstrap_token
-    _log = logging.getLogger("web")
+    _log = util.get_syslog_logger("web")
     _database = database
     handlers.append(('/(.*)', web.StaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
