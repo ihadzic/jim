@@ -13,7 +13,6 @@ from datetime import timedelta
 
 _http_server = None
 _https_server = None
-_template_root = sys.prefix + '/var/jim/templates'
 _log = None
 _database = None
 _bootstrap_token = None
@@ -767,7 +766,7 @@ class GetReportHandler(DynamicBaseHandler):
         # TODO: do the series of database reads and construct the report
         self.finish_success({'entries': [ranges]})
 
-def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = None, bootstrap_token = None):
+def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
     global _log
@@ -779,6 +778,10 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         template_root = sys.prefix + '/var/jim/templates'
     if html_root == None:
         html_root = sys.prefix + '/var/jim/html'
+    if database == None:
+        database = sys.prefix + './jim.db'
+    if bootstrap_token == None:
+        bootstrap_token = 'deadbeef'
 
     # list handlers for REST calls here
     handlers = [
@@ -809,11 +812,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ]
 
     _bootstrap_token = bootstrap_token
-
     _log = logging.getLogger("web")
-    if not database:
-        _log.error('cannot run without the database')
-        return
     _database = database
     handlers.append(('/(.*)', web.StaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
