@@ -47,7 +47,7 @@ def main():
     global _log
     logging.basicConfig(level=logging.DEBUG)
     _log = logging.getLogger("main")
-    config_file_list = ['./jim.cfg', '/etc/jim.cfg', os.path.dirname(os.path.realpath(__file__)) + '/jim.cfg']
+    config_file_list = [ os.path.dirname(os.path.realpath(__file__)) + '/jim.cfg', '/etc/jim.cfg', './jim.cfg' ]
     config_file_parser = ConfigParser.RawConfigParser()
     config_ok = True
     try:
@@ -59,7 +59,7 @@ def main():
         _log.error("no configuration file found")
         config_ok = False
     else:
-        _log.info("using configuration file {}".format(config_file_list[0]))
+        _log.info("using configuration files {}".format(config_file_list))
     if config_ok:
         cfg = read_config(config_file_parser)
         _log.info("server configuration: {}".format(cfg))
