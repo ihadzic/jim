@@ -99,8 +99,8 @@ class Database:
         values_pattern = ('?,' * len(values_tuple))[:-1]
         self._log.debug("update_player: fields are {}".format(fields_tuple))
         self._log.debug("update_player: values are {}".format(values_tuple))
+        check_username = player.get('username')
         if player_id == None:
-            check_username = player.get('username')
             check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE username=? COLLATE NOCASE", (check_username,))] + [ record for record in self._cursor.execute("SELECT id FROM admins WHERE username=? COLLATE NOCASE", (check_username,))]
             if len(check) > 0:
                 return -1, "username conflict"
@@ -111,6 +111,9 @@ class Database:
             check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (player_id,)) ]
             if len(check) == 0:
                 return -1, "player ID not found"
+            check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE not id=? and username=?", (player_id, check_username)) ]
+            if len(check) != 0:
+                return -1, "username conflict"
             fields_string = string.join([ f + "=?" for f in fields_tuple ], ', ')
             values_tuple += (player_id,)
             self._cursor.execute("UPDATE players SET {} WHERE id=?".format(fields_string), values_tuple)
