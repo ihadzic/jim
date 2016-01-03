@@ -17,10 +17,6 @@ _template_root = sys.prefix + '/var/jim/templates'
 _log = None
 _database = None
 _bootstrap_token = None
-# This is default (test-only) certificate located in ./certs directory.
-# default certificate is self-signed, so we don't have 'ca_cert' field
-# in the dictionary. Normally, we need one to point to the 'CA'
-_test_ssl_options = { 'certfile' : sys.prefix + '/var/jim/certs/cert.pem', 'keyfile': sys.prefix + '/var/jim/certs/key.pem' }
 
 class DynamicBaseHandler(tornado.web.RequestHandler):
     def finish_failure(self, err = None, status = None):
@@ -771,7 +767,7 @@ class GetReportHandler(DynamicBaseHandler):
         # TODO: do the series of database reads and construct the report
         self.finish_success({'entries': [ranges]})
 
-def run_server(ssl_options = _test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = None, bootstrap_token = None):
+def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = None, bootstrap_token = None):
     global _http_server
     global _https_server
     global _log
