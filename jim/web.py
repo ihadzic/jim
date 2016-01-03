@@ -43,7 +43,8 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
 
     def get_current_user(self):
         return { 'admin': util.bool_or_none(self.get_secure_cookie('admin')),
-                 'id': util.int_or_none(self.get_secure_cookie('id')) }
+                 'id': util.int_or_none(self.get_secure_cookie('id')),
+                 'username': self.get_secure_cookie('username') }
 
     def authorized(self, admin = False, quiet = False):
         if self.current_user['id'] != None:
@@ -108,6 +109,7 @@ class LoginHandler(DynamicBaseHandler):
             # if there are no admins in the system, only accept bootstrap token
             if username == 'bootstrap' and password == _bootstrap_token:
                 self.set_secure_cookie('admin', 'True')
+                self.set_secure_cookie('username', username)
                 self.set_secure_cookie('id', '0')
                 self.redirect('/main_menu')
             else:
@@ -117,12 +119,14 @@ class LoginHandler(DynamicBaseHandler):
             admin_id = _database.check_password(username, password, 'admins')
             if admin_id:
                 self.set_secure_cookie('admin', 'True')
+                self.set_secure_cookie('username', username)
                 self.set_secure_cookie('id', str(admin_id))
                 self.redirect('/main_menu')
             else:
                 player_id = _database.check_password(username, password, 'players')
                 if player_id:
                     self.set_secure_cookie('admin', 'False')
+                    self.set_secure_cookie('username', username)
                     self.set_secure_cookie('id', str(player_id))
                     self.redirect('/main_menu')
                 else:
@@ -140,6 +144,7 @@ class LoginIncorrectHandler(LoginHandler):
 class LogoutHandler(DynamicBaseHandler):
     def get(self):
         self.clear_cookie('admin')
+        self.clear_cookie('username')
         self.clear_cookie('id')
         self.redirect('/login')
 
