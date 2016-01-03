@@ -38,7 +38,7 @@ _formatter = None
 def get_syslog_logger(name):
     global _handler
     global _formatter
-    logger = logging.getLogger("main")
+    logger = logging.getLogger(name)
     if not _handler:
         _handler = logging.handlers.SysLogHandler(address='/dev/log')
         _formatter = logging.Formatter('%(name)s: %(levelname)s %(message)s')
