@@ -36,3 +36,11 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "add wins and losses 
  */
 CREATE TABLE admins (id INTEGER PRIMARY KEY NOT NULL, username TEXT, password_hash TEXT);
 INSERT INTO revisions (date, comment) VALUES (date("now"), "add admin account table");
+
+/*
+ * Version 6
+ * Add matches
+ */
+PRAGMA foreign_keys = ON;
+CREATE TABLE matches (id INTEGER PRIMARY KEY NOT NULL, challenger_id INTEGER NOT NULL REFERENCES players(id), opponent_id INTEGER NOT NULL REFERENCES players(id), winner_id INTEGER NOT NULL REFERENCES players(id), cpoints INTEGER NOT NULL, opoints INTEGER NOT NULL, cgames TEXT NOT NULL, ogames TEXT NOT NULL, date DATE NOT NULL, tournament BOOL NOT NULL DEFAULT FALSE, retired BOOL NOT NULL DEFAULT FALSE, forfeited BOOL NOT NULL DEFAULT FALSE);
+INSERT INTO revisions (date, comment) VALUES (date("now"), "add matches table");
