@@ -209,6 +209,10 @@ class Database:
             return -1, err
         return check[0][0], None
 
+    def add_match(self, match):
+        self._log.debug("add_match: {}".format(match))
+        return 42, None
+
     def __init__(self, db_file):
         self._log = util.get_syslog_logger("db")
         if os.path.isfile(db_file):
