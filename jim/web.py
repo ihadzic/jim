@@ -547,10 +547,11 @@ class AddMatchHandler(DynamicBaseHandler):
         # All of the above must be done in transactional manner so that we don't
         # end up with inconsistent records if something crashes in the middle
         # of the transaction
-        if self.update_database(match):
+        r, err = self.update_database(match)
+        if r:
             self.finish_success(match)
         else:
-            self.finish_failure("could not add match to the database")
+            self.finish_failure(err)
 
 class DelMatchHandler(DynamicBaseHandler):
     def get(self):

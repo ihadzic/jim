@@ -211,6 +211,19 @@ class Database:
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
+        fields_tuple = self._common_account_fields
+        values_tuple = tuple([ match.get(f) for f in fields_tuple ])
+        assert(len(fields_tuple) == len(values_tuple))
+        # check that referred player IDs are valid
+        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("opponent_id"),)) ]
+        if len(check) == 0:
+            return -1, "invalid opponent ID"
+        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("challenger_id"),)) ]
+        if len(check) == 0:
+            return -1, "invalid challenger ID"
+        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("winner_id"),)) ]
+        if len(check) == 0:
+            return -1, "invalid winner ID"
         return 42, None
 
     def __init__(self, db_file):
@@ -244,3 +257,4 @@ class Database:
         self._translated_player_fields = { 'player_id' : 'id' }
         self._common_account_fields = ( 'username', )
         self._translated_account_fields = { 'account_id' : 'id' }
+        self._common_match_fields = ('challenger_id', 'opponent_id', 'winner_id', 'cpoints', 'opoints', 'cgames', 'ogames', 'date', 'retired', 'forfeited')
