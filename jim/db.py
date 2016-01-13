@@ -215,22 +215,28 @@ class Database:
         values_tuple = tuple([ match.get(f) for f in fields_tuple ])
         values_pattern = ('?,' * len(values_tuple))[:-1]
         assert(len(fields_tuple) == len(values_tuple))
+        winner_id = match.get("winner_id")
+        challenger_id = match.get("challenger_id")
+        opponent_id = match.get("opponent_id")
+        loser_id = opponent_id if winner_id == challenger_id else opponent_id
         # check that referred player IDs are valid
-        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("opponent_id"),)) ]
+        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (opponent_id,)) ]
         if len(check) == 0:
             return -1, "invalid opponent ID"
-        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("challenger_id"),)) ]
+        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (challenger_id,)) ]
         if len(check) == 0:
             return -1, "invalid challenger ID"
-        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("winner_id"),)) ]
+        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (winner_id,)) ]
         if len(check) == 0:
             return -1, "invalid winner ID"
         self._log.debug("add_match: fields are {}".format(fields_tuple))
         self._log.debug("add_match: values are {}".format(values_tuple))
         self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
-                             (match.get('cpoints'), match.get('challenger_id')))
+                             (match.get('cpoints'), challenger_id))
         self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
-                             (match.get('opoints'), match.get('opponent_id')))
+                             (match.get('opoints'), opponent_id))
+        self._cursor.execute("UPDATE players SET wins=wins+1 WHERE id=?", (winner_id,))
+        self._cursor.execute("UPDATE players SET losses=losses+1 WHERE id=?", (loser_id,))
         self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, None
