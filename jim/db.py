@@ -211,8 +211,9 @@ class Database:
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
-        fields_tuple = self._common_account_fields
+        fields_tuple = self._common_match_fields
         values_tuple = tuple([ match.get(f) for f in fields_tuple ])
+        values_pattern = ('?,' * len(values_tuple))[:-1]
         assert(len(fields_tuple) == len(values_tuple))
         # check that referred player IDs are valid
         check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("opponent_id"),)) ]
@@ -224,7 +225,15 @@ class Database:
         check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (match.get("winner_id"),)) ]
         if len(check) == 0:
             return -1, "invalid winner ID"
-        return 42, None
+        self._log.debug("add_match: fields are {}".format(fields_tuple))
+        self._log.debug("add_match: values are {}".format(values_tuple))
+        self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
+                             (match.get('cpoints'), match.get('challenger_id')))
+        self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
+                             (match.get('opoints'), match.get('opponent_id')))
+        self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
+        self._conn.commit()
+        return self._cursor.lastrowid, None
 
     def __init__(self, db_file):
         self._log = util.get_syslog_logger("db")
