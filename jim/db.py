@@ -220,15 +220,24 @@ class Database:
         opponent_id = match.get("opponent_id")
         loser_id = opponent_id if winner_id == challenger_id else opponent_id
         # check that referred player IDs are valid
-        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (opponent_id,)) ]
+        check = [ record for record in self._cursor.execute("SELECT ladder FROM players WHERE id=?", (opponent_id,)) ]
         if len(check) == 0:
             return -1, "invalid opponent ID"
-        check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (challenger_id,)) ]
+        else:
+            opponent_ladder = check[0][0]
+        check = [ record for record in self._cursor.execute("SELECT ladder FROM players WHERE id=?", (challenger_id,)) ]
         if len(check) == 0:
             return -1, "invalid challenger ID"
+        else:
+            challenger_ladder = check[0][0]
         check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (winner_id,)) ]
         if len(check) == 0:
             return -1, "invalid winner ID"
+        winner_ladder = challenger_ladder if winner_id == challenger_id else opponent_ladder
+        loser_ladder = challenger_ladder if winner_id == opponent_id else opponent_ladder
+        self._log.debug("winner ladder is {}; loser ladder is {}".format(winner_ladder, loser_ladder))
+        if winner_ladder == "beginner" or loser_ladder == "beginner":
+            return -1, "Beginners cannnot participate in competition"
         self._log.debug("add_match: fields are {}".format(fields_tuple))
         self._log.debug("add_match: values are {}".format(values_tuple))
         self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
