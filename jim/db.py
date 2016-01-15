@@ -38,6 +38,14 @@ _schema = [
 
 class Database:
 
+    def _compare_ladders(self, l1, l2):
+        if self._ladder_weights.get(l1) == self._ladder_weights.get(l2):
+            return 0
+        if self._ladder_weights.get(l1) > self._ladder_weights.get(l2):
+            return 1
+        if self._ladder_weights.get(l1) < self._ladder_weights.get(l2):
+            return -1
+
     def get_db_version(self):
         self._cursor.execute('SELECT max(id) FROM REVISIONS')
         v = self._cursor.fetchall()
@@ -238,6 +246,10 @@ class Database:
         self._log.debug("winner ladder is {}; loser ladder is {}".format(winner_ladder, loser_ladder))
         if winner_ladder == "beginner" or loser_ladder == "beginner":
             return -1, "Beginners cannnot participate in competition"
+        # promotion to higher ladder, if winner came from lower ladder
+        if self._compare_ladders(winner_ladder, loser_ladder) < 0:
+            winner_ladder = loser_ladder
+        # TODO: recalculate the points and match losses/wins in case of a promotion
         self._log.debug("add_match: fields are {}".format(fields_tuple))
         self._log.debug("add_match: values are {}".format(values_tuple))
         self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
@@ -246,6 +258,7 @@ class Database:
                              (match.get('opoints'), opponent_id))
         self._cursor.execute("UPDATE players SET wins=wins+1 WHERE id=?", (winner_id,))
         self._cursor.execute("UPDATE players SET losses=losses+1 WHERE id=?", (loser_id,))
+        self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
         self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, None
@@ -282,3 +295,4 @@ class Database:
         self._common_account_fields = ( 'username', )
         self._translated_account_fields = { 'account_id' : 'id' }
         self._common_match_fields = ('challenger_id', 'opponent_id', 'winner_id', 'cpoints', 'opoints', 'cgames', 'ogames', 'date', 'retired', 'forfeited')
+        self._ladder_weights = {'a': 3, 'b': 2, 'c':1, 'unranked':0}
