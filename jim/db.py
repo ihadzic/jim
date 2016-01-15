@@ -258,7 +258,16 @@ class Database:
                              (match.get('opoints'), opponent_id))
         self._cursor.execute("UPDATE players SET wins=wins+1 WHERE id=?", (winner_id,))
         self._cursor.execute("UPDATE players SET losses=losses+1 WHERE id=?", (loser_id,))
+        # writing winner ladder will make sure that eventual promotion is recorder
         self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
+        if self._compare_ladders(winner_ladder, loser_ladder) >= 0:
+            # if winner after promotion is in the same ladder as loser, then this is
+            # a ladder match for the winner
+            self._cursor.execute("UPDATE players SET ladder_wins=ladder_wins+1 WHERE id=?", (winner_id,))
+        if self._compare_ladders(loser_ladder, winner_ladder) == 0:
+            # if loser is in the same ladder as the winner (after promotion), then this is
+            # a ladder loss for the loser
+            self._cursor.execute("UPDATE players SET ladder_losses=ladder_losses+1 WHERE id=?", (loser_id,))
         self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, None
