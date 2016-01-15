@@ -226,7 +226,7 @@ class Database:
         winner_id = match.get("winner_id")
         challenger_id = match.get("challenger_id")
         opponent_id = match.get("opponent_id")
-        loser_id = opponent_id if winner_id == challenger_id else opponent_id
+        loser_id = opponent_id if winner_id == challenger_id else challenger_id
         # check that referred player IDs are valid
         check = [ record for record in self._cursor.execute("SELECT ladder FROM players WHERE id=?", (opponent_id,)) ]
         if len(check) == 0:
