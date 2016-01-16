@@ -228,24 +228,28 @@ class Database:
         opponent_id = match.get("opponent_id")
         loser_id = opponent_id if winner_id == challenger_id else challenger_id
         # check that referred player IDs are valid
-        check = [ record for record in self._cursor.execute("SELECT ladder FROM players WHERE id=?", (opponent_id,)) ]
+        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=?", (opponent_id,)) ]
         if len(check) == 0:
-            return -1, "invalid opponent ID"
+            return -1, None, None, "invalid opponent ID"
         else:
             opponent_ladder = check[0][0]
-        check = [ record for record in self._cursor.execute("SELECT ladder FROM players WHERE id=?", (challenger_id,)) ]
+            opponent_last_name = check[0][1]
+        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=?", (challenger_id,)) ]
         if len(check) == 0:
-            return -1, "invalid challenger ID"
+            return -1, None, None, "invalid challenger ID"
         else:
             challenger_ladder = check[0][0]
+            challenger_last_name = check[0][1]
         check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (winner_id,)) ]
         if len(check) == 0:
-            return -1, "invalid winner ID"
+            return -1, None, None, "invalid winner ID"
         winner_ladder = challenger_ladder if winner_id == challenger_id else opponent_ladder
         loser_ladder = challenger_ladder if winner_id == opponent_id else opponent_ladder
-        self._log.debug("winner ladder is {}; loser ladder is {}".format(winner_ladder, loser_ladder))
+        winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
+        loser_last_name = challenger_last_name if winner_id == opponent_id else opponent_last_name
+        self._log.debug("winner is {} from ladder {}; loser is {} from ladder {}".format(winner_last_name, winner_ladder, loser_last_name, loser_ladder))
         if winner_ladder == "beginner" or loser_ladder == "beginner":
-            return -1, "Beginners cannnot participate in competition"
+            return -1, None, None, "Beginners cannnot participate in competition"
         # promotion to higher ladder, if winner came from lower ladder
         if self._compare_ladders(winner_ladder, loser_ladder) < 0:
             winner_ladder = loser_ladder
@@ -270,7 +274,7 @@ class Database:
             self._cursor.execute("UPDATE players SET ladder_losses=ladder_losses+1 WHERE id=?", (loser_id,))
         self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
-        return self._cursor.lastrowid, None
+        return self._cursor.lastrowid, winner_last_name, loser_last_name, None
 
     def __init__(self, db_file):
         self._log = util.get_syslog_logger("db")

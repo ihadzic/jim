@@ -461,9 +461,11 @@ class GetPlayerHandler(PlayerBaseHandler):
 
 class AddMatchHandler(DynamicBaseHandler):
     def update_database(self, match):
-        match_id, err = _database.add_match(match)
+        match_id, winner_last_name, loser_last_name, err = _database.add_match(match)
         if match_id > 0:
             match.update({'match_id': match_id})
+            match.update({'winner_last_name': winner_last_name})
+            match.update({'loser_last_name': loser_last_name})
             return True, err
         else:
             return False, err
