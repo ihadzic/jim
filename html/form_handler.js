@@ -198,13 +198,33 @@ function process_player_form_response(command, response)
     }
 }
 
+function populate_match_list(data)
+{
+    var s;
+    var match_list;
+    var inner_match_list;
+
+    match_list = document.getElementById("match_list");
+    if (match_list.innerHTML == "") {
+        match_list.innerHTML = "<h3>Recent Matches</h3><ul>";
+        match_list.innerHTML += '<div id="inner_match_list"></div>';
+        match_list.innerHTML += '</ul><div class="form_description"><p></p></div>';
+    }
+    s = "<li>Match " + data.match_id + ": ";
+    s += data.date + ", ";
+    s += "" + data.winner_last_name + " def. " + data.loser_last_name;    
+    s += "</li>";
+    inner_match_list = document.getElementById("inner_match_list");
+    inner_match_list.innerHTML += s;
+}
+
 function process_match_form_response(command, response)
 {
     var form_name = "match_form";
     if (response.result == "success") {
         form = document.getElementById(form_name);
         form.reset();
-        alert("TODO: process successful match submission");
+        populate_match_list(response);
     } else {
         alert("Error: " + response.reason);
     }
