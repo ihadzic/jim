@@ -200,20 +200,23 @@ function process_player_form_response(command, response)
     }
 }
 
-function populate_player_id_box(data, form, id_box)
+function populate_player_box(data, form, box, field)
 {
     var player;
     if (data.result == "success") {
         if (data.entries.length == 1) {
             player = data.entries[0];
-            form[id_box].value = player.player_id;
+	    if (field == 'id')
+		form[box].value = player.player_id;
+	    else
+		form[box].value = player.last_name;
         } else
-            form[id_box].value = "";
+            form[box].value = "";
     } else
-        form[id_box].value = "";
+        form[box].value = "";
 }
 
-function do_player_name_to_player_id(player_last_name_box, player_id_box, timer_index)
+function do_box_completion(player_last_name_box, player_id_box, timer_index, field)
 {
     var q, form;
     var xhttp = new XMLHttpRequest();
@@ -221,22 +224,31 @@ function do_player_name_to_player_id(player_last_name_box, player_id_box, timer_
 
     clearTimeout(match_form_timers[timer_index]);
     match_form_timers[timer_index] = null;
+    if (field == "id")
+	player_box = player_id_box;
+    else
+	player_box = player_last_name_box;
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
             if (xhttp.status == 200) {
-                populate_player_id_box(JSON.parse(xhttp.responseText), form, player_id_box);
+                populate_player_box(JSON.parse(xhttp.responseText), form, player_box, field);
             }
         }
     }
     form = document.getElementById(form_name);
     q = form.action;
-    q += "get_player?last_name=";
-    q += document.getElementById(player_last_name_box).value;
+    if (field == "id") {
+        q += "get_player?last_name=";
+        q += document.getElementById(player_last_name_box).value;
+    } else {
+        q += "get_player?player_id=";
+        q += document.getElementById(player_id_box).value;
+    }
     xhttp.open("GET", q, true);
     xhttp.send();
 }
 
-function player_name_to_player_id(player_last_name_box, player_id_box, timer_index)
+function player_box_completion(player_last_name_box, player_id_box, timer_index, field)
 {
     var typing_delay = 1000;
 
@@ -247,9 +259,7 @@ function player_name_to_player_id(player_last_name_box, player_id_box, timer_ind
         clearTimeout(match_form_timers[timer_index]);
     match_form_timers[timer_index] = setTimeout(
         function () {
-            do_player_name_to_player_id(player_last_name_box,
-                                        player_id_box,
-                                        timer_index);
+            do_box_completion(player_last_name_box, player_id_box, timer_index, field);
         },
         typing_delay);
 }
