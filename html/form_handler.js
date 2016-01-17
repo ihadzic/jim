@@ -1,3 +1,5 @@
+var match_form_timers = [null, null, null, null];
+
 function universal_json_to_form(form, data)
 {
     var i, p;
@@ -196,6 +198,60 @@ function process_player_form_response(command, response)
     } else {
         alert("Error: " + response.reason);
     }
+}
+
+function populate_player_id_box(data, form, id_box)
+{
+    var player;
+    if (data.result == "success") {
+        if (data.entries.length == 1) {
+            player = data.entries[0];
+            form[id_box].value = player.player_id;
+        } else
+            form[id_box].value = "";
+    } else
+        form[id_box].value = "";
+}
+
+function do_player_name_to_player_id(player_last_name_box, player_id_box, timer_index)
+{
+    var q, form;
+    var xhttp = new XMLHttpRequest();
+    var form_name = "match_form";
+
+    clearTimeout(match_form_timers[timer_index]);
+    match_form_timers[timer_index] = null;
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                populate_player_id_box(JSON.parse(xhttp.responseText), form, player_id_box);
+            }
+        }
+    }
+    form = document.getElementById(form_name);
+    q = form.action;
+    q += "get_player?last_name=";
+    q += document.getElementById(player_last_name_box).value;
+    xhttp.open("GET", q, true);
+    xhttp.send();
+}
+
+function player_name_to_player_id(player_last_name_box, player_id_box, timer_index)
+{
+    var typing_delay = 1000;
+
+    // user has typed something in the form box, use timer that we keep
+    // rearming for as long as user is typing; one second after user
+    // has stopped typing in that box, fire the timer and do the database lookup
+    if (match_form_timers[timer_index])
+        clearTimeout(match_form_timers[timer_index]);
+    match_form_timers[timer_index] = setTimeout(
+        function () {
+            do_player_name_to_player_id(player_last_name_box,
+                                        player_id_box,
+                                        timer_index);
+        },
+        typing_delay);
 }
 
 function populate_match_list(data)

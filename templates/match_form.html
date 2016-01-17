@@ -27,7 +27,7 @@
             <label class="description" for="player_1">Player 1</label>
             <div style="float:left;width:30%">
               <label class="description" for="player_1_last_name">Last Name </label>
-              <input style="width:100%" id="player_1_last_name" name="player_1_last_name" class="element text small" type="text" maxlength="255" value=""/>
+              <input style="width:100%" id="player_1_last_name" name="player_1_last_name" class="element text small" type="text" maxlength="255" value="" oninput="player_name_to_player_id('player_1_last_name', 'player_1_id', 0)"/>
             </div>
             <div style="float:left;width:10%">
               <label class="description" for="player_1_id">ID </label>
@@ -57,7 +57,7 @@
             <label class="description" for="player_2">Player 2</label>
             <div style="float:left;width:30%">
               <label class="description" for="player_2_last_name">Last Name </label>
-              <input style="width:100%" id="player_2_last_name" name="player_2_last_name" class="element text small" type="text" maxlength="255" value=""/>
+              <input style="width:100%" id="player_2_last_name" name="player_2_last_name" class="element text small" type="text" maxlength="255" value="" oninput="player_name_to_player_id('player_2_last_name', 'player_2_id', 2)"/>
             </div>
             <div style="float:left;width:10%">
               <label class="description" for="player_2_id">ID </label>
