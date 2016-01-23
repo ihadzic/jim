@@ -253,11 +253,9 @@ class Database:
         # promotion to higher ladder, if winner came from lower ladder
         if self._compare_ladders(winner_ladder, loser_ladder) < 0:
             winner_ladder = loser_ladder
-            # if winner is promoted, the points and ladder match counters reset to zero
-            # they will be updated to 30 and 1, respectively in normal calculation
+            # if winner is promoted, the points reset to zero they will be updated to 30
+            # in subsequent operations within this transaction
             self._cursor.execute("UPDATE players SET points=0 WHERE id=?", (winner_id,))
-            self._cursor.execute("UPDATE players SET ladder_wins=0 WHERE id=?", (winner_id,))
-            self._cursor.execute("UPDATE players SET ladder_losses=0 WHERE id=?", (winner_id,))
         self._log.debug("add_match: fields are {}".format(fields_tuple))
         self._log.debug("add_match: values are {}".format(values_tuple))
         self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
