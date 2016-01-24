@@ -32,7 +32,15 @@ _schema = [
       'INSERT INTO revisions (date, comment) VALUES (date("now"), "add admin account table");'],
 
     [ 'CREATE TABLE matches (id INTEGER PRIMARY KEY NOT NULL, challenger_id INTEGER NOT NULL REFERENCES players(id), opponent_id INTEGER NOT NULL REFERENCES players(id), winner_id INTEGER NOT NULL REFERENCES players(id), cpoints INTEGER NOT NULL, opoints INTEGER NOT NULL, cgames TEXT NOT NULL, ogames TEXT NOT NULL, date DATE NOT NULL, tournament BOOL NOT NULL DEFAULT FALSE, retired BOOL NOT NULL DEFAULT FALSE, forfeited BOOL NOT NULL DEFAULT FALSE);',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add matches table");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add matches table");'],
+
+    [ 'ALTER TABLE players ADD COLUMN a_wins INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN a_losses INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN b_wins INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN b_losses INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN c_wins INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE players ADD COLUMN c_losses INTEGER NOT NULL DEFAULT 0;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "separate win/loss counter for each ladder");']
 
 ]
 
