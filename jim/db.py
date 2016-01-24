@@ -65,7 +65,7 @@ class Database:
         return v[0]
 
     def get_ladder(self, ladder):
-        fields = ["first_name", "last_name", "points", "id", 'wins', 'losses', 'ladder_wins', 'ladder_losses']
+        fields = ["first_name", "last_name", "points", "id", "wins", "losses", "a_wins", "a_losses", "b_wins", "b_losses", "c_wins", "c_losses"]
         fields_string = string.join(fields, ',')
         r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? ORDER BY points DESC".format(fields_string), (ladder,)) ]
         return r
@@ -253,6 +253,10 @@ class Database:
             return -1, None, None, "invalid winner ID"
         winner_ladder = challenger_ladder if winner_id == challenger_id else opponent_ladder
         loser_ladder = challenger_ladder if winner_id == opponent_id else opponent_ladder
+        if self._compare_ladders(opponent_ladder, challenger_ladder) >= 0:
+            match_ladder = opponent_ladder
+        else:
+            return -1, None, None, "Challenger must be from lower ladder"
         winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
         loser_last_name = challenger_last_name if winner_id == opponent_id else opponent_last_name
         self._log.debug("winner is {} from ladder {}; loser is {} from ladder {}".format(winner_last_name, winner_ladder, loser_last_name, loser_ladder))
@@ -270,18 +274,21 @@ class Database:
                              (match.get('cpoints'), challenger_id))
         self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
                              (match.get('opoints'), opponent_id))
+        # record wins and losses counters
         self._cursor.execute("UPDATE players SET wins=wins+1 WHERE id=?", (winner_id,))
         self._cursor.execute("UPDATE players SET losses=losses+1 WHERE id=?", (loser_id,))
-        # writing winner ladder will make sure that eventual promotion is recorded
+        if match_ladder == 'a':
+            self._cursor.execute("UPDATE players SET a_wins=a_wins+1 WHERE id=?", (winner_id,))
+            self._cursor.execute("UPDATE players SET a_losses=a_losses+1 WHERE id=?", (loser_id,))
+        elif match_ladder == 'b':
+            self._cursor.execute("UPDATE players SET b_wins=b_wins+1 WHERE id=?", (winner_id,))
+            self._cursor.execute("UPDATE players SET b_losses=b_losses+1 WHERE id=?", (loser_id,))
+        elif match_ladder == 'c':
+            self._cursor.execute("UPDATE players SET c_wins=c_wins+1 WHERE id=?", (winner_id,))
+            self._cursor.execute("UPDATE players SET c_losses=c_losses+1 WHERE id=?", (loser_id,))
+        # writing winner ladder will make sure that possible promotion is recorded
         self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
-        if self._compare_ladders(winner_ladder, loser_ladder) >= 0:
-            # if winner after possible promotion is in the same ladder as loser, then this is
-            # a ladder match for the winner
-            self._cursor.execute("UPDATE players SET ladder_wins=ladder_wins+1 WHERE id=?", (winner_id,))
-        if self._compare_ladders(loser_ladder, winner_ladder) == 0:
-            # if loser is in the same ladder as the winner (after possible promotion), then this is
-            # a ladder loss for the loser
-            self._cursor.execute("UPDATE players SET ladder_losses=ladder_losses+1 WHERE id=?", (loser_id,))
+        # finally, record the match
         self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, winner_last_name, loser_last_name, None
