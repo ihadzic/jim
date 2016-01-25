@@ -270,10 +270,13 @@ class Database:
             self._cursor.execute("UPDATE players SET points=0 WHERE id=?", (winner_id,))
         self._log.debug("add_match: fields are {}".format(fields_tuple))
         self._log.debug("add_match: values are {}".format(values_tuple))
-        self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
-                             (match.get('cpoints'), challenger_id))
-        self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
-                             (match.get('opoints'), opponent_id))
+        # loser in beginner or unranked ladder gets no points
+        if not (loser_id == challenger_id and challenger_ladder in ["unranked", "beginner"]):
+            self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
+                                 (match.get('cpoints'), challenger_id))
+        if not (loser_id == opponent_id and opponent_ladder in ["unranked", "beginner"]):
+            self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
+                                 (match.get('opoints'), opponent_id))
         # record wins and losses counters
         self._cursor.execute("UPDATE players SET wins=wins+1 WHERE id=?", (winner_id,))
         self._cursor.execute("UPDATE players SET losses=losses+1 WHERE id=?", (loser_id,))
