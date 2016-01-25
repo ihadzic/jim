@@ -260,6 +260,8 @@ class Database:
         winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
         loser_last_name = challenger_last_name if winner_id == opponent_id else opponent_last_name
         self._log.debug("winner is {} from ladder {}; loser is {} from ladder {}".format(winner_last_name, winner_ladder, loser_last_name, loser_ladder))
+        if winner_ladder in ["beginner", "unranked"] and loser_ladder in ["beginner", "unranked"]:
+            return -1, None, None, "Unranked or beginner players cannot play each other"
         # promotion to higher ladder, if winner came from lower ladder
         if self._compare_ladders(winner_ladder, loser_ladder) < 0:
             winner_ladder = loser_ladder
