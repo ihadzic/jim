@@ -1,3 +1,9 @@
+#!/usr/bin/env python2
+#
+# Copyright (c) 2016, Ilija Hadzic <ilijahadzic@gmail.com>
+#
+# MIT License, see LICENSE.txt for details
+
 import util
 import sqlite3
 import string
