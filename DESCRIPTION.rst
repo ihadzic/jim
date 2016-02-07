@@ -27,6 +27,12 @@ machine with a network connection to act as a server and a web browser
 to interact with the system. More likely, you will want to install
 the server on an instance in the Amazon cloud (or similar service).
 
+License
+-------
+
+Unless indicated otherwise, the code in this repository is licensed
+under the MIT license. See `LICENSE.txt` file for details.
+
 Installation
 ------------
 

@@ -30,15 +30,14 @@ setup(
     url='http://bitbucket.com/tbd',
     author='Ilija Hadzic',
     author_email='ilijahadzic@gmail.com',
-    license='TBD',
+    license='MIT',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Tennis Players',
-        'Topic :: Applications :: Tennis Ranking',
-        #'License :: OSI Approved :: MIT License',
-        'License :: TBD :: TBD',
+        'Topic :: Applications :: Web',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
@@ -47,7 +46,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-    keywords='tennis rankings competition database',
+    keywords='tennis rankings competition database web',
     packages=find_packages(exclude=[]),
     install_requires=['tornado', 'bcrypt', 'python-daemon', 'argparse'],
     package_data={
