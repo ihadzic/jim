@@ -67,7 +67,7 @@ setup:
    `cd jim/`
    `pip install .`
 
-Here, we assumed that `jim/` is the directory into which you cloned the repository.
+   Here, we assumed that `jim/` is the directory into which you cloned the repository.
 
 5. Edit this file and customize any parameters as you see fit:
 
