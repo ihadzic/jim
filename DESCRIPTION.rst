@@ -49,54 +49,54 @@ setup:
 
 1. Clone the repository:
 
-...`git clone https://github.com/ihadzic/jim.git`
+   `git clone https://github.com/ihadzic/jim.git`
 
 2. Setup the virtual environment in your home directory:
 
-...`virtualenv ~/jim_env`
+   `virtualenv ~/jim_env`
 
-...If your system has both Python 2 and Python 3 installed, then make sure you create an environment
-...for Python 2 using `-p python2` option.
+   If your system has both Python 2 and Python 3 installed, then make sure you create an environment
+   for Python 2 using `-p python2` option.
 
 3. Activate the virtual environment:
 
-...`. ~/jim_env/bin/activate`
+   `. ~/jim_env/bin/activate`
 
 4. Install using `pip`
 
-...`cd jim/`
-...`pip install .`
+   `cd jim/`
+   `pip install .`
 
 Here, we assumed that `jim/` is the directory into which you cloned the repository.
 
 5. Edit this file and customize any parameters as you see fit:
 
-...`~jim_env/lib/python2.7/site-packages/jim/jim.cfg`
+   `~jim_env/lib/python2.7/site-packages/jim/jim.cfg`
 
-...Note that if you want to run it as a regular user, you must use TCP ports above
-...1024 (non privileged ports) and the path to the database file must be writable
-...by the user that you want to run as. By default, the path to the database is
-...is relative to the current working directory, so if you leave it like that
-...then make sure you always run the tests in the same directory (otherwise you
-...will end up creating a new database for each directory in which you run).
+   Note that if you want to run it as a regular user, you must use TCP ports above
+   1024 (non privileged ports) and the path to the database file must be writable
+   by the user that you want to run as. By default, the path to the database is
+   is relative to the current working directory, so if you leave it like that
+   then make sure you always run the tests in the same directory (otherwise you
+   will end up creating a new database for each directory in which you run).
 
 6. Fire it up in the foreground:
 
-...`jim -n`
+   `jim -n`
 
-...When you run for the first time, you will see a lot of messages fly by (most
-...of them will be the SQL commands as it creates the database schema), but it should
-...finish with this message:
+   When you run for the first time, you will see a lot of messages fly by (most
+   of them will be the SQL commands as it creates the database schema), but it should
+   finish with this message:
 
-...`INFO:web:starting server loop`
+   `INFO:web:starting server loop`
 
 7. Try if it works by pointing your browser to:
 
-...`https://localhost:<https_port>`
+   `https://localhost:<https_port>`
 
-...Where `<https_port>` is the TCP port that you picked when you edited the configuration file.
-...Alternatively you can use `http` (cleartext) connection along with the TCP port that you
-...specified in the configuration file for `http` connections.
+   Where `<https_port>` is the TCP port that you picked when you edited the configuration file.
+   Alternatively you can use `http` (cleartext) connection along with the TCP port that you
+   specified in the configuration file for `http` connections.
 
 You should see the login screen and the server and a bunch of log messages in the terminal
 window. If you get to this point, your service works! We will explain the usage in subsequent
