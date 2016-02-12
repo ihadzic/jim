@@ -114,9 +114,93 @@ will have to accept the security exception. This is because the default certific
 just a self-singed placeholder. In real deployment you will have to obtain and install
 real (signed) certificate, which is explained in the next subsection.
 
-### Deployment (using AWS)
+### Deployment
 
-TODO
+For real deployment (whether an official site for use with ATTTC or for experimentation
+and pre-deployment testing) you will need a machine to host the service. This section
+will assume that the host is an Amazon Web Services (AWS) cloud instance, but the same
+instructions will work with any other hosting provider or on a dedicated private
+machine with permanent Internet connection.
+
+If deploying on Amazon Cloud platform, create an AWS instance (use Ubuntu image) and
+follow these instructions.
+
+1. Install prerequisite packages (see the previous section).
+
+2. Become `root`:
+
+   `sudo su -`
+
+3. Install the Jim package:
+
+   `pip install git+https://github.com/ihadzic/jim.git`
+
+   Note that this time you are not installing into a virtual environment but as a system-wide
+   installation, which is the reason why you had to become `root` in the previous step.
+
+   The installed files will be in the following directories:
+
+   `static HTML: /usr/local/var/jim/html`
+
+   `HTML templates: /usr/local/var/jim/templates`
+
+3. Create the directory for database:
+
+   `mkdir /usr/local/var/jim/database/`
+
+4. Create the configuration file in `/etc/jim.cfg` and populate it with the following content:
+
+    ```
+    [web]
+    http_port = <set_the_http_port>
+    https_port = <set_the_https_port>
+    html_root = /usr/local/var/jim/html
+    template_root = /usr/local/var/jim/templates
+    bootstrap_token = <set_the_bootstrap_token>
+    certs_path = /usr/local/var/jim/certs
+
+    [db]
+    db_file = /usr/local/var/jim/database/jim.db
+    ```
+
+5. Register the domain name for your service with your favorite DNS provider. If you decide
+   to skip this step, you can still use the service by specifying the IP address,
+   but you will also have to use self-signed certificate because you cannot go through
+   the signing process without the registered domain.
+
+6. Obtain signed SSL certificates and put them in `/usr/local/var/jim/certs`. The private key
+   file must be called `key.pem` (please do not use the pass phrase) and the site certificate
+   must be called `cert.pem`. The signing process is specific to the Certificate Authority
+   (CA) from which you will be getting the certificate, but in the process you will have to
+   generate the Certificate (see the README.txt file in the directory) followed by generating
+   the Certificate Signing Request file (CSR) and submit it to CA which will provide
+   the signed certificate to you. You can decide to skip the signing process and use
+   self-signed certificates, but then you will have to add the security exception
+   in your browser or use cleartext (http) connections. The latter should be done only
+   for testing and experimentation.
+
+7. Setup the network rules in AWS dashboard such that at least `https` port is open and
+   routed to the correct port on your instance. You can also open up the `http` port, but
+   only if your instance is used for testing and experimentation. The official system should
+   not accept cleartext connections.
+
+8. You are now ready to run the service, just type (as root):
+
+   `jim`
+
+   and the service will start in the background and run as a daemon (the lack of `-n`
+   option will make the service run as a daemon). If you prefer to run the service
+   as a non-privileged user (instead of as `root`) then you have to make sure that
+   all files under `/usr/locatl/var/jim` are owned by the user that will own the service
+   and you cannot use the privileged TCP port (80 for `http` and 443 for `https`).
+   You can still set up the network rules in AWS dashboard to translate the incoming
+   privileged port to a non-privileged.
+
+9. To verify that the service is running look at the system log using `journalctl` command.
+   You should see the log messages from the service.
+
+10. Optionally, add starting of `jim` service to boot scripts so that it comes back
+    up if you reboot the instance.
 
 
 Usage
