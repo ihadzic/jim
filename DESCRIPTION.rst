@@ -206,7 +206,38 @@ follow these instructions.
 Usage
 -----
 
-TODO
+When you bring up the service for the first time, you should point your browser
+to the site and do the bootstrap login. Log in using `bootstrap` for username
+and the bootstrap token that you selected in the configuration file
+for the password.
+
+After you log in, you should immediately select "Manage Admins" and create an
+administrator account. After the first administrator account is created
+you the `bootstrap` login will be automatically disabled. The `bootstrap`
+login is a one-time backdoor until the first administrator account is created.
+
+If you delete all administrator accounts, the `bootstrap` login will start to
+work again, but in general you should avoid doing that.
+
+There are two types of users. Administrator (which you have just created
+if you are following these instructions) is a user that cannot play matches
+(and thus is not included in the ladder), but can enter matches and player
+information for any player, add players, delete players, etc. Player is a
+regular user that plays matches and shows on the ladder. Players cannot enter
+matches for others and can modify only their own data (TODO: this feature
+is not implemented yet). Players can also view the ladder, matches, and
+roster. Initially, players have accounts only to see the ladder and roster,
+while matches are still reported using the old way (E-mail to administrator).
+Later, the plan is to allow players to enter their own matches.
+
+If you are just testing the system, create one administrator and log in as
+that user. You will get the menu of operations that an administrator can do.
+Explore it and add a few players (regular users) and add some matches.
+Watch the ladder change as you enter matches. Now log out and log in as
+a player. You will see a more limited set of options and fewer menus. The
+interface should be intuitive and entering players and matches should
+be straightforward.
+
 
 Development
 -----------
