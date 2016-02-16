@@ -238,9 +238,35 @@ a player. You will see a more limited set of options and fewer menus. The
 interface should be intuitive and entering players and matches should
 be straightforward.
 
-
 Development
 -----------
+
+The easiest environment to do the development in is to run everything on
+the local machine in your home directory using Python virtual environment.
+After making (and possibly commiting to Git) code changes (add a feature,
+fix a bug, etc.), upgrade the installation using `pip`. Type this in the top
+of your source code directory in your virtual environment:
+
+`pip install --upgrade .`
+
+This will update the installation as well as the dependency packages. If you are not
+on the network and you know that you have all dependecies already installed you can
+type this instead:
+
+`pip install --upgrade --no-dependencies .`
+
+Run the `jim` executable in the foreground:
+
+`jim -n`
+
+and point the browser to `https://localhost:<port>`. If you are using default configuration,
+the system will look for the database file in the current working directory. So make
+sure that you always run the executable in the same directory. Otherwise a new
+empty database will be created when you run.
+
+Once you are ready to deploy your changes to a public server, `ssh` to the server
+and `pip install --upgrade` the code on the server. Restart the `jim` daemon following
+the upgrade.
 
 Guidelines for Contributing
 ---------------------------
