@@ -322,14 +322,14 @@ One patch must change one small logical unit and must be accompanied by a meanin
 commit message that explains what the patch is about. The commit message must be in
 canonical format:
 
-    ```
-    affected unit: short message
+```
+affected unit: short message
 
-    elaborate message that explains the whats, whys,
-    and hows (unless the patch is trivial and obvious)
+elaborate message that explains the whats, whys,
+and hows (unless the patch is trivial and obvious)
 
-    Signed-off-by: Your Name <your@email>
-    ```
+Signed-off-by: Your Name <your@email>
+```
 
 A monster-patch that contains dozen unrelated changes accompanied with a
 meaningless commit message, such as "my latest stuff from Monday, it works!"
