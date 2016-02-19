@@ -270,3 +270,118 @@ the upgrade.
 
 Guidelines for Contributing
 ---------------------------
+
+If you plan to contribute to this code (whether or not you play tennis in the ATTTC league),
+here are some guidelines you should adhere to.
+
+###License
+
+The code in this repository is licensed under MIT License, so please make sure that you
+understand its terms and any implications it may have on the distribution
+of the code that you are contributing. I am not a lawyer and cannot provide any legal
+advice.
+
+Any patch that you contribute must include the "Signed-off-by: Your Name <your@email>"
+line at the end. What that means is that you should type `git commit -s` when committing
+your code. By including the "Signed-off-by" you are making a statement that you are
+either own the code that you are contributing (i.e., you are the original author)
+or that you received it from an original author or a third party under license terms
+that allow you to distribute it or contribute it to an MIT-licensed open-source project.
+This is a normal practice in most free and open-source projects and should come as no
+surprise to anyone who has worked on community software development.
+
+If you write software for living, it is your responsibility to make sure that your
+employer has no objection to you contributing to a public open-source project on your
+own time. In most cases your contributions will be your own (i.e., hobby-contributions)
+and not of your employer, so unless you have explicitly permission from your company,
+the "Author" line of your patches should identify you as private individual, not as
+an employee of your company. This further means that you should use your personal
+E-mail for all patches, not your work E-mail. Different companies have different
+policies with regard to their employees contributing to public projects (even if
+it's on their own time), so if in doubt check. At the end of the day, it's your
+responsibility, not mine.
+
+###Coding practices
+
+Short version: Please keep it simple and stupid (KISS) and be neat!
+
+Long version: This system is no rocket science. It is not meant to serve half a billion users nor push
+terabytes of data to the world. It's a simple database-101 project married with a web front end.
+So simple, working, and easy-to-follow is more important than fancy. No need for three dozen
+frameworks and a pile of hyped-up technologies. If you look at the code, you will notice
+that it's very simple: Python + Tornado + SQLite at the server side and hand-crafted HTML
+and Javascript at the client side. I don't even bother using asynchronous methods in Tornado,
+not because I don't know them (I do), but because expected traffic does not justify doing anything
+fancier.
+
+Please be neat and tidy. This applies to the code itself and patches as a series of changes
+to the code. You are using Git, which allows you to commit things locally, and rework and
+tidy-up your patches before sending the pull request.
+
+One patch must change one small logical unit and must be accompanied by a meaningful
+commit message that explains what the patch is about. The commit message must be in
+canonical format:
+
+    ```
+    affected unit: short message
+
+    elaborate message that explains the whats, whys,
+    and hows (unless the patch is trivial and obvious)
+
+    Signed-off-by: Your Name <your@email>
+    ```
+
+A monster-patch that contains dozen unrelated changes accompanied with a
+meaningless commit message, such as "my latest stuff from Monday, it works!"
+is not very useful for other contributors and I won't merge it.
+
+You should never mix the cleanup work with substance work. Do the cleanup
+in a separate patch and then follow with the substance. If, as part
+of your work you need to refactor or rework some functions, do the rework
+in a series of preparatory function-neutral patches and then follow with
+a patch that changes the actual function. This makes reviewing the
+code easier, because your friendly integrator can focus on one small
+patch when trying to understand what you are doing instead of looking
+at one monster-patch that touches every single file with dozen unrelated
+changes.
+
+The size of the patch should be the smallest that makes sense, but you should
+avoid changes that completely break the build or ability to run. It is normal
+part of development to inadvertently introduce bugs, but intentional break
+such as changing the function signature without reconciling with the callers
+(in the same patch) is bad. Such a practice completely defeats the ability to
+bisect the tree if we are searching for a regression, so please don't do it.
+In other words, each patch should be the minimum set of changes that
+achieves transitive closure of the dependency graph.
+
+Order of patches matters. If, for example, you need to modify the
+database schema, introduce a new function in the backend, modify the
+code to use the new function, and add stuff to front-end to give user
+the access to the new feature, then do it in that order and make the
+database schema upgrade a separate patch, from implementation of the
+new function, which is a separate patch from caller rework, which in
+turn is the separate patch from front-end rework. If, in this example,
+you pick the opposite order, you may be forced to either intentionally
+break the build and existing functionality or bundle everything into
+one monster-patch.
+
+If, while working on a feature, you stumble upon something unrelated
+that's broken and decide to fix it, while you are at it, please do not
+bundle the fix into the rest of your work. Make the fix a separate patch
+unless your main work is already modifying the affected section
+of the code. Use 'git add -p' to selectively stage hunks that logically
+belong to different patches.
+
+People who come from SVN or CVS background may find this practice
+burdening and may even question its merits. The problem is that being
+a centralized system, SVN or CVS institute a fear that if you commit
+something you will break everyone else. That encourages postponing
+the commit until everything is tested and verified, which in turns
+forces the user to create massive monster-commits that nobody
+(not even the author) can figure out what they actually include.
+Searching for regression is a nightmare in such an environment.
+In Git, you cannot break anyone except yourself and you can amend
+and cleanup patches as many times as you want before your stuff
+is merged. So take advantage of it. In SVN or CVS, the system forces
+you to be messy. In Git, being messy or tidy is solely the result
+of your own merits.
