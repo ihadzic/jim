@@ -586,12 +586,17 @@ class GetMatchHandler(DynamicBaseHandler):
         if args == None:
             return
         try:
-            players  = args['player']
-            if len(players) > 2:
-                self.finish_failure("cannot have more than two players")
-                return
+            challenger_id = int(args['challenger_id'][0])
         except:
-            players = None
+            challenger_id = None
+        try:
+            opponent_id = int(args['opponent_id'][0])
+        except:
+            opponent_id = None
+        try:
+            winner_id = int(args['winner_id'][0])
+        except:
+            winner_id = None
         try:
             date = datetime.strptime(args['date'][0], '%Y-%m-%d')
         except:
@@ -607,7 +612,9 @@ class GetMatchHandler(DynamicBaseHandler):
         if since and date:
             self.finish_failure("cannot have both since and date parameters")
             return
-        keys =  util.purge_null_fields({ 'players': players,
+        keys =  util.purge_null_fields({ 'challenger_id': challenger_id,
+                                         'opponent_id': opponent_id,
+                                         'winner_id': winner_id,
                                          'ladder' : ladder,
                                          'date': str(date).split()[0] if date else None, 
                                          'since': str(since).split()[0] if since else None })
