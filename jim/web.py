@@ -612,11 +612,8 @@ class GetMatchHandler(DynamicBaseHandler):
                                          'date': str(date).split()[0] if date else None, 
                                          'since': str(since).split()[0] if since else None })
         _log.info("keys = {}".format(keys))
-        # TODO: lookup match here
-        if keys:
-            self.finish_success({'entries': [keys]})
-        else:
-            self.finish_failure("no valid keys specified")
+        matches = _database.lookup_match(keys)
+        self.finish_success({'entries': matches})
 
 class UpdateMatchHandler(DynamicBaseHandler):
     def get(self):

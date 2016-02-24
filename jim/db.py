@@ -174,6 +174,9 @@ class Database:
     def lookup_player(self, fields, operator):
         return self._lookup_something(fields, operator, "players", self._common_player_fields, self._translated_player_fields)
 
+    def lookup_match(self, fields):
+        return self._lookup_something(fields, "and", "matches", self._common_match_fields, self._translated_match_fields)
+
     def delete_player(self, player_id):
         self._log.debug("delete_player: trying to delete player with ID {}".format(player_id))
         try:
@@ -334,4 +337,5 @@ class Database:
         self._common_account_fields = ( 'username', )
         self._translated_account_fields = { 'account_id' : 'id' }
         self._common_match_fields = ('challenger_id', 'opponent_id', 'winner_id', 'cpoints', 'opoints', 'cgames', 'ogames', 'date', 'retired', 'forfeited')
+        self._translated_match_fields = { }
         self._ladder_weights = {'a': 3, 'b': 2, 'c':1, 'unranked':0}
