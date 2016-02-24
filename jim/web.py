@@ -596,8 +596,22 @@ class GetMatchHandler(DynamicBaseHandler):
             date = datetime.strptime(args['date'][0], '%Y-%m-%d')
         except:
             date = None
+        try:
+            since = datetime.strptime(args['since'][0], '%Y-%m-%d')
+        except:
+            since = None
+        try:
+            ladder = args['ladder'][0].lower()
+        except:
+            ladder = None
+        if since and date:
+            self.finish_failure("cannot have both since and date parameters")
+            return
         keys =  util.purge_null_fields({ 'players': players,
-                                         'date': str(date).split()[0] if date else None })
+                                         'ladder' : ladder,
+                                         'date': str(date).split()[0] if date else None, 
+                                         'since': str(since).split()[0] if since else None })
+        _log.info("keys = {}".format(keys))
         # TODO: lookup match here
         if keys:
             self.finish_success({'entries': [keys]})
