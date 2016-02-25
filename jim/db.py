@@ -152,7 +152,7 @@ class Database:
         select_fields = string.join(common_fields + tfs, ', ')
         match_tuple = ()
         where_list = []
-        for w in fields and api_fields:
+        for w in api_fields:
             f = fields.get(w)
             if f != None:
                 match_tuple = match_tuple + (f,)
