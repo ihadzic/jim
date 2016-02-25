@@ -145,10 +145,11 @@ class Database:
             self._conn.commit()
             return player_id, None
 
-    def _lookup_something(self, fields, operator, table_name, common_fields, translated_fields):
+    def _lookup_something(self, fields, operator, table_name, common_fields, translated_fields, special_fields = {}):
         tfk = tuple(t for t in translated_fields)
         tfs = tuple(translated_fields.get(t) for t in tfk)
-        api_fields = common_fields + tfk
+        sfk = tuple(special_fields.keys())
+        api_fields = common_fields + tfk + sfk
         select_fields = string.join(common_fields + tfs, ', ')
         match_tuple = ()
         where_list = []
@@ -156,8 +157,17 @@ class Database:
             f = fields.get(w)
             if f != None:
                 match_tuple = match_tuple + (f,)
-                wt = translated_fields.get(w)
-                where_list = where_list + ['{} = ?'.format(wt if wt else w)]
+                if w in sfk:
+                    # special field: translates and has custom operator
+                    # safe to do without the check, because sfk has all keys and keys are invariant
+                    wt = special_fields.get(w).get('field')
+                    c_operator = special_fields.get(w).get('operator')
+                    self._log.debug('_lookup_something: special field: {} --> {} , {}'.format(w, wt, operator))
+                    where_list = where_list + ['{} {} ?'.format(wt, c_operator)]
+                else:
+                    # direct or translated field: operator is always '='
+                    wt = translated_fields.get(w)
+                    where_list = where_list + ['{} = ?'.format(wt if wt else w)]
         where_string = string.join(where_list, ' OR ' if operator == 'or' else ' AND ')
         self._log.debug("_lookup_something: where string is {}".format(where_string))
         self._log.debug("_lookup_something: match tuple is {}".format(match_tuple))
