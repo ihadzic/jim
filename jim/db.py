@@ -162,7 +162,7 @@ class Database:
                     # safe to do without the check, because sfk has all keys and keys are invariant
                     wt = special_fields.get(w).get('field')
                     c_operator = special_fields.get(w).get('operator')
-                    self._log.debug('_lookup_something: special field: {} --> {} , {}'.format(w, wt, operator))
+                    self._log.debug('_lookup_something: special field: {} --> {} , {}'.format(w, wt, c_operator))
                     where_list = where_list + ['{} {} ?'.format(wt, c_operator)]
                 else:
                     # direct or translated field: operator is always '='
