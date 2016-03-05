@@ -188,7 +188,10 @@ class Database:
         return self._lookup_something(fields, operator, "players", self._common_player_fields, self._translated_player_fields)
 
     def lookup_match(self, fields):
-        return self._lookup_something(fields, "and", "matches", self._common_match_fields, self._translated_match_fields, self._special_match_fields)
+        # ladder is special: it can be searched, but it is generated when match is added
+        # so it's not listed in the common fields tuple; we add it for search
+        modified_common_match_fields = self._common_match_fields + ('ladder',)
+        return self._lookup_something(fields, "and", "matches", modified_common_match_fields, self._translated_match_fields, self._special_match_fields)
 
     def delete_player(self, player_id):
         self._log.debug("delete_player: trying to delete player with ID {}".format(player_id))
@@ -251,7 +254,6 @@ class Database:
         self._log.debug("add_match: {}".format(match))
         fields_tuple = self._common_match_fields
         values_tuple = tuple([ match.get(f) for f in fields_tuple ])
-        values_pattern = ('?,' * len(values_tuple))[:-1]
         assert(len(fields_tuple) == len(values_tuple))
         winner_id = match.get("winner_id")
         challenger_id = match.get("challenger_id")
@@ -313,7 +315,10 @@ class Database:
             self._cursor.execute("UPDATE players SET c_losses=c_losses+1 WHERE id=?", (loser_id,))
         # writing winner ladder will make sure that possible promotion is recorded
         self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
-        # finally, record the match
+        # finally, record the match (add calculated ladder column)
+        fields_tuple = fields_tuple + ('ladder',)
+        values_tuple = values_tuple + (match_ladder,)
+        values_pattern = ('?,' * len(values_tuple))[:-1]
         self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, winner_last_name, loser_last_name, None
