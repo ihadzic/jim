@@ -195,11 +195,18 @@ class LadderHandler(DynamicBaseHandler):
         assert len(ogames) == len(cgames)
         score_list = zip(cgames, ogames) if winner_id == challenger_id else zip(ogames, cgames)
         score_str =  "".join([str(x[0]) + "-" + str(x[1]) + " " for x in score_list])[:-1]
+        if match.get('retired'):
+            notes = "(retired)"
+        elif match.get('forfeited'):
+            notes = "(forfeited)"
+        else:
+            notes = ""
         match.update({'winner_last_name' : winner_last_name,
                       'loser_last_name' : loser_last_name,
                       'score' : score_str,
                       'winner_id': winner_id,
-                      'loser_id' : loser_id})
+                      'loser_id' : loser_id,
+                      'notes' : notes})
         return match
 
     def get(self):
@@ -224,7 +231,10 @@ class LadderHandler(DynamicBaseHandler):
                         a_ladder = _database.get_ladder('a'),
                         b_ladder = _database.get_ladder('b'),
                         c_ladder = _database.get_ladder('c'),
-                        u_ladder = _database.get_ladder('unranked')
+                        u_ladder = _database.get_ladder('unranked'),
+                        a_matches = a_matches,
+                        b_matches = b_matches,
+                        c_matches = c_matches
                         )
         else:
             self.redirect('/login')
