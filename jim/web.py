@@ -20,6 +20,7 @@ _https_server = None
 _log = None
 _database = None
 _bootstrap_token = None
+_recent_days = 7
 
 class DynamicBaseHandler(tornado.web.RequestHandler):
     def log_request(self):
@@ -183,8 +184,16 @@ class LadderHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
+            args = self.get_args()
+            today = datetime.ctime(datetime.now());
+            try:
+                matches_since = datetime.strptime(args['matches_since'][0], '%Y-%m-%d')
+            except:
+                matches_since = datetime.now() - timedelta(_recent_days)
+            since_str = str(matches_since).split()[0]
+            _log.info("ladder: matches_since: {}".format(since_str))
             self.render('ladder.html',
-                        date_string = datetime.ctime(datetime.now()),
+                        date_string = today,
                         a_ladder = _database.get_ladder('a'),
                         b_ladder = _database.get_ladder('b'),
                         c_ladder = _database.get_ladder('c'),
