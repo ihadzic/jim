@@ -49,7 +49,10 @@ _schema = [
       'INSERT INTO revisions (date, comment) VALUES (date("now"), "separate win/loss counter for each ladder");'],
 
     [ 'ALTER TABLE matches ADD COLUMN ladder TEXT;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add ladder to match entry");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add ladder to match entry");'],
+
+    [ 'CREATE VIEW matches_with_names as select matches.*, p1.last_name, p2.last_name from matches join players p1 on p1.id = matches.challenger_id join players p2 on p2.id = matches.opponent_id;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added matches view with player names");']
 
 ]
 
