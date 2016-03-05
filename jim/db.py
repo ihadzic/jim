@@ -193,8 +193,12 @@ class Database:
     def lookup_match(self, fields):
         # ladder is special: it can be searched, but it is generated when match is added
         # so it's not listed in the common fields tuple; we add it for search
-        modified_common_match_fields = self._common_match_fields + ('ladder',)
-        return self._lookup_something(fields, "and", "matches", modified_common_match_fields, self._translated_match_fields, self._special_match_fields)
+        modified_common_match_fields = self._common_match_fields + ('ladder', 'last_name', '`last_name:1`', )
+        res = self._lookup_something(fields, "and", "matches_with_names", modified_common_match_fields, self._translated_match_fields, self._special_match_fields)
+        for r in res:
+            r['challenger_last_name'] = r.pop('last_name')
+            r['opponent_last_name'] = r.pop('`last_name:1`')
+        return res
 
     def delete_player(self, player_id):
         self._log.debug("delete_player: trying to delete player with ID {}".format(player_id))
