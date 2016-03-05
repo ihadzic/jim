@@ -216,9 +216,9 @@ class LadderHandler(DynamicBaseHandler):
             a_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('a', since_str)]
             b_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('b', since_str)]
             c_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('c', since_str)]
-            _log.info("ladder: A matches found: {}".format(a_matches))
-            _log.info("ladder: B matches found: {}".format(b_matches))
-            _log.info("ladder: C matches found: {}".format(c_matches))
+            _log.debug("ladder: A matches found: {}".format(a_matches))
+            _log.debug("ladder: B matches found: {}".format(b_matches))
+            _log.debug("ladder: C matches found: {}".format(c_matches))
             self.render('ladder.html',
                         date_string = today,
                         a_ladder = _database.get_ladder('a'),
