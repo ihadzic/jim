@@ -801,40 +801,6 @@ class UpdateAccountHandler(AccountBaseHandler):
         else:
             self.get_or_post(None)
 
-class GetReportHandler(DynamicBaseHandler):
-    def get(self):
-        self.log_request()
-        if not self.authorized():
-            return
-        args = self.get_args()
-        if args == None:
-            return
-        try:
-            latest = util.str_to_bool(args['latest'][0])
-            if latest == None:
-                latest = True
-        except:
-            latest = False
-        if latest:
-            # latest report spans two most recent report days
-            dates =  [ datetime.now() - timedelta(i) for i in range(0, 14) if (datetime.now() - timedelta(i)).weekday() == rules.report_day() ]
-            until = dates[0]
-            since = dates[1]
-        else:
-            try:
-                since = datetime.strptime(args['since'][0], '%Y-%m-%d')
-            except:
-                self.finish_failure("must specify the report start date")
-                return
-            try:
-                until = datetime.strptime(args['until'][0], '%Y-%m-%d')
-            except:
-                until = datetime.now()
-        ranges = {'since' : str(since).split()[0],
-                  'until' : str(until).split()[0]}
-        # TODO: do the series of database reads and construct the report
-        self.finish_success({'entries': [ranges]})
-
 def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
@@ -873,7 +839,6 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/del_account', DelAccountHandler),
         ('/get_account', GetAccountHandler),
         ('/update_account', UpdateAccountHandler),
-        ('/get_report', GetReportHandler),
         ('/main_menu', MainMenuHandler),
         ('/match_form', MatchFormHandler),
         ('/player_form', PlayerFormHandler),
