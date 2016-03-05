@@ -181,6 +181,27 @@ class DateHandler(DynamicBaseHandler):
                     user_string = name)
 
 class LadderHandler(DynamicBaseHandler):
+    def expand_match_record(self, match):
+        winner_id = match.get('winner_id')
+        challenger_id = match.get('challenger_id')
+        opponent_id = match.get('opponent_id')
+        loser_id = opponent_id if winner_id == challenger_id else challenger_id
+        challenger_last_name = match.get('challenger_last_name')
+        opponent_last_name = match.get('opponent_last_name')
+        winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
+        loser_last_name = opponent_last_name if winner_id == challenger_id else challenger_last_name
+        ogames = match.get('ogames').split(',')
+        cgames = match.get('cgames').split(',')
+        assert len(ogames) == len(cgames)
+        score_list = zip(cgames, ogames) if winner_id == challenger_id else zip(ogames, cgames)
+        score_str =  "".join([str(x[0]) + "-" + str(x[1]) + " " for x in score_list])[:-1]
+        match.update({'winner_last_name' : winner_last_name,
+                      'loser_last_name' : loser_last_name,
+                      'score' : score_str,
+                      'winner_id': winner_id,
+                      'loser_id' : loser_id})
+        return match
+
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
@@ -192,6 +213,12 @@ class LadderHandler(DynamicBaseHandler):
                 matches_since = datetime.now() - timedelta(_recent_days)
             since_str = str(matches_since).split()[0]
             _log.info("ladder: matches_since: {}".format(since_str))
+            a_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('a', since_str)]
+            b_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('b', since_str)]
+            c_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('c', since_str)]
+            _log.info("ladder: A matches found: {}".format(a_matches))
+            _log.info("ladder: B matches found: {}".format(b_matches))
+            _log.info("ladder: C matches found: {}".format(c_matches))
             self.render('ladder.html',
                         date_string = today,
                         a_ladder = _database.get_ladder('a'),
