@@ -76,6 +76,10 @@ class Database:
         assert len(v) == 1
         return v[0]
 
+    def get_recent_matches(self, ladder, since):
+        keys = { 'ladder': ladder, 'since': since }
+        return self.lookup_match(keys)
+
     def get_ladder(self, ladder):
         fields = ["first_name", "last_name", "points", "id", "wins", "losses", "a_wins", "a_losses", "b_wins", "b_losses", "c_wins", "c_losses"]
         fields_string = string.join(fields, ',')
