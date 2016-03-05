@@ -17,6 +17,18 @@
       </h3>
     </div>
     <h2>A-Ladder</h2>
+    <h3>Recent matches:</h3>
+    {% for am in a_matches %}
+      {% block am %}
+        <p>
+          {{escape(str(am.get('date')))}}:
+          {{escape(str(am.get('winner_last_name')))}} <i>def.</i>
+          {{escape(str(am.get('loser_last_name')))}}
+          {{escape(str(am.get('score')))}}
+          {{escape(str(am.get('notes')))}}
+        </p>
+      {% end %}
+    {% end %}
     <table border="1" style="width:100%">
       <tr>
         <th style="width:7%">Rank</th>
@@ -46,6 +58,18 @@
       {% end %}
     </table>
     <h2>B-Ladder</h2>
+    <h3>Recent matches:</h3>
+    {% for bm in b_matches %}
+      {% block bm %}
+        <p>
+          {{escape(str(bm.get('date')))}}:
+          {{escape(str(bm.get('winner_last_name')))}} <i>def.</i>
+          {{escape(str(bm.get('loser_last_name')))}}
+          {{escape(str(bm.get('score')))}}
+          {{escape(str(bm.get('notes')))}}
+        </p>
+      {% end %}
+    {% end %}
     <table border="1" style="width:100%">
       <tr>
         <th style="width:7%">Rank</th>
@@ -75,6 +99,18 @@
       {% end %}
     </table>
     <h2>C-Ladder</h2>
+    <h3>Recent matches:</h3>
+    {% for cm in c_matches %}
+      {% block cm %}
+        <p>
+          {{escape(str(cm.get('date')))}}:
+          {{escape(str(cm.get('winner_last_name')))}} <i>def.</i>
+          {{escape(str(cm.get('loser_last_name')))}}
+          {{escape(str(cm.get('score')))}}
+          {{escape(str(cm.get('notes')))}}
+        </p>
+      {% end %}
+    {% end %}
     <table border="1" style="width:100%">
       <tr>
         <th style="width:7%">Rank</th>
