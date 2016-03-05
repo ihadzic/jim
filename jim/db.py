@@ -46,7 +46,10 @@ _schema = [
       'ALTER TABLE players ADD COLUMN b_losses INTEGER NOT NULL DEFAULT 0;',
       'ALTER TABLE players ADD COLUMN c_wins INTEGER NOT NULL DEFAULT 0;',
       'ALTER TABLE players ADD COLUMN c_losses INTEGER NOT NULL DEFAULT 0;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "separate win/loss counter for each ladder");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "separate win/loss counter for each ladder");'],
+
+    [ 'ALTER TABLE matches ADD COLUMN ladder TEXT;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add ladder to match entry");']
 
 ]
 
