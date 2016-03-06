@@ -5,6 +5,7 @@
 <title>Player Ladder</title>
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
 <script type="text/javascript" src="form_handler.js"></script>
+<script type="text/javascript" src="calendar.js"></script>
 </head>
 <body id="main_body" >
   <img id="top" src="top.png" alt="">
@@ -16,6 +17,35 @@
         <a href="logout">Logout</a>
       </h3>
     </div>
+    <form action="ladder" method="post">
+      <label class="description" for="since_date">Show matches since </label>
+      <span>
+        <input id="since_date_1" name="since_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
+        <label for="since_date_1">MM</label>
+      </span>
+      <span>
+        <input id="since_date_2" name="since_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
+        <label for="since_date_2">DD</label>
+      </span>
+      <span>
+        <input id="since_date_3" name="since_date_3" class="element text" size="4" maxlength="4" value="" type="text">
+        <label for="since_date_3">YYYY</label>
+      </span>
+      <span id="calendar_match">
+        <img id="cal_img_match" class="datepicker" src="calendar.gif" alt="Pick a date.">
+      </span>
+      <script type="text/javascript">
+        Calendar.setup({
+        inputField         : "since_date_3",
+        baseField    : "since_date",
+        displayArea  : "calendar_match",
+        button                 : "cal_img_match",
+        ifFormat         : "%B %e, %Y",
+        onSelect         : selectDate
+        });
+      </script>
+      <input type="submit" value="Refresh">
+    <form>
     <h2>A-Ladder</h2>
     <h3>Recent matches:</h3>
     {% for am in a_matches %}
