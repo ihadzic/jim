@@ -209,7 +209,7 @@ class LadderHandler(DynamicBaseHandler):
                       'notes' : notes})
         return match
 
-    def get(self):
+    def get_or_post(self):
         self.log_request()
         if self.authorized(quiet = True):
             args = self.get_args()
@@ -238,6 +238,12 @@ class LadderHandler(DynamicBaseHandler):
                         )
         else:
             self.redirect('/login')
+
+    def get(self):
+        self.get_or_post()
+
+    def post(self):
+        self.get_or_post()
 
 class RosterHandler(DynamicBaseHandler):
     def get(self):
