@@ -209,41 +209,49 @@ class LadderHandler(DynamicBaseHandler):
                       'notes' : notes})
         return match
 
-    def get_or_post(self):
+    def get_or_post(self, args):
+        _log.debug("ladder: args {}".format(args))
+        today = datetime.ctime(datetime.now());
+        try:
+            matches_since = datetime.strptime(args['matches_since'][0], '%Y-%m-%d')
+        except:
+            matches_since = datetime.now() - timedelta(_recent_days)
+        since_str = str(matches_since).split()[0]
+        _log.info("ladder: matches_since: {}".format(since_str))
+        a_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('a', since_str)]
+        b_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('b', since_str)]
+        c_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('c', since_str)]
+        _log.debug("ladder: A matches found: {}".format(a_matches))
+        _log.debug("ladder: B matches found: {}".format(b_matches))
+        _log.debug("ladder: C matches found: {}".format(c_matches))
+        self.render('ladder.html',
+                    date_string = today,
+                    a_ladder = _database.get_ladder('a'),
+                    b_ladder = _database.get_ladder('b'),
+                    c_ladder = _database.get_ladder('c'),
+                    u_ladder = _database.get_ladder('unranked'),
+                    a_matches = a_matches,
+                    b_matches = b_matches,
+                    c_matches = c_matches
+                    )
+
+    def get(self):
         self.log_request()
         if self.authorized(quiet = True):
             args = self.get_args()
-            today = datetime.ctime(datetime.now());
-            try:
-                matches_since = datetime.strptime(args['matches_since'][0], '%Y-%m-%d')
-            except:
-                matches_since = datetime.now() - timedelta(_recent_days)
-            since_str = str(matches_since).split()[0]
-            _log.info("ladder: matches_since: {}".format(since_str))
-            a_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('a', since_str)]
-            b_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('b', since_str)]
-            c_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('c', since_str)]
-            _log.debug("ladder: A matches found: {}".format(a_matches))
-            _log.debug("ladder: B matches found: {}".format(b_matches))
-            _log.debug("ladder: C matches found: {}".format(c_matches))
-            self.render('ladder.html',
-                        date_string = today,
-                        a_ladder = _database.get_ladder('a'),
-                        b_ladder = _database.get_ladder('b'),
-                        c_ladder = _database.get_ladder('c'),
-                        u_ladder = _database.get_ladder('unranked'),
-                        a_matches = a_matches,
-                        b_matches = b_matches,
-                        c_matches = c_matches
-                        )
+            self.get_or_post(args)
         else:
             self.redirect('/login')
 
-    def get(self):
-        self.get_or_post()
-
     def post(self):
-        self.get_or_post()
+        self.log_request()
+        if self.authorized(quiet=True):
+            month = self.get_argument('since_date_1')
+            day = self.get_argument('since_date_2')
+            year = self.get_argument('since_date_3')
+            self.get_or_post({'matches_since' : ["{}-{}-{}".format(year, month, day)]})
+        else:
+            self.redirect('/login')
 
 class RosterHandler(DynamicBaseHandler):
     def get(self):
