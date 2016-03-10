@@ -71,3 +71,13 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "add ladder to match 
  */
 CREATE VIEW matches_with_names as select matches.*, p1.last_name, p2.last_name from matches join players p1 on p1.id = matches.challenger_id join players p2 on p2.id = matches.opponent_id;
 INSERT INTO revisions (date, comment) VALUES (date("now"), "added matches view with player names");
+
+/*
+ * Version 10
+ * Add seasons table
+ */
+CREATE TABLE seasons (id INTEGER PRIMARY KEY NOT NULL, title TEXT UNIQUE, start_date DATE, end_date DATE, active BOOL NOT NULL DEFAULT FALSE);
+INSERT INTO seasons (title, active) VALUES ("default test season", 1);
+ALTER TABLE matches ADD COLUMN season_id INTEGER REFERENCES seasons(id);
+UPDATE matches set season_id=1;
+INSERT INTO revisions (date, comment) VALUES (date("now"), "added seasons");
