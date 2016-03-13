@@ -72,12 +72,11 @@ class Database:
             return -1
 
     def get_season(self):
-        self._cursor.execute('SELECT id FROM seasons WHERE active=1')
+        self._cursor.execute('SELECT id, start_date, end_date FROM seasons WHERE active=1')
         v = self._cursor.fetchall()
         assert len(v) == 1
         v = v[0]
-        assert len(v) == 1
-        return v[0]
+        return v
 
     def get_db_version(self):
         self._cursor.execute('SELECT max(id) FROM REVISIONS')
@@ -276,8 +275,17 @@ class Database:
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
-        season_id = self.get_season()
-        self._log.info("season id is {}".format(season_id))
+        season_id, start_date, end_date = self.get_season()
+        match_date = match.get('date')
+        self._log.info("season id is {} ({}-{})".format(season_id, start_date, end_date))
+        self._log.info("match date is {}".format(match_date))
+        if start_date != None and end_date != None:
+            # enforce season dates if they exist
+            sd = datetime.strptime(start_date, '%Y-%m-%d')
+            ed = datetime.strptime(end_date, '%Y-%m-%d')
+            md = datetime.strptime(match_date, '%Y-%m-%d')
+            if md > end_date or md < start_date:
+                return -1, None, None, "match date out of season date-range"
         fields_tuple = self._common_match_fields
         values_tuple = tuple([ match.get(f) for f in fields_tuple ])
         assert(len(fields_tuple) == len(values_tuple))
