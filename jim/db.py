@@ -276,6 +276,8 @@ class Database:
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
+        season_id = self.get_season()
+        self._log.info("season id is {}".format(season_id))
         fields_tuple = self._common_match_fields
         values_tuple = tuple([ match.get(f) for f in fields_tuple ])
         assert(len(fields_tuple) == len(values_tuple))
@@ -339,9 +341,9 @@ class Database:
             self._cursor.execute("UPDATE players SET c_losses=c_losses+1 WHERE id=?", (loser_id,))
         # writing winner ladder will make sure that possible promotion is recorded
         self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
-        # finally, record the match (add calculated ladder column)
-        fields_tuple = fields_tuple + ('ladder',)
-        values_tuple = values_tuple + (match_ladder,)
+        # finally, record the match (add calculated ladder column and season column)
+        fields_tuple = fields_tuple + ('ladder', 'season_id')
+        values_tuple = values_tuple + (match_ladder, season_id)
         values_pattern = ('?,' * len(values_tuple))[:-1]
         self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
         self._conn.commit()
