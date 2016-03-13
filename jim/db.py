@@ -71,6 +71,14 @@ class Database:
         if self._ladder_weights.get(l1) < self._ladder_weights.get(l2):
             return -1
 
+    def get_season(self):
+        self._cursor.execute('SELECT id FROM seasons WHERE active=1')
+        v = self._cursor.fetchall()
+        assert len(v) == 1
+        v = v[0]
+        assert len(v) == 1
+        return v[0]
+
     def get_db_version(self):
         self._cursor.execute('SELECT max(id) FROM REVISIONS')
         v = self._cursor.fetchall()
