@@ -672,10 +672,15 @@ class GetMatchHandler(DynamicBaseHandler):
         if since and date:
             self.finish_failure("cannot have both since and date parameters")
             return
+        try:
+            season_id = int(args['season_id'][0])
+        except:
+            season_id, _, _ = _database.get_season()
         keys =  util.purge_null_fields({ 'challenger_id': challenger_id,
                                          'opponent_id': opponent_id,
                                          'winner_id': winner_id,
                                          'ladder' : ladder,
+                                         'season_id' : season_id,
                                          'date': str(date).split()[0] if date else None, 
                                          'since': str(since).split()[0] if since else None })
         _log.info("keys = {}".format(keys))
