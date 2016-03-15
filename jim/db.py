@@ -58,7 +58,10 @@ _schema = [
       'INSERT INTO seasons (title, active) VALUES ("default test season", 1);',
       'ALTER TABLE matches ADD COLUMN season_id INTEGER REFERENCES seasons(id);',
       'UPDATE matches SET season_id=1;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added seasons");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added seasons");'],
+
+    [ 'CREATE TABLE player_archive (id INTEGER PRIMARY KEY  NOT NULL, season_id INTEGER REFERENCES seasons(id), player_id INTEGER REFERENCES players(id), ladder TEXT, active BOOL NOT NULL  DEFAULT false, points INTEGER NOT NULL  DEFAULT 0, initial_points NOT NULL DEFAULT 0, wins INTEGER NOT NULL DEFAULT 0, losses INTEGER NOT NULL DEFAULT 0, a_wins INTEGER NOT NULL DEFAULT 0, a_losses INTEGER NOT NULL DEFAULT 0, b_wins INTEGER NOT NULL DEFAULT 0, b_losses INTEGER NOT NULL DEFAULT 0, c_wins INTEGER NOT NULL DEFAULT 0, c_losses INTEGER NOT NULL DEFAULT 0);',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added player_archive");'],
 ]
 
 class Database:
