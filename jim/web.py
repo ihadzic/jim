@@ -857,6 +857,40 @@ class UpdateAccountHandler(AccountBaseHandler):
         else:
             self.get_or_post(None)
 
+class NewSeasonHandler(DynamicBaseHandler):
+    def get_or_post(self, args):
+        self.log_request()
+        if not self.authorized(admin = True):
+            return
+        try:
+            start_date = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
+        except:
+            start_date = None
+        try:
+            end_date = datetime.strptime(args['end_date'][0], '%Y-%m-%d')
+        except:
+            end_date = None
+        _log.info("new season requested: {}-{}".format(start_date, end_date))
+        # TODO: deactivate all players, clear points, add season entry to DB
+        r = True
+        err = None
+        if r:
+            self.finish_success({'season_id' : 42})
+        else:
+            self.finish_failure(err)
+
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        self.get_or_post(args)
+
+    def post(self):
+        start_date = self.get_argument('start_date')
+        end_date = self.get_argument('end_date')
+        args = {'start_date' : [start_date], 'end_date' : [end_date]}
+        self.get_or_post(args)
+
 def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
@@ -895,6 +929,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/del_account', DelAccountHandler),
         ('/get_account', GetAccountHandler),
         ('/update_account', UpdateAccountHandler),
+        ('/new_season', NewSeasonHandler),
         ('/main_menu', MainMenuHandler),
         ('/match_form', MatchFormHandler),
         ('/player_form', PlayerFormHandler),
