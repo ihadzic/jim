@@ -877,11 +877,9 @@ class NewSeasonHandler(DynamicBaseHandler):
         except:
             end_date = None
         _log.info("new season requested: {}-{}".format(start_date, end_date))
-        # TODO: deactivate all players, clear points, add season entry to DB
-        r = True
-        err = None
-        if r:
-            self.finish_success({'season_id' : 42})
+        season_id, err = _database.new_season(start_date, end_date, title)
+        if season_id:
+            self.finish_success({'season_id' : season_id})
         else:
             self.finish_failure(err)
 
