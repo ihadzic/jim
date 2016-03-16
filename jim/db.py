@@ -81,6 +81,20 @@ class Database:
         v = v[0]
         return v
 
+    def new_season(self, start_date, end_date, title):
+        self._cursor.execute("SELECT seasons.id, players.id, ladder, points, initial_points, players.active, wins, losses, a_wins, a_losses, b_wins, b_losses, c_wins, c_losses FROM players LEFT JOIN seasons WHERE seasons.active=1")
+        archived_players = self._cursor.fetchall()
+        self._log.debug("archived {} players".format(len(archived_players)))
+        for ap in archived_players:
+            self._log.debug("  {}".format(ap))
+            self._cursor.execute("INSERT INTO player_archive (season_id, player_id, ladder, points, initial_points, active, wins, losses, a_wins, a_losses, b_wins, b_losses, c_wins, c_losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ap)
+        season_value_tuple = (start_date, end_date, title, 1)
+        self._cursor.execute("UPDATE seasons set active=0")
+        self._log.debug("new season value tuple: {}".format(season_value_tuple))
+        self._cursor.execute("INSERT INTO seasons (start_date, end_date, title, active) VALUES (?, ?, ?, ?)", season_value_tuple)
+        self._conn.commit()
+        return self._cursor.lastrowid, None
+
     def get_db_version(self):
         self._cursor.execute('SELECT max(id) FROM REVISIONS')
         v = self._cursor.fetchall()
