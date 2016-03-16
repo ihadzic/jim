@@ -297,7 +297,7 @@ class Database:
         self._log.debug("add_match: {}".format(match))
         season_id, start_date, end_date = self.get_season()
         match_date = match.get('date')
-        self._log.info("season id is {} ({}-{})".format(season_id, start_date, end_date))
+        self._log.info("season id is {} ({}:{})".format(season_id, start_date, end_date))
         self._log.info("match date is {}".format(match_date))
         if start_date != None and end_date != None:
             # enforce season dates if they exist
@@ -373,7 +373,10 @@ class Database:
         fields_tuple = fields_tuple + ('ladder', 'season_id')
         values_tuple = values_tuple + (match_ladder, season_id)
         values_pattern = ('?,' * len(values_tuple))[:-1]
-        self._cursor.execute("INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern), values_tuple)
+        insert_query = "INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern)
+        self._log.debug("query: {}".format(insert_query))
+        self._log.debug("values: {}".format(values_tuple))
+        self._cursor.execute(insert_query, values_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, winner_last_name, loser_last_name, None
 
