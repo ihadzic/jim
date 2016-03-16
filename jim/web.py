@@ -604,15 +604,6 @@ class AddMatchHandler(DynamicBaseHandler):
                  'forfeited' : forfeited,
                  'date': str(date).split()[0],
                  'tournament': tournament}
-        # TODO: we also need to do the following along with adding
-        #       the match to the database:
-        # 1) promote the player if applicable
-        # 2) record the match ID that promoted the player to the current ladder
-        # 3) record the ladder from which the player came from (so that we can
-        #    demote him/her if the promoting match has been deleted
-        # All of the above must be done in transactional manner so that we don't
-        # end up with inconsistent records if something crashes in the middle
-        # of the transaction
         r, err = self.update_database(match)
         if r:
             self.finish_success(match)
