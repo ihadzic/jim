@@ -314,15 +314,15 @@ class Database:
         opponent_id = match.get("opponent_id")
         loser_id = opponent_id if winner_id == challenger_id else challenger_id
         # check that referred player IDs are valid
-        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=?", (opponent_id,)) ]
+        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=? and active=1", (opponent_id,)) ]
         if len(check) == 0:
-            return -1, None, None, "invalid opponent ID"
+            return -1, None, None, "invalid opponent ID (is the player active?)"
         else:
             opponent_ladder = check[0][0]
             opponent_last_name = check[0][1]
-        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=?", (challenger_id,)) ]
+        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=? and active=1", (challenger_id,)) ]
         if len(check) == 0:
-            return -1, None, None, "invalid challenger ID"
+            return -1, None, None, "invalid challenger ID (is the player active?)"
         else:
             challenger_ladder = check[0][0]
             challenger_last_name = check[0][1]
