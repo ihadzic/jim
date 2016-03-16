@@ -863,6 +863,10 @@ class NewSeasonHandler(DynamicBaseHandler):
         if not self.authorized(admin = True):
             return
         try:
+            title = args['title'][0]
+        except:
+            title = "season created on {}".format(str(datetime.now()))
+        try:
             start_date = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
         except:
             start_date = None
