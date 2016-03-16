@@ -868,10 +868,12 @@ class NewSeasonHandler(DynamicBaseHandler):
             title = "season created on {}".format(str(datetime.now()))
         try:
             start_date = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
+            start_date = str(start_date).split()[0]
         except:
             start_date = None
         try:
             end_date = datetime.strptime(args['end_date'][0], '%Y-%m-%d')
+            end_date = str(end_date).split()[0]
         except:
             end_date = None
         _log.info("new season requested: {}-{}".format(start_date, end_date))
