@@ -304,7 +304,7 @@ class Database:
             sd = datetime.strptime(start_date, '%Y-%m-%d')
             ed = datetime.strptime(end_date, '%Y-%m-%d')
             md = datetime.strptime(match_date, '%Y-%m-%d')
-            if md > end_date or md < start_date:
+            if md > ed or md < sd:
                 return -1, None, None, "match date out of season date-range"
         fields_tuple = self._common_match_fields
         values_tuple = tuple([ match.get(f) for f in fields_tuple ])
