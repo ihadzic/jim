@@ -115,7 +115,7 @@ class Database:
     def get_ladder(self, ladder):
         fields = ["first_name", "last_name", "points", "id", "wins", "losses", "a_wins", "a_losses", "b_wins", "b_losses", "c_wins", "c_losses"]
         fields_string = string.join(fields, ',')
-        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? ORDER BY points DESC".format(fields_string), (ladder,)) ]
+        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? and active=1 ORDER BY points DESC".format(fields_string), (ladder,)) ]
         return r
 
     def no_admins(self):
