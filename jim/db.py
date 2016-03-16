@@ -106,7 +106,8 @@ class Database:
         return v[0]
 
     def get_recent_matches(self, ladder, since):
-        keys = { 'ladder': ladder, 'since': since }
+        season_id, _, _ = self.get_season()
+        keys = { 'ladder': ladder, 'since': since, 'season_id': season_id}
         return self.lookup_match(keys)
 
     def get_ladder(self, ladder):
