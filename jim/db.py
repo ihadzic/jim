@@ -296,6 +296,9 @@ class Database:
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
         season_id, start_date, end_date = self.get_season()
+        # if query came in with season_id, override it to current season, if
+        # it came in without season_id, set it
+        match['season_id'] = season_id
         match_date = match.get('date')
         self._log.info("season id is {} ({}:{})".format(season_id, start_date, end_date))
         self._log.info("match date is {}".format(match_date))
@@ -370,8 +373,8 @@ class Database:
         # writing winner ladder will make sure that possible promotion is recorded
         self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
         # finally, record the match (add calculated ladder column and season column)
-        fields_tuple = fields_tuple + ('ladder', 'season_id')
-        values_tuple = values_tuple + (match_ladder, season_id)
+        fields_tuple = fields_tuple + ('ladder',)
+        values_tuple = values_tuple + (match_ladder,)
         values_pattern = ('?,' * len(values_tuple))[:-1]
         insert_query = "INSERT INTO matches {} VALUES ({})".format(fields_tuple, values_pattern)
         self._log.debug("query: {}".format(insert_query))
