@@ -76,7 +76,7 @@ class Database:
             return -1
 
     def get_season(self):
-        self._cursor.execute('SELECT id, start_date, end_date FROM seasons WHERE active=1')
+        self._cursor.execute('SELECT id, start_date, end_date, title FROM seasons WHERE active=1')
         v = self._cursor.fetchall()
         assert len(v) == 1
         v = v[0]
@@ -108,7 +108,7 @@ class Database:
         return v[0]
 
     def get_recent_matches(self, ladder, since):
-        season_id, _, _ = self.get_season()
+        season_id, _, _, _ = self.get_season()
         keys = { 'ladder': ladder, 'since': since, 'season_id': season_id}
         return self.lookup_match(keys)
 
@@ -295,7 +295,7 @@ class Database:
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
-        season_id, start_date, end_date = self.get_season()
+        season_id, start_date, end_date, _ = self.get_season()
         # if query came in with season_id, override it to current season, if
         # it came in without season_id, set it
         match['season_id'] = season_id
