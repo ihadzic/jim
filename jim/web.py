@@ -228,8 +228,10 @@ class LadderHandler(DynamicBaseHandler):
         _log.debug("ladder: A matches found: {}".format(a_matches))
         _log.debug("ladder: B matches found: {}".format(b_matches))
         _log.debug("ladder: C matches found: {}".format(c_matches))
+        _, _, _, season_string = _database.get_season()
         self.render('ladder.html',
                     date_string = today,
+                    season_string = season_string,
                     a_ladder = _database.get_ladder('a'),
                     b_ladder = _database.get_ladder('b'),
                     c_ladder = _database.get_ladder('c'),
@@ -261,7 +263,9 @@ class RosterHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
+            _, _, _, season_string = _database.get_season()
             self.render('roster.html',
+                        season_string = season_string,
                         date_string = datetime.ctime(datetime.now()),
                         roster = _database.get_roster()
                         )
