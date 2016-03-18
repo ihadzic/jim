@@ -117,6 +117,27 @@ function match_form_to_query(form, command)
     return q;
 }
 
+function season_form_to_query(form, command)
+{
+    var q = form.action;
+
+    q+= command;
+    title = document.getElementById('title').value;
+    q+= '?title=' + title;
+
+    start_date = document.getElementById('start_date_3').value + '-' +
+        document.getElementById('start_date_1').value + '-' +
+        document.getElementById('start_date_2').value;
+    q += '&start_date=' + start_date;
+
+    end_date = document.getElementById('end_date_3').value + '-' +
+        document.getElementById('end_date_1').value + '-' +
+        document.getElementById('end_date_2').value;
+    q += '&end_date=' + end_date;
+
+    return q;
+}
+
 function clear_list(list_name)
 {
     var clear_me = document.getElementById(list_name);
@@ -296,6 +317,18 @@ function process_match_form_response(command, response)
     }
 }
 
+function process_season_form_response(command, response)
+{
+    var form_name = "season_form";
+    if (response.result == "success") {
+        form = document.getElementById(form_name);
+        form.reset();
+        alert("New season created, ID=" + response.season_id);
+    } else {
+        alert("Error: " + response.reason);
+    }
+}
+
 function populate_account_form_with_data(data)
 {
     form = clear_form("account_form");
@@ -460,6 +493,28 @@ function process_match_form(command)
     }
 }
 
+function process_season_form(command)
+{
+    var form, query;
+    var xhttp = new XMLHttpRequest();
+    var form_name = "season_form";
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_season_form_response(command, JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    form = document.getElementById(form_name);
+    query = season_form_to_query(form, command);
+    if (query) {
+        xhttp.open("GET", query, true);
+        xhttp.send();
+    }
+}
 
 function process_account_form(command)
 {
