@@ -516,6 +516,12 @@ function process_season_form(command)
     }
 }
 
+function check_season_form(command)
+{
+    if (confirm("This will archive the ladder and reset the scores. Proceed?"))
+	process_season_form(command);
+}
+
 function process_account_form(command)
 {
     var form, query;
