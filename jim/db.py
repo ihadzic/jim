@@ -83,6 +83,10 @@ class Database:
         return v
 
     def new_season(self, start_date, end_date, title):
+        self._cursor.execute("SELECT id FROM seasons WHERE title=?", (title,))
+        titles = self._cursor.fetchall()
+        if len(titles):
+            return None, "Season title already in use"
         self._cursor.execute("SELECT seasons.id, players.id, ladder, points, initial_points, players.active, wins, losses, a_wins, a_losses, b_wins, b_losses, c_wins, c_losses FROM players LEFT JOIN seasons WHERE seasons.active=1")
         archived_players = self._cursor.fetchall()
         self._log.debug("archived {} players".format(len(archived_players)))
