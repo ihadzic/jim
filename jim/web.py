@@ -864,6 +864,8 @@ class NewSeasonHandler(DynamicBaseHandler):
         try:
             title = args['title'][0]
         except:
+            title = None;
+        if not title:
             title = "season created on {}".format(str(datetime.now()))
         try:
             start_date = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
