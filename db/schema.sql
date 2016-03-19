@@ -88,3 +88,10 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "added seasons");
  */
 CREATE TABLE player_archive (id INTEGER PRIMARY KEY  NOT NULL, season_id INTEGER REFERENCES seasons(id), player_id INTEGER REFERENCES players(id), ladder TEXT, active BOOL NOT NULL  DEFAULT false, points INTEGER NOT NULL  DEFAULT 0, initial_points NOT NULL DEFAULT 0, wins INTEGER NOT NULL DEFAULT 0, losses INTEGER NOT NULL DEFAULT 0, a_wins INTEGER NOT NULL DEFAULT 0, a_losses INTEGER NOT NULL DEFAULT 0, b_wins INTEGER NOT NULL DEFAULT 0, b_losses INTEGER NOT NULL DEFAULT 0, c_wins INTEGER NOT NULL DEFAULT 0, c_losses INTEGER NOT NULL DEFAULT 0);
 INSERT INTO revisions (date, comment) VALUES (date("now"), "added player_archive");
+
+/*
+ * Version 12
+ * Add tokens table
+ */
+CREATE TABLE tokens (id INTEGER PRIMARY KEY NOT NULL, token TEXT NOT NULL, type TEXT NOT NULL, expires DATE NOT NULL, since DATE);
+INSERT INTO revisions (date, comment) VALUES (date("now"), "added tokens table");
