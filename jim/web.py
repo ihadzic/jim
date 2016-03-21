@@ -215,7 +215,7 @@ class LadderHandler(DynamicBaseHandler):
 
     def get_or_post(self, args):
         _log.debug("ladder: args {}".format(args))
-        today = datetime.ctime(datetime.now());
+        today = datetime.ctime(datetime.now())
         try:
             matches_since = datetime.strptime(args['matches_since'][0], '%Y-%m-%d')
         except:
@@ -864,7 +864,7 @@ class NewSeasonHandler(DynamicBaseHandler):
         try:
             title = args['title'][0]
         except:
-            title = None;
+            title = None
         if not title:
             title = "season created on {}".format(str(datetime.now()))
         try:
