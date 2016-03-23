@@ -9,6 +9,7 @@ import sqlite3
 import string
 import os
 import bcrypt
+import random
 from datetime import datetime
 
 # each time the schema is changed, add a new entry here
@@ -83,6 +84,13 @@ class Database:
         assert len(v) == 1
         v = v[0]
         return v
+
+    def new_token(self, token_type, since_date, expires_date):
+        token_value = "".join([random.choice(string.ascii_letters + string.digits) for _ in xrange(32)])
+        token_tuple = (token_type, since_date, expires_date, token_value)
+        self._cursor.execute("INSERT INTO tokens (type, since, expires, token) VALUES (?, ?, ?, ?)", token_tuple)
+        self._conn.commit()
+        return token_value, self._cursor.lastrowid, None
 
     def new_season(self, start_date, end_date, title):
         self._cursor.execute("SELECT id FROM seasons WHERE title=?", (title,))
