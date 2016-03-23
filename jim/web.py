@@ -896,6 +896,52 @@ class NewSeasonHandler(DynamicBaseHandler):
         args = {'start_date' : [start_date], 'end_date' : [end_date]}
         self.get_or_post(args)
 
+class NewTokenHandler(DynamicBaseHandler):
+    def get_or_post(self, args):
+        self.log_request()
+        if not self.authorized(admin = True):
+            return
+        try:
+            token_type = args['token_type'][0]
+        except:
+            token_type = None
+        if not type:
+            token_type = 'report_and_roster'
+        # if we need other token types, list them here
+        if token_type not in ['report_and_roster']:
+            self.finish_failure("invalid token type")
+            return
+        try:
+            since_date = datetime.strptime(args['since_date'][0], '%Y-%m-%d')
+            since_date = str(since_date).split()[0]
+        except:
+            self.finish_failure('missing or invalid since-date')
+            return
+        try:
+            expires_date = datetime.strptime(args['expires_date'][0], '%Y-%m-%d')
+            expires_date = str(expires_date).split()[0]
+        except:
+            self.finish_failure('missing or invalid expiration date')
+            return
+        _log.info("new token requested: since {}, type is {}, expires on {}".format(since_date, expires_date, token_type))
+        token, token_id, err = _database.new_token(token_type, since_date, expires_date)
+        if token and token_id:
+            self.finish_success({'token' : token, 'token_id': token_id})
+        else:
+            self.finish_failure(err)
+
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        self.get_or_post(args)
+
+    def post(self):
+        start_date = self.get_argument('start_date')
+        end_date = self.get_argument('end_date')
+        args = {'start_date' : [start_date], 'end_date' : [end_date]}
+        self.get_or_post(args)
+
 def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
@@ -935,6 +981,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/get_account', GetAccountHandler),
         ('/update_account', UpdateAccountHandler),
         ('/new_season', NewSeasonHandler),
+        ('/new_token', NewTokenHandler),
         ('/main_menu', MainMenuHandler),
         ('/match_form', MatchFormHandler),
         ('/player_form', PlayerFormHandler),
