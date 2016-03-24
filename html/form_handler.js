@@ -138,6 +138,26 @@ function season_form_to_query(form, command)
     return q;
 }
 
+function token_form_to_query(form, command)
+{
+    var q = form.action;
+
+    q+= command;
+    q+= '?token_type=report_and_roster';
+
+    since_date = document.getElementById('since_date_3').value + '-' +
+        document.getElementById('since_date_1').value + '-' +
+        document.getElementById('since_date_2').value;
+    q += '&since_date=' + since_date;
+
+    expires_date = document.getElementById('expires_date_3').value + '-' +
+        document.getElementById('expires_date_1').value + '-' +
+        document.getElementById('expires_date_2').value;
+    q += '&expires_date=' + expires_date;
+
+    return q;
+}
+
 function clear_list(list_name)
 {
     var clear_me = document.getElementById(list_name);
@@ -329,6 +349,19 @@ function process_season_form_response(command, response)
     }
 }
 
+function process_token_form_response(command, response)
+{
+    var form_name = "token_form";
+    if (response.result == "success") {
+        form = document.getElementById(form_name);
+        form.reset();
+	// TODO: add to HTML
+        alert("New token:" + response.token);
+    } else {
+        alert("Error: " + response.reason);
+    }
+}
+
 function populate_account_form_with_data(data)
 {
     form = clear_form("account_form");
@@ -510,6 +543,29 @@ function process_season_form(command)
     }
     form = document.getElementById(form_name);
     query = season_form_to_query(form, command);
+    if (query) {
+        xhttp.open("GET", query, true);
+        xhttp.send();
+    }
+}
+
+function process_token_form(command)
+{
+    var form, query;
+    var xhttp = new XMLHttpRequest();
+    var form_name = "token_form";
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_token_form_response(command, JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    form = document.getElementById(form_name);
+    query = token_form_to_query(form, command);
     if (query) {
         xhttp.open("GET", query, true);
         xhttp.send();
