@@ -111,6 +111,10 @@ class SeasonFormHandler(GenericAdminFormHandler):
     def get(self):
         self.generic_get('season_form.html')
 
+class TokenFormHandler(GenericAdminFormHandler):
+    def get(self):
+        self.generic_get('token_form.html')
+
 class LoginHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
@@ -986,6 +990,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/match_form', MatchFormHandler),
         ('/player_form', PlayerFormHandler),
         ('/season_form', SeasonFormHandler),
+        ('/token_form', TokenFormHandler),
         ('/account_form', AccountFormHandler)
         ]
 
