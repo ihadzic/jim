@@ -188,7 +188,7 @@ class DateHandler(DynamicBaseHandler):
                     date_string = str(datetime.now()),
                     user_string = name)
 
-class LadderHandler(DynamicBaseHandler):
+class LadderOrReportHandler(DynamicBaseHandler):
     def expand_match_record(self, match):
         winner_id = match.get('winner_id')
         challenger_id = match.get('challenger_id')
@@ -217,6 +217,7 @@ class LadderHandler(DynamicBaseHandler):
                       'notes' : notes})
         return match
 
+class LadderHandler(LadderOrReportHandler):
     def get_or_post(self, args):
         _log.debug("ladder: args {}".format(args))
         today = datetime.ctime(datetime.now())
