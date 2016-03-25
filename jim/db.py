@@ -86,7 +86,13 @@ class Database:
         return v
 
     def new_token(self, token_type, since_date, expires_date):
-        token_value = "".join([random.choice(string.ascii_letters + string.digits) for _ in xrange(32)])
+        token_value = None
+        while not token_value:
+            token_value = "".join([random.choice(string.ascii_letters + string.digits) for _ in xrange(32)])
+            self._cursor.execute('SELECT id FROM tokens WHERE token=?', (token_value,))
+            v = self._cursor.fetchall()
+            if len(v) > 0:
+                token_value = None
         token_tuple = (token_type, since_date, expires_date, token_value)
         self._cursor.execute("INSERT INTO tokens (type, since, expires, token) VALUES (?, ?, ?, ?)", token_tuple)
         self._conn.commit()
