@@ -352,12 +352,14 @@ function process_season_form_response(command, response)
 function process_token_form_response(command, action, response)
 {
     var form_name = "token_form";
+    var token_list = document.getElementById("token_list");
+
     if (response.result == "success") {
         form = document.getElementById(form_name);
         form.reset();
-	// TODO: add to HTML
-	token_url = action + "report?token=" + response.token;
-        alert("New token:" + token_url);
+        token_url = action + "report?token=" + response.token;
+        token_list.innerHTML = "<h3>Token URL is:</h3><ul>"
+        token_list.innerHTML += token_url + "</div></li><li></li>";
     } else {
         alert("Error: " + response.reason);
     }
