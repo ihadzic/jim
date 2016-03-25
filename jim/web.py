@@ -309,16 +309,19 @@ class ReportHandler(LadderOrReportHandler):
         _log.debug("report: A matches found: {}".format(a_matches))
         _log.debug("report: B matches found: {}".format(b_matches))
         _log.debug("report: C matches found: {}".format(c_matches))
-        _, _, _, season = _database.get_season()
-        # TODO: render the page instead of sending JSON
-        self.finish_success({ 'a_matches' : a_matches,
-                              'b_matches' : b_matches,
-                              'c_matches' : c_matches,
-                              'a_ladder' : a_ladder,
-                              'b_ladder' : b_ladder,
-                              'c_ladder' : c_ladder,
-                              'u_ladder' : u_ladder,
-                              'season' : season })
+        _, _, _, season_string = _database.get_season()
+        today = datetime.ctime(datetime.now())
+        roster = _database.get_roster()
+        self.render('report.html', date_string = today,
+                    a_matches = a_matches,
+                    b_matches = b_matches,
+                    c_matches = c_matches,
+                    a_ladder = a_ladder,
+                    b_ladder = b_ladder,
+                    c_ladder = c_ladder,
+                    u_ladder = u_ladder,
+                    roster = roster,
+                    season_string = season_string)
 
 class PlayerBaseHandler(DynamicBaseHandler):
     def parse_args(self, args, add_flag, password):
