@@ -277,6 +277,49 @@ class RosterHandler(DynamicBaseHandler):
         else:
             self.redirect('/login')
 
+class ReportHandler(LadderOrReportHandler):
+    def token_error(self):
+        self.finish_failure('invalid or expired token', 401)
+
+    def get(self):
+        self.log_request()
+        args = self.get_args()
+        if args == None:
+            self.token_error()
+            return
+        try:
+            token = args['token'][0]
+        except:
+            token = None
+        if not token:
+            self.token_error()
+            return
+        authorized, since_date, expires_date, token_type = _database.check_token(token)
+        if not authorized or datetime.now() > datetime.strptime(expires_date, '%Y-%m-%d'):
+            self.token_error()
+            return
+        a_ladder = _database.get_ladder('a'),
+        b_ladder = _database.get_ladder('b'),
+        c_ladder = _database.get_ladder('c'),
+        u_ladder = _database.get_ladder('unranked'),
+        _log.info("report: matches_since: {}".format(since_date))
+        a_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('a', since_date)]
+        b_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('b', since_date)]
+        c_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('c', since_date)]
+        _log.debug("report: A matches found: {}".format(a_matches))
+        _log.debug("report: B matches found: {}".format(b_matches))
+        _log.debug("report: C matches found: {}".format(c_matches))
+        _, _, _, season = _database.get_season()
+        # TODO: render the page instead of sending JSON
+        self.finish_success({ 'a_matches' : a_matches,
+                              'b_matches' : b_matches,
+                              'c_matches' : c_matches,
+                              'a_ladder' : a_ladder,
+                              'b_ladder' : b_ladder,
+                              'c_ladder' : c_ladder,
+                              'u_ladder' : u_ladder,
+                              'season' : season })
+
 class PlayerBaseHandler(DynamicBaseHandler):
     def parse_args(self, args, add_flag, password):
         try:
@@ -973,6 +1016,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/date', DateHandler),
         ('/ladder', LadderHandler),
         ('/roster', RosterHandler),
+        ('/report', ReportHandler),
         ('/add_player', AddPlayerHandler),
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
