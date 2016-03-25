@@ -349,14 +349,15 @@ function process_season_form_response(command, response)
     }
 }
 
-function process_token_form_response(command, response)
+function process_token_form_response(command, action, response)
 {
     var form_name = "token_form";
     if (response.result == "success") {
         form = document.getElementById(form_name);
         form.reset();
 	// TODO: add to HTML
-        alert("New token:" + response.token);
+	token_url = action + "report?token=" + response.token;
+        alert("New token:" + token_url);
     } else {
         alert("Error: " + response.reason);
     }
@@ -555,16 +556,16 @@ function process_token_form(command)
     var xhttp = new XMLHttpRequest();
     var form_name = "token_form";
 
+    form = document.getElementById(form_name);
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
             if (xhttp.status == 200) {
-                process_token_form_response(command, JSON.parse(xhttp.responseText));
+                process_token_form_response(command, form.action, JSON.parse(xhttp.responseText));
             } else {
                 process_submit_error(xhttp.status);
             }
         }
     }
-    form = document.getElementById(form_name);
     query = token_form_to_query(form, command);
     if (query) {
         xhttp.open("GET", query, true);
