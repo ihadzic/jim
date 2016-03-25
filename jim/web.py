@@ -298,10 +298,10 @@ class ReportHandler(LadderOrReportHandler):
         if not authorized or datetime.now() > datetime.strptime(expires_date, '%Y-%m-%d'):
             self.token_error()
             return
-        a_ladder = _database.get_ladder('a'),
-        b_ladder = _database.get_ladder('b'),
-        c_ladder = _database.get_ladder('c'),
-        u_ladder = _database.get_ladder('unranked'),
+        a_ladder = _database.get_ladder('a')
+        b_ladder = _database.get_ladder('b')
+        c_ladder = _database.get_ladder('c')
+        u_ladder = _database.get_ladder('unranked')
         _log.info("report: matches_since: {}".format(since_date))
         a_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('a', since_date)]
         b_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('b', since_date)]
