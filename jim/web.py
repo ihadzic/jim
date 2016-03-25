@@ -294,7 +294,7 @@ class ReportHandler(LadderOrReportHandler):
         if not token:
             self.token_error()
             return
-        authorized, since_date, expires_date, token_type = _database.check_token(token)
+        authorized, since_date, expires_date = _database.check_token(token, 'report_and_roster')
         if not authorized or datetime.now() > datetime.strptime(expires_date, '%Y-%m-%d'):
             self.token_error()
             return

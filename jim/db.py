@@ -145,15 +145,15 @@ class Database:
         else:
             return False
 
-    def check_token(self, token):
+    def check_token(self, token, token_type):
         self._log.debug("check_token: {}".format(token))
-        self._cursor.execute("SELECT since, expires, type FROM tokens WHERE token=?", (token,))
+        self._cursor.execute("SELECT since, expires FROM tokens WHERE token=? and type=?", (token, token_type))
         v = self._cursor.fetchall()
         self._log.debug("check_token: {}".format(v))
         if len(v) == 0:
-            return False, None, None, None
+            return False, None, None
         assert len(v) == 1
-        return True, v[0][0], v[0][1], v[0][2]
+        return True, v[0][0], v[0][1]
 
     def check_password(self, username, password, table):
         self._log.debug("check_password: {} in {}".format(username, table))
