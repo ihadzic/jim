@@ -247,10 +247,10 @@ function populate_player_box(data, form, box, field)
     if (data.result == "success") {
         if (data.entries.length == 1) {
             player = data.entries[0];
-	    if (field == 'id')
-		form[box].value = player.player_id;
-	    else
-		form[box].value = player.last_name;
+            if (field == 'id')
+                form[box].value = player.player_id;
+            else
+                form[box].value = player.last_name;
         } else
             form[box].value = "";
     } else
@@ -266,9 +266,9 @@ function do_box_completion(player_last_name_box, player_id_box, timer_index, fie
     clearTimeout(match_form_timers[timer_index]);
     match_form_timers[timer_index] = null;
     if (field == "id")
-	player_box = player_id_box;
+        player_box = player_id_box;
     else
-	player_box = player_last_name_box;
+        player_box = player_last_name_box;
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
             if (xhttp.status == 200) {
@@ -578,7 +578,7 @@ function process_token_form(command)
 function check_season_form(command)
 {
     if (confirm("This will archive the ladder and reset the scores. Proceed?"))
-	process_season_form(command);
+        process_season_form(command);
 }
 
 function process_account_form(command)
