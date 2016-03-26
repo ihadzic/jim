@@ -179,14 +179,35 @@ class Database:
         return r
 
     def update_player(self, player, player_id = None):
-        # construct the tuple for the database (first the straightforward ones)
+        # first override initial points if necessary
+        reset_points = False
+        if player_id == None:
+            # on add, treat None for initial points as zero
+            if player.get('initial_points') == None:
+                player.update({'initial_points' : 0})
+            reset_points = True
+        else:
+            # on update, treat None as "leave unchanged", otherwise set
+            if player.get('initial_points') == None:
+                self._cursor.execute("SELECT initial_points FROM players WHERE id=?", (player_id,))
+                initial_points = self._cursor.fetchall()
+                if len(initial_points) == 0:
+                    # REVISIT: ugly hack, we have a similar check later down in this function
+                    # but we have to have another one here
+                    return -1, "player ID not found"
+                initial_points = initial_points[0][0]
+                player.update({'initial_points' : initial_points})
+            else:
+                reset_points = True
+        # now construct the tuple for the database (first the straightforward ones)
         fields_tuple = self._common_player_fields
         values_tuple = tuple([ player.get(f) for f in fields_tuple ])
         # next fields that need some massage
-
-        # set points to be the same as initial points when adding new player
-        fields_tuple = fields_tuple + ('points',)
-        values_tuple = values_tuple + (player.get('initial_points'),)
+        if reset_points:
+            # set points to be the same as initial points when adding new player
+            # or updating the existing player, but the user has set them
+            fields_tuple = fields_tuple + ('points',)
+            values_tuple = values_tuple + (player.get('initial_points'),)
         player_password = player.get('password')
         if player_password:
             fields_tuple = fields_tuple + ('password_hash',)
