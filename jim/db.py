@@ -275,7 +275,10 @@ class Database:
         return [util.purge_null_fields(e) for e in r]
 
     def lookup_player(self, fields, operator):
-        return self._lookup_something(fields, operator, "players", self._common_player_fields, self._translated_player_fields)
+        players = self._lookup_something(fields, operator, "players", self._common_player_fields, self._translated_player_fields)
+        for p in players:
+            p.pop('initial_points')
+        return players
 
     def lookup_match(self, fields):
         # ladder is special: it can be searched, but it is generated when match is added
