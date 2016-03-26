@@ -499,6 +499,14 @@ class DelPlayerHandler(PlayerBaseHandler):
 
 class UpdatePlayerHandler(PlayerBaseHandler):
 
+    def purge_non_privileged_fields(self, player):
+        if player.get('ladder') != None:
+            player.pop('ladder')
+        if player.get('initial_points') != None:
+            player.pop('initial_points')
+        if player.get('active') != None:
+            player.pop('active')
+
     def update_database(self, player, player_id):
         player_id, err = _database.update_player(player, player_id)
         if player_id > 0:
@@ -509,7 +517,15 @@ class UpdatePlayerHandler(PlayerBaseHandler):
 
     def get_or_post(self, password):
         self.log_request()
-        if not self.authorized(admin = True):
+        if self.authorized(admin = False, quiet = True):
+            if self.authorized(admin = True, quiet = True):
+                _log.info("update_player: admin user {}".format(self.current_user['id']))
+                is_admin = True;
+            else:
+                _log.info("update_player: regular user {}".format(self.current_user['id']))
+                is_admin = False;
+        else:
+            self.finish_failure('not authorized')
             return
         args = self.get_args()
         if args == None:
@@ -517,14 +533,26 @@ class UpdatePlayerHandler(PlayerBaseHandler):
         player = self.parse_args(args, False, password)
         if player == None:
             return
-        try:
-            player_id = int(args['player_id'][0])
-        except:
-            self.finish_failure("missing or invalid player ID")
-            return
-        r, err = self.update_database(player, player_id)
+        if is_admin:
+            try:
+                player_id = int(args['player_id'][0])
+            except:
+                self.finish_failure("missing or invalid player ID")
+                return
+            updated_player = player
+        else:
+            # force logged-in user ID if not admin
+            player_id = self.current_user['id']
+            self.purge_non_privileged_fields(player)
+            _log.info("purged player record: {}".format(player))
+            existing_players = _database.lookup_player({'player_id':player_id}, 'and')
+            assert(len(existing_players) == 1)
+            existing_player = existing_players[0]
+            existing_player.update(player)
+            updated_player = existing_player
+        r, err = self.update_database(updated_player, player_id)
         if r:
-            self.finish_success(player)
+            self.finish_success(updated_player)
         elif err:
             self.finish_failure(err)
         else:
