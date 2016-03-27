@@ -98,9 +98,13 @@ class GenericAdminFormHandler(DynamicBaseHandler):
 class PlayerFormRestrictedHandler(DynamicBaseHandler):
     def get(self):
         if self.authorized(admin = True, quiet = True):
-            self.finish_failure('must be regular user', 401)
-        elif self.authorized():
+            # admin is redirected to its own player form
+            self.redirect('/player_form')
+        elif self.authorized(quiet = True):
             self.render('player_form_restricted.html')
+        else:
+            # nobody is logged in, redirect to login form
+            self.redirect('/login')
 
 class AccountFormHandler(GenericAdminFormHandler):
     def get(self):
