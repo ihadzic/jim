@@ -12,11 +12,13 @@ function universal_json_to_form(form, data)
 
 function player_json_to_form(form, data)
 {
-    if (data.hasOwnProperty("active")) {
-        if (data["active"]) {
-            form.active[1].selected = true;
-        } else {
-            form.active[2].selected = true;
+    if (typeof form.active !== 'undefined') {
+        if (data.hasOwnProperty("active")) {
+            if (data["active"]) {
+                form.active[1].selected = true;
+            } else {
+                form.active[2].selected = true;
+            }
         }
     }
 }
