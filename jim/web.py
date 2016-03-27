@@ -589,7 +589,11 @@ class GetPlayerHandler(PlayerBaseHandler):
             player_id = int(args['player_id'][0])
         except:
             player_id = None
-        if player_id:
+        if player_id != None:
+            if player_id < 0:
+                # negative player_id means currently logged-in player
+                if not self.current_user['admin']:
+                    player_id = self.current_user['id']
             player.update({'player_id': player_id})
         try:
             op = args['op'][0].lower()
