@@ -95,6 +95,13 @@ class GenericAdminFormHandler(DynamicBaseHandler):
         else:
             self.redirect('/login')
 
+class PlayerFormRestrictedHandler(DynamicBaseHandler):
+    def get(self):
+        if self.authorized(admin = True, quiet = True):
+            self.finish_failure('must be regular user', 401)
+        elif self.authorized():
+            self.render('player_form_restricted.html')
+
 class AccountFormHandler(GenericAdminFormHandler):
     def get(self):
         self.generic_get('account_form.html')
@@ -1069,6 +1076,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/main_menu', MainMenuHandler),
         ('/match_form', MatchFormHandler),
         ('/player_form', PlayerFormHandler),
+        ('/player_form_restricted', PlayerFormRestrictedHandler),
         ('/season_form', SeasonFormHandler),
         ('/token_form', TokenFormHandler),
         ('/account_form', AccountFormHandler)
