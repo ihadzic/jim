@@ -231,17 +231,21 @@ function process_player_form_response(command, response)
     var form_name = "player_form";
     if (response.result == "success") {
         form = document.getElementById(form_name);
-        form.reset();
         switch (command) {
         case "add_player":
+            form.reset();
             clear_list("player_list");
             alert("player id is " + response.player_id + ".");
             break;
         case "update_player":
+            form.reset();
+            // no break, intentionally!
+        case "update_player_restricted":
             alert("player with id " + response.player_id + " updated.");
             break;
         case "get_player":
             var data = response.entries;
+            form.reset();
             if (data.length == 0)
                 alert("no players found");
             else if (data.length == 1) {
@@ -253,10 +257,12 @@ function process_player_form_response(command, response)
             }
             break;
         case "del_player":
+            form.reset();
             clear_list("player_list");
             alert("player with id " + response.player_id + " deleted.");
             break;
         default:
+            form.reset();
             alert("should not happen, bug?");
         }
     } else {
@@ -523,7 +529,10 @@ function process_player_form(command)
         if (!confirm("Are you sure you want to delete the player?\nUsually, just inactivating the player is good enough."))
             return;
     }
-    query = universal_form_to_query(form, command);
+    if (command == "update_player_restricted")
+        query = universal_form_to_query(form, "update_player");
+    else
+        query = universal_form_to_query(form, command);
     password = universal_form_to_password(form);
     xhttp.open("POST", query, true);
     xhttp.send(password);
