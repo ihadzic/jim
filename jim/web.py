@@ -22,6 +22,12 @@ _database = None
 _bootstrap_token = None
 _recent_days = 7
 
+class NoCacheStaticFileHandler(tornado.web.StaticFileHandler):
+    def set_extra_headers(self, path):
+        self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+        self.set_header("Pragma", "no-cache")
+        self.set_header("Expires", "0")
+
 class DynamicBaseHandler(tornado.web.RequestHandler):
     def log_request(self):
         x_real_ip = self.request.headers.get("X-Real-IP")
@@ -1089,7 +1095,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     _bootstrap_token = bootstrap_token
     _log = util.get_syslog_logger("web")
     _database = database
-    handlers.append(('/(.*)', web.StaticFileHandler, {'path': html_root}))
+    handlers.append(('/(.*)', NoCacheStaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
                                   cookie_secret = binascii.b2a_hex(os.urandom(32)))
     _log.info("creating servers")
