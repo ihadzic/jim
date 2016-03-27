@@ -205,6 +205,27 @@ function populate_player_list(data)
     player_list.innerHTML += '</ul><div class="form_description"><p></p></div>';
 }
 
+function get_logged_in_player_data()
+{
+    var xhttp = new XMLHttpRequest();
+    var query, form;
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_player_form_response("get_player", JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    form = document.getElementById("player_form");
+    query = form.action + "get_player?player_id=-1";
+    xhttp.open("GET", query, true);
+    xhttp.send();
+
+}
+
 function process_player_form_response(command, response)
 {
     var form_name = "player_form";
