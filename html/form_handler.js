@@ -387,7 +387,7 @@ function process_token_form_response(command, action, response)
         form = document.getElementById(form_name);
         form.reset();
         token_url = action + "report?token=" + response.token;
-        token_list.innerHTML = "<h3>Token URL is:</h3><ul>"
+        token_list.innerHTML = "<h3>Token URL is:</h3><ul>";
         token_list.innerHTML += token_url + "</div></li><li></li>";
     } else {
         alert("Error: " + response.reason);
