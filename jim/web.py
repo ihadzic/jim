@@ -211,7 +211,7 @@ class LadderOrReportHandler(DynamicBaseHandler):
         challenger_id = match.get('challenger_id')
         opponent_id = match.get('opponent_id')
         loser_id = opponent_id if winner_id == challenger_id else challenger_id
-        challenger_last_name = match.get('challenger_last_name')
+        challenger_last_name = match.get('challenger_last_name') + " (c)"
         opponent_last_name = match.get('opponent_last_name')
         winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
         loser_last_name = opponent_last_name if winner_id == challenger_id else challenger_last_name
