@@ -78,7 +78,7 @@ setup:
 
 5. Edit this file and customize any parameters as you see fit:
 
-   `~jim_env/lib/python2.7/site-packages/jim/jim.cfg`
+   `~/jim_env/lib/python2.7/site-packages/jim/jim.cfg`
 
    Note that if you want to run it as a regular user, you must use TCP ports above
    1024 (non privileged ports) and the path to the database file must be writable
