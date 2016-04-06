@@ -39,7 +39,7 @@ Installation
 The installation instructions assume that you are using Ubuntu, though
 it should be straight forward to adapt it to any other distribution.
 First, you will need several packages (install them using `apt-get install`
-command): `libffi-dev`, `python-dev`, `python-virtualenv`, `python-pip`,
+command): `git`, `libffi-dev`, `python-dev`, `python-virtualenv`, `python-pip`,
 `sqlite3`. You can also install `python-tornado`, but if you don't it
 will be pulled by `pip` as a dependency (there are several other Python
 packages that `pip` will pull or update at installation time).
@@ -71,6 +71,7 @@ setup:
 4. Install using `pip`
 
    `cd jim/`
+
    `pip install .`
 
    Here, we assumed that `jim/` is the directory into which you cloned the repository.
