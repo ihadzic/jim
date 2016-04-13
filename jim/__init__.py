@@ -28,6 +28,10 @@ def read_config(parser):
     except:
         cfg['https_port'] = None
     try:
+        cfg['bounce_port'] = int(parser.get("web", "bounce_port"))
+    except:
+        cfg['bounce_port'] = None
+    try:
         cfg['html_root'] = parser.get("web", "html_root")
     except:
         cfg['html_root'] = None
@@ -79,7 +83,7 @@ def do_main():
                             'keyfile': certs_path + '/key.pem' }
         else:
             ssl_options = util.test_ssl_options
-        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), html_root = cfg.get('html_root'), template_root = cfg.get('template_root'), database = database, bootstrap_token = cfg.get('bootstrap_token'))
+        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), bounce_port = cfg.get('bounce_port'), html_root = cfg.get('html_root'), template_root = cfg.get('template_root'), database = database, bootstrap_token = cfg.get('bootstrap_token'))
         _log.info("server exited")
     else:
         _log.error("configuration error")

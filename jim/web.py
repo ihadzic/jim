@@ -1042,7 +1042,7 @@ class NewTokenHandler(DynamicBaseHandler):
         args = {'start_date' : [start_date], 'end_date' : [end_date]}
         self.get_or_post(args)
 
-def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
+def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
     global _log
