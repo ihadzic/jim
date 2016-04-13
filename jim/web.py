@@ -1101,7 +1101,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     _log.info("creating servers")
     _http_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False)
     _https_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False, ssl_options = ssl_options)
-    _log.info("setting up TCP ports")
+    _log.info("setting up TCP ports: http={}, https={}, bounce={}".format(http_port, https_port, bounce_port))
     _http_server.listen(http_port)
     _https_server.listen(https_port)
     _log.info("starting server loop")
