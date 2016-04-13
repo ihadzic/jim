@@ -17,10 +17,18 @@ from datetime import timedelta
 
 _http_server = None
 _https_server = None
+_bounce_server = None
 _log = None
 _database = None
 _bootstrap_token = None
 _recent_days = 7
+
+class BounceAllHandler(tornado.web.RequestHandler):
+    def get(self, path):
+        _log.info("bounce handler: {}".format(path))
+        _log.info("request to redirect: {}".format(self.request))
+        host = self.request.host.split(':')[0]
+        self.redirect("https://" + host, permanent = True)
 
 class NoCacheStaticFileHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
@@ -1045,6 +1053,7 @@ class NewTokenHandler(DynamicBaseHandler):
 def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
+    global _bounce_server
     global _log
     global _database
     global _bootstrap_token
@@ -1098,12 +1107,15 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     handlers.append(('/(.*)', NoCacheStaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
                                   cookie_secret = binascii.b2a_hex(os.urandom(32)))
+    app_bounce = tornado.web.Application(handlers = [('/(.*)', BounceAllHandler)])
     _log.info("creating servers")
     _http_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False)
     _https_server = tornado.httpserver.HTTPServer(app, no_keep_alive = False, ssl_options = ssl_options)
+    _bounce_server = tornado.httpserver.HTTPServer(app_bounce)
     _log.info("setting up TCP ports: http={}, https={}, bounce={}".format(http_port, https_port, bounce_port))
     _http_server.listen(http_port)
     _https_server.listen(https_port)
+    _bounce_server.listen(bounce_port)
     _log.info("starting server loop")
     tornado.ioloop.IOLoop.instance().start()
     _log.info("server loop exited")
