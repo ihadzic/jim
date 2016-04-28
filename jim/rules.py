@@ -102,3 +102,21 @@ def process_match(cid, oid, cgames, ogames, retired = False, forfeited = False, 
             return oid, loser_points(cgames, True), winner_points(), None
     else:
         return None, None, None, "invalid match score: ({}, {})".format(cwset, owset)
+
+# Rule 4.2.4
+# - No more than 3 of your first 9 matches may be against the same opponent.
+# - After the first 9 matches no more that 1/3 of your matches may be against
+#   the same opponent.
+def match_limit_reached(p1_vs_p2, p1, p2):
+    if p1 < 9:
+        if p1_vs_p2 > 3:
+            return True
+    elif p1_vs_p2 * 3 > p1:
+            return True
+    if p2 < 9:
+        if p1_vs_p2 > 3:
+            return True
+    elif p1_vs_p2 * 3 > p2:
+            return True
+    return False
+
