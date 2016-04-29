@@ -5,6 +5,7 @@
 # MIT License, see LICENSE.txt for details
 
 import util
+import rules
 import sqlite3
 import string
 import os
@@ -369,6 +370,15 @@ class Database:
         winner_id = match.get("winner_id")
         challenger_id = match.get("challenger_id")
         opponent_id = match.get("opponent_id")
+        self._cursor.execute("SELECT id FROM matches WHERE season_id=? AND ((challenger_id=? AND opponent_id=?) OR (challenger_id=? AND opponent_id=?))", (season_id, challenger_id, opponent_id, opponent_id, challenger_id))
+        challenger_vs_opponent = len(self._cursor.fetchall()) + 1
+        self._cursor.execute("SELECT id FROM matches WHERE season_id=? AND (challenger_id=? OR opponent_id=?)", (season_id, challenger_id, challenger_id))
+        challenger_matches = len(self._cursor.fetchall()) + 1
+        self._cursor.execute("SELECT id FROM matches WHERE season_id=? AND (challenger_id=? OR opponent_id=?)", (season_id, opponent_id, opponent_id))
+        opponent_matches = len(self._cursor.fetchall()) + 1
+        self._log.info("match limit inputs {} {} {}".format(challenger_matches, opponent_matches, challenger_vs_opponent))
+        if rules.match_limit_reached(challenger_vs_opponent, challenger_matches, opponent_matches):
+            return -1, None, None, 'match limit reached for this pair of players'
         loser_id = opponent_id if winner_id == challenger_id else challenger_id
         # check that referred player IDs are valid
         check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=? and active=1", (opponent_id,)) ]
