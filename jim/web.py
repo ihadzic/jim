@@ -294,8 +294,13 @@ class ProfileHandler(InfoBaseHandler):
         _log.debug("ladder: args {}".format(args))
         player_ids = args.get('player_id')
         if not player_ids:
-            self.finish_failure("invalid or missing player id", 400)
-            return
+            if self.current_user['admin']:
+                # admin must specify player id
+                self.finish_failure("invalid or missing player id", 400)
+                return
+            else:
+                # for regular player, assume logged-in user if id is not specified
+                player_ids = [ str(self.current_user['id']) ]
         if len(player_ids) != 1:
             self.finish_failure("only one player id, please", 400)
             return
