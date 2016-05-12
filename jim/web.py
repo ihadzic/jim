@@ -213,7 +213,7 @@ class DateHandler(DynamicBaseHandler):
                     date_string = str(datetime.now()),
                     user_string = name)
 
-class LadderOrReportHandler(DynamicBaseHandler):
+class InfoBaseHandler(DynamicBaseHandler):
     def expand_match_record(self, match):
         winner_id = match.get('winner_id')
         challenger_id = match.get('challenger_id')
@@ -242,7 +242,7 @@ class LadderOrReportHandler(DynamicBaseHandler):
                       'notes' : notes})
         return match
 
-class LadderHandler(LadderOrReportHandler):
+class LadderHandler(InfoBaseHandler):
     def get_or_post(self, args):
         _log.debug("ladder: args {}".format(args))
         today = datetime.ctime(datetime.now())
@@ -302,7 +302,7 @@ class RosterHandler(DynamicBaseHandler):
         else:
             self.redirect('/login')
 
-class ReportHandler(LadderOrReportHandler):
+class ReportHandler(InfoBaseHandler):
     def token_error(self):
         self.finish_failure('invalid or expired token', 401)
 
