@@ -133,10 +133,19 @@ class Database:
         keys = { 'ladder': ladder, 'since': since, 'season_id': season_id}
         return self.lookup_match(keys)
 
-    def get_ladder(self, ladder):
+    def get_ladder(self, ladder = None, player_id = None):
         fields = ["first_name", "last_name", "points", "id", "wins", "losses", "a_wins", "a_losses", "b_wins", "b_losses", "c_wins", "c_losses"]
         fields_string = string.join(fields, ',')
-        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE ladder=? and active=1 ORDER BY points DESC".format(fields_string), (ladder,)) ]
+        query_fields = ['active=1']
+        query_values = []
+        if ladder:
+            query_fields += [ "ladder=?" ]
+            query_values += [ ladder ]
+        if player_id:
+            query_fields += [ "id=?" ]
+            query_values += [ player_id ]
+        query_string = string.join(query_fields, ' and ')
+        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE {} ORDER BY points DESC".format(fields_string, query_string), tuple(query_values)) ]
         return r
 
     def no_admins(self):
