@@ -782,7 +782,7 @@ class GetMatchHandler(DynamicBaseHandler):
         try:
             season_id = int(args['season_id'][0])
         except:
-            season_id, _, _ = _database.get_season()
+            season_id, _, _, _ = _database.get_season()
         keys =  util.purge_null_fields({ 'challenger_id': challenger_id,
                                          'opponent_id': opponent_id,
                                          'winner_id': winner_id,
