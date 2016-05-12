@@ -334,7 +334,7 @@ class ProfileHandler(InfoBaseHandler):
         b_ladder_matches = str(ladder_info.get('b_wins')) + " wins, " + str(ladder_info.get('b_losses')) + " losses"
         c_ladder_matches = str(ladder_info.get('c_wins')) + " wins, " + str(ladder_info.get('c_losses')) + " losses"
         self.render(
-            'player_info.html',
+            'player_profile.html',
             matches =  matches,
             player_name_and_id = player_name_and_id,
             player_location = "TBD location",
