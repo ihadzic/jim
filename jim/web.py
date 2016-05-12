@@ -289,6 +289,80 @@ class LadderHandler(InfoBaseHandler):
         else:
             self.redirect('/login')
 
+class ProfileHandler(InfoBaseHandler):
+    def get_or_post(self, args):
+        _log.debug("ladder: args {}".format(args))
+        player_ids = args.get('player_id')
+        if not player_ids:
+            self.finish_failure("invalid or missing player id", 400)
+            return
+        if len(player_ids) != 1:
+            self.finish_failure("only one player id, please", 400)
+            return
+        player_id = player_ids[0]
+        matched_players = _database.lookup_player({'player_id': player_id, 'active': '1'}, 'and')
+        if len(matched_players) == 1:
+            player = matched_players[0]
+        else:
+            self.finish_failure("player lookup failed", 404)
+            return
+        _log.debug("player: player found: {}".format(player))
+        matched_ladder_info = _database.get_ladder(None, player_id)
+        if len(matched_ladder_info) == 1:
+            ladder_info = matched_ladder_info[0]
+        else:
+            self.finish_failure("ladder info lookup failed", 404)
+            return
+        _log.debug("player: ladder info found: {}".format(ladder_info))
+        season_id, _, _, _ = _database.get_season()
+        ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id})
+        op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id})
+        matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
+        _log.debug("player: matches found: {}".format(matches))
+        player_e_mail = player.get('email')
+        player_ladder = player.get('ladder').upper()
+        player_company = player.get('company')
+        player_phone_numbers = ""
+        if player.get('home_phone'):
+            player_phone_numbers += player.get('home_phone') + " (h) "
+        if player.get('work_phone'):
+            player_phone_numbers += player.get('work_phone') + " (w) "
+        if player.get('cell_phone'):
+            player_phone_numbers += player.get('cell_phone') + " (c) "
+        player_name_and_id = player.get('first_name') + " " + player.get('last_name') + " (" + player_id + ")"
+        a_ladder_matches = str(ladder_info.get('a_wins')) + " wins, " + str(ladder_info.get('a_losses')) + " losses"
+        b_ladder_matches = str(ladder_info.get('b_wins')) + " wins, " + str(ladder_info.get('b_losses')) + " losses"
+        c_ladder_matches = str(ladder_info.get('c_wins')) + " wins, " + str(ladder_info.get('c_losses')) + " losses"
+        self.render(
+            'player_info.html',
+            matches =  matches,
+            player_name_and_id = player_name_and_id,
+            player_location = "TBD location",
+            player_e_mail = player_e_mail,
+            player_ladder = player_ladder,
+            player_phone_numbers = player_phone_numbers,
+            player_company = player_company,
+            a_ladder_matches = a_ladder_matches,
+            b_ladder_matches = b_ladder_matches,
+            c_ladder_matches = c_ladder_matches
+        )
+
+    def get(self):
+        self.log_request()
+        if self.authorized(quiet = True):
+            args = self.get_args()
+            self.get_or_post(args)
+        else:
+            self.redirect('/login')
+
+    def post(self):
+        self.log_request()
+        if self.authorized(quiet=True):
+            player_id = self.get_argument('player_id')
+            self.get_or_post({'player_id' : [ player_id ]})
+        else:
+            self.redirect('/login')
+
 class RosterHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
@@ -1078,6 +1152,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/ladder', LadderHandler),
         ('/roster', RosterHandler),
         ('/report', ReportHandler),
+        ('/profile', ProfileHandler),
         ('/add_player', AddPlayerHandler),
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
