@@ -30,7 +30,7 @@
       {% for p in roster %}
         {% block p %}
           <tr>
-            <td>{{ escape(str(p.get('first_name')) + " " + str(p.get('last_name'))) }}</td>
+            <td><a href="profile?player_id={{p.get('id')}}">{{ escape(str(p.get('first_name')) + " " + str(p.get('last_name'))) }}</a></td>
             <td>{{ escape(str(p.get('id'))) }}</td>
             <td>{{ escape(str(p.get('ladder'))[0:3].capitalize()) }}</td>
             <td>{{ escape(str(p.get('home_phone'))) }}</td>
