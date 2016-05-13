@@ -37,7 +37,7 @@
             <td>{{ escape(str(p.get('home_phone'))) }}</td>
             <td>{{ escape(str(p.get('cell_phone'))) }}</td>
             <td>{{ escape(str(p.get('work_phone'))) }}</td>
-            <td>{{ escape(str(p.get('email'))) }}</td>
+            <td><a href="mailto:{{escape(str(p.get('email')))}}">{{ escape(str(p.get('email'))) }}</a></td>
           </tr>
         {% end %}
       {% end %}
