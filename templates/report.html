@@ -10,8 +10,8 @@
   <div id="form_container">
     <h1><a>Player Ladder</a></h1>
     <div class="form_description">
-      <h2>Live ATTTC Ladder as of {{date_string}}</h2>
-      <h2>Season: {{season_string}}</h2>
+      <h2>Live ATTTC Ladder as of {{escape(date_string)}}</h2>
+      <h2>Season: {{escape(season_string)}}</h2>
     </div>
     <form>
     <h2>A-Ladder</h2>
@@ -43,7 +43,7 @@
         {% set i = i + 1 %}
         {% block a %}
           <tr>
-            <td>{{ str(i) }}</td>
+            <td>{{ escape(str(i)) }}</td>
             <td>{{ escape(str(a.get('id'))) }}</td>
             <td>{{ escape(str(a.get('first_name')) + " " + str(a.get('last_name'))) }}</td>
             <td>{{ escape(str(a.get('points'))) }}</td>
@@ -84,7 +84,7 @@
         {% set i = i + 1 %}
         {% block b %}
           <tr>
-            <td>{{ str(i) }}</td>
+            <td>{{ escape(str(i)) }}</td>
             <td>{{ escape(str(b.get('id'))) }}</td>
             <td>{{ escape(str(b.get('first_name')) + " " + str(b.get('last_name'))) }}</td>
             <td>{{ escape(str(b.get('points'))) }}</td>
@@ -125,7 +125,7 @@
         {% set i = i + 1 %}
         {% block c %}
           <tr>
-            <td>{{ str(i) }}</td>
+            <td>{{ escape(str(i)) }}</td>
             <td>{{ escape(str(c.get('id'))) }}</td>
             <td>{{ escape(str(c.get('first_name')) + " " + str(c.get('last_name'))) }}</td>
             <td>{{ escape(str(c.get('points'))) }}</td>
@@ -154,7 +154,7 @@
         {% set i = i + 1 %}
         {% block u %}
           <tr>
-            <td>{{ str(i) }}</td>
+            <td>{{ escape(str(i)) }}</td>
             <td>{{ escape(str(u.get('id'))) }}</td>
             <td>{{ escape(str(u.get('first_name')) + " " + str(u.get('last_name'))) }}</td>
             <td>{{ escape(str(u.get('points'))) }}</td>
@@ -168,7 +168,7 @@
     </table>
     <h1><a>Player Roster</a></h1>
     <div class="form_description">
-      <h2>ATTTC Roster as of {{date_string}}</h2>
+      <h2>ATTTC Roster as of {{escape(date_string)}}</h2>
     </div>
     <table border="1" style="width:100%">
       <tr>
