@@ -485,6 +485,14 @@ class PlayerBaseHandler(DynamicBaseHandler):
             company = args['company'][0]
         except:
             company = None
+        try:
+            location = args['location'][0]
+        except:
+            location = None
+        try:
+            note = args['note'][0]
+        except:
+            note = None
         if add_flag and not company:
             self.finish_failure("company name is required")
             return None
@@ -531,6 +539,8 @@ class PlayerBaseHandler(DynamicBaseHandler):
                    'work_phone' : work_phone,
                    'cell_phone' : cell_phone,
                    'company': company,
+                   'location': location,
+                   'note': note,
                    'ladder': ladder,
                    'initial_points': initial_points,
                    'active': active}
