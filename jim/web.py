@@ -331,6 +331,10 @@ class ProfileHandler(InfoBaseHandler):
         if not player_location:
             player_location = "Unknown location"
         player_note = player.get('note')
+        if player_note:
+            player_note = " --- " + player_note
+        else:
+            player_note = ""
         player_phone_numbers = ""
         if player.get('home_phone'):
             player_phone_numbers += player.get('home_phone') + " (h) "
@@ -347,6 +351,7 @@ class ProfileHandler(InfoBaseHandler):
             matches =  matches,
             player_name_and_id = player_name_and_id,
             player_location = player_location,
+            player_note = player_note,
             player_e_mail = player_e_mail,
             player_ladder = player_ladder,
             player_phone_numbers = player_phone_numbers,
