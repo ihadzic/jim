@@ -2,27 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>{{escape(player_name_and_id)}}</title>
+<title>{{escape(str(player_name_and_id))}}</title>
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
 </head>
 <body id="main_body" >
   <img id="top" src="top.png" alt="">
   <div id="form_container">
-    <h1><a>{{escape(player_name_and_id)}}</a></h1>
+    <h1><a>{{escape(str(player_name_and_id))}}</a></h1>
     <div class="form_description">
-      <h2>{{escape(player_name_and_id)}}<br>{{escape(player_company)}}<br>{{escape(player_ladder)}}-ladder</h2>
+      <h2>{{escape(str(player_name_and_id))}}<br>{{escape(str(player_company))}}<br>{{escape(str(player_ladder))}}-ladder</h2>
       <h3><a href="main_menu">Main Menu</a>
         <a href="roster">Roster</a>
         <a href="ladder">Ladder</a>
         <a href="logout">Logout</a>
       </h3>
     </div>
-    <h2>{{escape(player_location)}}<br>
-        {{escape(player_phone_numbers)}}<br>
+    <h2>{{escape(str(player_location))}}<br>
+        {{escape(str(player_phone_numbers))}}<br>
         <a href="mailto:{{escape(player_e_mail)}}">{{escape(player_e_mail)}}</a></h2>
-    <h3>A-ladder matches: {{escape(a_ladder_matches)}}<br>
-        B-ladder matches: {{escape(b_ladder_matches)}}<br>
-        C-ladder matches: {{escape(c_ladder_matches)}}
+    <h3>A-ladder matches: {{escape(str(a_ladder_matches))}}<br>
+        B-ladder matches: {{escape(str(b_ladder_matches))}}<br>
+        C-ladder matches: {{escape(str(c_ladder_matches))}}
     </h3>
     <h3>Matches this season:</h3>
     {% for m in matches %}
