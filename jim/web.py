@@ -328,6 +328,8 @@ class ProfileHandler(InfoBaseHandler):
         player_ladder = player.get('ladder').upper()
         player_company = player.get('company')
         player_location = player.get('location')
+        if not player_location:
+            player_location = "Unknown location"
         player_note = player.get('note')
         player_phone_numbers = ""
         if player.get('home_phone'):
