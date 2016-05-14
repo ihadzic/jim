@@ -327,6 +327,8 @@ class ProfileHandler(InfoBaseHandler):
         player_e_mail = player.get('email')
         player_ladder = player.get('ladder').upper()
         player_company = player.get('company')
+        player_location = player.get('location')
+        player_note = player.get('note')
         player_phone_numbers = ""
         if player.get('home_phone'):
             player_phone_numbers += player.get('home_phone') + " (h) "
@@ -342,7 +344,7 @@ class ProfileHandler(InfoBaseHandler):
             'player_profile.html',
             matches =  matches,
             player_name_and_id = player_name_and_id,
-            player_location = "TBD location",
+            player_location = player_location,
             player_e_mail = player_e_mail,
             player_ladder = player_ladder,
             player_phone_numbers = player_phone_numbers,
