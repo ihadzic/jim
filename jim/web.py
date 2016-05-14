@@ -21,7 +21,7 @@ _bounce_server = None
 _log = None
 _database = None
 _bootstrap_token = None
-_recent_days = 7
+_recent_days = 14
 
 class BounceAllHandler(tornado.web.RequestHandler):
     def get(self, path):
