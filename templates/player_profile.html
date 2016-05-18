@@ -2,37 +2,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>{{escape(str(player_name_and_id))}}</title>
+<title>{{str(player_name_and_id)}}</title>
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
 </head>
 <body id="main_body" >
   <img id="top" src="top.png" alt="">
   <div id="form_container">
-    <h1><a>{{escape(str(player_name_and_id))}}</a></h1>
+    <h1><a>{{str(player_name_and_id)}}</a></h1>
     <div class="form_description">
-      <h2>{{escape(str(player_name_and_id) + str(player_note))}}<br>{{escape(str(player_company))}}<br>{{escape(str(player_ladder))}}-ladder</h2>
+      <h2>{{str(player_name_and_id) + str(player_note)}}<br>{{str(player_company)}}<br>{{str(player_ladder)}}-ladder</h2>
       <h3><a href="main_menu">Main Menu</a>
         <a href="roster">Roster</a>
         <a href="ladder">Ladder</a>
         <a href="logout">Logout</a>
       </h3>
     </div>
-    <h2>{{escape(str(player_location))}}<br>
-        {{escape(str(player_phone_numbers))}}<br>
-        <a href="mailto:{{escape(player_e_mail)}}">{{escape(player_e_mail)}}</a></h2>
-    <h3>A-ladder matches: {{escape(str(a_ladder_matches))}}<br>
-        B-ladder matches: {{escape(str(b_ladder_matches))}}<br>
-        C-ladder matches: {{escape(str(c_ladder_matches))}}
+    <h2>{{str(player_location)}}<br>
+        {{str(player_phone_numbers)}}<br>
+        <a href="mailto:{{str(player_e_mail)}}">{{str(player_e_mail)}}</a></h2>
+    <h3>A-ladder matches: {{str(a_ladder_matches)}}<br>
+        B-ladder matches: {{str(b_ladder_matches)}}<br>
+        C-ladder matches: {{str(c_ladder_matches)}}
     </h3>
     <h3>Matches this season:</h3>
     {% for m in matches %}
     {% block m %}
     <p>
-      {{escape(str(m.get('date')))}}:
-      {{escape(str(m.get('winner_last_name')))}} <i>def.</i>
-      {{escape(str(m.get('loser_last_name')))}} : &nbsp;&nbsp;
-      {{escape(str(m.get('score')))}}
-      {{escape(str(m.get('notes')))}}
+      {{str(m.get('date'))}}:
+      {{str(m.get('winner_last_name'))}} <i>def.</i>
+      {{str(m.get('loser_last_name'))}} : &nbsp;&nbsp;
+      {{str(m.get('score'))}}
+      {{str(m.get('notes'))}}
     </p>
     {% end %}
     {% end %}

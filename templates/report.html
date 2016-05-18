@@ -10,8 +10,8 @@
   <div id="form_container">
     <h1><a>Player Ladder</a></h1>
     <div class="form_description">
-      <h2>Live ATTTC Ladder as of {{escape(date_string)}}</h2>
-      <h2>Season: {{escape(season_string)}}</h2>
+      <h2>Live ATTTC Ladder as of {{date_string}}</h2>
+      <h2>Season: {{season_string}}</h2>
     </div>
     <form>
     <h2>A-Ladder</h2>
@@ -19,11 +19,11 @@
     {% for am in a_matches %}
       {% block am %}
         <p>
-          {{escape(str(am.get('date')))}}:
-          {{escape(str(am.get('winner_last_name')))}} <i>def.</i>
-          {{escape(str(am.get('loser_last_name')))}} : &nbsp;&nbsp;
-          {{escape(str(am.get('score')))}}
-          {{escape(str(am.get('notes')))}}
+          {{str(am.get('date'))}}:
+          {{str(am.get('winner_last_name'))}} <i>def.</i>
+          {{str(am.get('loser_last_name'))}} : &nbsp;&nbsp;
+          {{str(am.get('score'))}}
+          {{str(am.get('notes'))}}
         </p>
       {% end %}
     {% end %}
@@ -43,14 +43,14 @@
         {% set i = i + 1 %}
         {% block a %}
           <tr>
-            <td>{{ escape(str(i)) }}</td>
-            <td>{{ escape(str(a.get('id'))) }}</td>
-            <td>{{ escape(str(a.get('first_name')) + " " + str(a.get('last_name'))) }}</td>
-            <td>{{ escape(str(a.get('points'))) }}</td>
-            <td>{{ escape(str(a.get('a_wins'))) }}</td>
-            <td>{{ escape(str(a.get('a_losses'))) }}</td>
-            <td>{{ escape(str(a.get('wins'))) }}</td>
-            <td>{{ escape(str(a.get('losses'))) }}</td>
+            <td>{{ str(i) }}</td>
+            <td>{{ str(a.get('id')) }}</td>
+            <td>{{ str(a.get('first_name')) + " " + str(a.get('last_name')) }}</td>
+            <td>{{ str(a.get('points')) }}</td>
+            <td>{{ str(a.get('a_wins')) }}</td>
+            <td>{{ str(a.get('a_losses')) }}</td>
+            <td>{{ str(a.get('wins')) }}</td>
+            <td>{{ str(a.get('losses')) }}</td>
           </tr>
         {% end %}
       {% end %}
@@ -60,11 +60,11 @@
     {% for bm in b_matches %}
       {% block bm %}
         <p>
-          {{escape(str(bm.get('date')))}}:
-          {{escape(str(bm.get('winner_last_name')))}} <i>def.</i>
-          {{escape(str(bm.get('loser_last_name')))}} : &nbsp;&nbsp;
-          {{escape(str(bm.get('score')))}}
-          {{escape(str(bm.get('notes')))}}
+          {{str(bm.get('date'))}}:
+          {{str(bm.get('winner_last_name'))}} <i>def.</i>
+          {{str(bm.get('loser_last_name'))}} : &nbsp;&nbsp;
+          {{str(bm.get('score'))}}
+          {{str(bm.get('notes'))}}
         </p>
       {% end %}
     {% end %}
@@ -84,14 +84,14 @@
         {% set i = i + 1 %}
         {% block b %}
           <tr>
-            <td>{{ escape(str(i)) }}</td>
-            <td>{{ escape(str(b.get('id'))) }}</td>
-            <td>{{ escape(str(b.get('first_name')) + " " + str(b.get('last_name'))) }}</td>
-            <td>{{ escape(str(b.get('points'))) }}</td>
-            <td>{{ escape(str(b.get('b_wins'))) }}</td>
-            <td>{{ escape(str(b.get('b_losses'))) }}</td>
-            <td>{{ escape(str(b.get('wins'))) }}</td>
-            <td>{{ escape(str(b.get('losses'))) }}</td>
+            <td>{{ str(i) }}</td>
+            <td>{{ str(b.get('id')) }}</td>
+            <td>{{ str(b.get('first_name')) + " " + str(b.get('last_name')) }}</td>
+            <td>{{ str(b.get('points')) }}</td>
+            <td>{{ str(b.get('b_wins')) }}</td>
+            <td>{{ str(b.get('b_losses')) }}</td>
+            <td>{{ str(b.get('wins')) }}</td>
+            <td>{{ str(b.get('losses')) }}</td>
           </tr>
         {% end %}
       {% end %}
@@ -101,11 +101,11 @@
     {% for cm in c_matches %}
       {% block cm %}
         <p>
-          {{escape(str(cm.get('date')))}}:
-          {{escape(str(cm.get('winner_last_name')))}} <i>def.</i>
-          {{escape(str(cm.get('loser_last_name')))}} : &nbsp;&nbsp;
-          {{escape(str(cm.get('score')))}}
-          {{escape(str(cm.get('notes')))}}
+          {{str(cm.get('date'))}}:
+          {{str(cm.get('winner_last_name'))}} <i>def.</i>
+          {{str(cm.get('loser_last_name'))}} : &nbsp;&nbsp;
+          {{str(cm.get('score'))}}
+          {{str(cm.get('notes'))}}
         </p>
       {% end %}
     {% end %}
@@ -125,14 +125,14 @@
         {% set i = i + 1 %}
         {% block c %}
           <tr>
-            <td>{{ escape(str(i)) }}</td>
-            <td>{{ escape(str(c.get('id'))) }}</td>
-            <td>{{ escape(str(c.get('first_name')) + " " + str(c.get('last_name'))) }}</td>
-            <td>{{ escape(str(c.get('points'))) }}</td>
-            <td>{{ escape(str(c.get('c_wins'))) }}</td>
-            <td>{{ escape(str(c.get('c_losses'))) }}</td>
-            <td>{{ escape(str(c.get('wins'))) }}</td>
-            <td>{{ escape(str(c.get('losses'))) }}</td>
+            <td>{{ str(i) }}</td>
+            <td>{{ str(c.get('id')) }}</td>
+            <td>{{ str(c.get('first_name')) + " " + str(c.get('last_name')) }}</td>
+            <td>{{ str(c.get('points')) }}</td>
+            <td>{{ str(c.get('c_wins')) }}</td>
+            <td>{{ str(c.get('c_losses')) }}</td>
+            <td>{{ str(c.get('wins')) }}</td>
+            <td>{{ str(c.get('losses')) }}</td>
           </tr>
         {% end %}
       {% end %}
@@ -154,21 +154,21 @@
         {% set i = i + 1 %}
         {% block u %}
           <tr>
-            <td>{{ escape(str(i)) }}</td>
-            <td>{{ escape(str(u.get('id'))) }}</td>
-            <td>{{ escape(str(u.get('first_name')) + " " + str(u.get('last_name'))) }}</td>
-            <td>{{ escape(str(u.get('points'))) }}</td>
+            <td>{{ str(i) }}</td>
+            <td>{{ str(u.get('id')) }}</td>
+            <td>{{ str(u.get('first_name')) + " " + str(u.get('last_name')) }}</td>
+            <td>{{ str(u.get('points')) }}</td>
             <td>0</td>
             <td>0</td>
-            <td>{{ escape(str(u.get('wins'))) }}</td>
-            <td>{{ escape(str(u.get('losses'))) }}</td>
+            <td>{{ str(u.get('wins')) }}</td>
+            <td>{{ str(u.get('losses')) }}</td>
           </tr>
         {% end %}
       {% end %}
     </table>
     <h1><a>Player Roster</a></h1>
     <div class="form_description">
-      <h2>ATTTC Roster as of {{escape(date_string)}}</h2>
+      <h2>ATTTC Roster as of {{date_string}}</h2>
     </div>
     <table border="1" style="width:100%">
       <tr>
@@ -183,13 +183,13 @@
       {% for p in roster %}
         {% block p %}
           <tr>
-            <td>{{ escape(str(p.get('first_name')) + " " + str(p.get('last_name'))) }}</td>
-            <td>{{ escape(str(p.get('id'))) }}</td>
-            <td>{{ escape(str(p.get('ladder'))[0:3].capitalize()) }}</td>
-            <td>{{ escape(str(p.get('home_phone'))) }}</td>
-            <td>{{ escape(str(p.get('cell_phone'))) }}</td>
-            <td>{{ escape(str(p.get('work_phone'))) }}</td>
-            <td>{{ escape(str(p.get('email'))) }}</td>
+            <td>{{ str(p.get('first_name')) + " " + str(p.get('last_name')) }}</td>
+            <td>{{ str(p.get('id')) }}</td>
+            <td>{{ str(p.get('ladder'))[0:3].capitalize() }}</td>
+            <td>{{ str(p.get('home_phone')) }}</td>
+            <td>{{ str(p.get('cell_phone')) }}</td>
+            <td>{{ str(p.get('work_phone')) }}</td>
+            <td>{{ str(p.get('email')) }}</td>
           </tr>
         {% end %}
       {% end %}
