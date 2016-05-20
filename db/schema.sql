@@ -96,7 +96,6 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "added player_archive
 CREATE TABLE tokens (id INTEGER PRIMARY KEY NOT NULL, token TEXT NOT NULL, type TEXT NOT NULL, expires DATE NOT NULL, since DATE);
 INSERT INTO revisions (date, comment) VALUES (date("now"), "added tokens table");
 
-
 /*
  * Version 13
  * Add user location
@@ -104,3 +103,10 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "added tokens table")
 ALTER TABLE players ADD COLUMN location TEXT;
 ALTER TABLE players ADD COLUMN note TEXT;
 INSERT INTO revisions (date, comment) VALUES (date("now"), "added note and location");
+
+/*
+ * Version 14
+ * Add user location
+ */
+ALTER TABLE players ADD COLUMN wlocation TEXT;
+INSERT INTO revisions (date, comment) VALUES (date("now"), "added work location");

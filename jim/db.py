@@ -70,6 +70,8 @@ _schema = [
     ['ALTER TABLE players ADD COLUMN location TEXT;',
      'ALTER TABLE players ADD COLUMN note TEXT;',
      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added note and location");'],
+    [ 'ALTER TABLE players ADD COLUMN wlocation TEXT;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added work location");']
 ]
 
 class Database:
