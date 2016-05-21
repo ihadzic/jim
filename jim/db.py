@@ -488,7 +488,7 @@ class Database:
         self._conn.commit()
         db_version = self.get_db_version()
         assert db_version == v
-        self._common_player_fields = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active', 'initial_points', 'location', 'note' )
+        self._common_player_fields = ( 'username', 'first_name', 'last_name', 'email', 'home_phone', 'work_phone', 'cell_phone', 'company', 'ladder', 'active', 'initial_points', 'location', 'wlocation', 'note' )
         self._translated_player_fields = { 'player_id' : 'id' }
         self._common_account_fields = ( 'username', )
         self._translated_account_fields = { 'account_id' : 'id' }
