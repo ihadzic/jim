@@ -330,6 +330,9 @@ class ProfileHandler(InfoBaseHandler):
         player_location = player.get('location')
         if not player_location:
             player_location = "Unknown location"
+        player_wlocation = player.get('wlocation')
+        if not player_wlocation:
+            player_wlocation = "Unknown location"
         player_note = player.get('note')
         if player_note:
             player_note = " --- " + player_note
@@ -351,6 +354,7 @@ class ProfileHandler(InfoBaseHandler):
             matches =  matches,
             player_name_and_id = player_name_and_id,
             player_location = player_location,
+            player_wlocation = player_wlocation,
             player_note = player_note,
             player_e_mail = player_e_mail,
             player_ladder = player_ladder,
@@ -498,6 +502,10 @@ class PlayerBaseHandler(DynamicBaseHandler):
             location = args['location'][0]
         except:
             location = None
+        try:
+            wlocation = args['wlocation'][0]
+        except:
+            wlocation = None
         try:
             note = args['note'][0]
         except:
