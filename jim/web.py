@@ -557,6 +557,7 @@ class PlayerBaseHandler(DynamicBaseHandler):
                    'cell_phone' : cell_phone,
                    'company': company,
                    'location': location,
+                   'wlocation' : wlocation,
                    'note': note,
                    'ladder': ladder,
                    'initial_points': initial_points,
