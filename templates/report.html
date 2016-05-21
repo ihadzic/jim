@@ -172,13 +172,15 @@
     </div>
     <table border="1" style="width:100%">
       <tr>
-        <th style="width:31%">Name</th>
-        <th style="width:5%">ID</th>
-        <th style="width:5%">Ldr.</th>
-        <th style="width:12%">Home #</th>
-        <th style="width:12%">Cell #</th>
-        <th style="width:12%">Work #</th>
-        <th style="width:23%">E-mail</th>
+        <th style="width:23%">Name</th>
+        <th style="width:4%">ID</th>
+        <th style="width:4%">Ldr.</th>
+        <th style="width:10%">Home Loc.</th>
+        <th style="width:10%">Work Loc.</th>
+        <th style="width:9%">Home #</th>
+        <th style="width:9%">Cell #</th>
+        <th style="width:9%">Work #</th>
+        <th style="width:22%">E-mail</th>
       </tr>
       {% for p in roster %}
         {% block p %}
@@ -186,9 +188,11 @@
             <td>{{ str(p.get('first_name')) + " " + str(p.get('last_name')) }}</td>
             <td>{{ str(p.get('id')) }}</td>
             <td>{{ str(p.get('ladder'))[0:3].capitalize() }}</td>
-            <td>{{ str(p.get('home_phone')) }}</td>
-            <td>{{ str(p.get('cell_phone')) }}</td>
-            <td>{{ str(p.get('work_phone')) }}</td>
+            <td>{{ str(p.get('location')) if p.get('location') else "" }}</td>
+            <td>{{ str(p.get('wlocation')) if p.get('wlocation') else "" }}</td>
+            <td>{{ str(p.get('home_phone')) if p.get('home_phone') else ""}}</td>
+            <td>{{ str(p.get('cell_phone')) if p.get('cell_phone') else ""}}</td>
+            <td>{{ str(p.get('work_phone')) if p.get('work_home') else ""}}</td>
             <td>{{ str(p.get('email')) }}</td>
           </tr>
         {% end %}

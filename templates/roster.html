@@ -36,11 +36,11 @@
             <td><a href="profile?player_id={{str(p.get('id'))}}">{{ str(p.get('first_name')) + " " + str(p.get('last_name')) }}</a></td>
             <td>{{ str(p.get('id')) }}</td>
             <td>{{ str(p.get('ladder'))[0:3].capitalize() }}</td>
-            <td>{{ str(p.get('location')) }}</td>
-            <td>{{ str(p.get('wlocation')) }}</td>
-            <td>{{ str(p.get('home_phone')) }}</td>
-            <td>{{ str(p.get('cell_phone')) }}</td>
-            <td>{{ str(p.get('work_phone')) }}</td>
+            <td>{{ str(p.get('location')) if p.get('location') else "" }}</td>
+            <td>{{ str(p.get('wlocation')) if p.get('wlocation') else "" }}</td>
+            <td>{{ str(p.get('home_phone')) if p.get('home_phone') else ""}}</td>
+            <td>{{ str(p.get('cell_phone')) if p.get('cell_phone') else ""}}</td>
+            <td>{{ str(p.get('work_phone')) if p.get('work_home') else ""}}</td>
             <td><a href="mailto:{{str(p.get('email'))}}">{{ str(p.get('email')) }}</a></td>
           </tr>
         {% end %}
