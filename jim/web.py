@@ -329,10 +329,10 @@ class ProfileHandler(InfoBaseHandler):
         player_company = player.get('company')
         player_location = player.get('location')
         if not player_location:
-            player_location = "Unknown location"
+            player_location = "unknown"
         player_wlocation = player.get('wlocation')
         if not player_wlocation:
-            player_wlocation = "Unknown location"
+            player_wlocation = "unknown"
         player_note = player.get('note')
         if player_note:
             player_note = " --- " + player_note
