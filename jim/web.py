@@ -11,6 +11,7 @@ import binascii
 import rules
 import util
 import string
+import db
 from tornado import web, httpserver
 from datetime import datetime
 from datetime import timedelta
@@ -1157,7 +1158,7 @@ class NewTokenHandler(DynamicBaseHandler):
         args = {'start_date' : [start_date], 'end_date' : [end_date]}
         self.get_or_post(args)
 
-def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', bootstrap_token = 'deadbeef' ):
+def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = None, bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
     global _bounce_server
@@ -1171,7 +1172,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     if html_root == None:
         html_root = sys.prefix + '/var/jim/html'
     if database == None:
-        database = sys.prefix + './jim.db'
+        database =  db.Database('./jim.db')
     if bootstrap_token == None:
         bootstrap_token = 'deadbeef'
 

@@ -76,7 +76,11 @@ def do_main():
         cfg = read_config(config_file_parser)
         _log.info("server configuration: {}".format(cfg))
         _log.info("starting server")
-        database = db.Database(cfg.get('db_file'))
+        db_file = cfg.get('db_file')
+        if db_file:
+            database = db.Database(db_file)
+        else:
+            database = None
         certs_path = cfg.get('certs_path')
         if certs_path:
             ssl_options = { 'certfile' : certs_path + '/cert.pem',
