@@ -162,6 +162,7 @@ follow these instructions.
 
     [db]
     db_file = /usr/local/var/jim/database/jim.db
+    news_file = /usr/local/var/jim/database/news.txt
     ```
 
 5. Register the domain name for your service with your favorite DNS provider. If you decide

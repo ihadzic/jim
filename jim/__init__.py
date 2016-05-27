@@ -81,13 +81,14 @@ def do_main():
             database = db.Database(db_file)
         else:
             database = None
+        news = cfg.get('news') 
         certs_path = cfg.get('certs_path')
         if certs_path:
             ssl_options = { 'certfile' : certs_path + '/cert.pem',
                             'keyfile': certs_path + '/key.pem' }
         else:
             ssl_options = util.test_ssl_options
-        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), bounce_port = cfg.get('bounce_port'), html_root = cfg.get('html_root'), template_root = cfg.get('template_root'), database = database, bootstrap_token = cfg.get('bootstrap_token'))
+        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), bounce_port = cfg.get('bounce_port'), html_root = cfg.get('html_root'), template_root = cfg.get('template_root'), database = database, news = news, bootstrap_token = cfg.get('bootstrap_token'))
         _log.info("server exited")
     else:
         _log.error("configuration error")
