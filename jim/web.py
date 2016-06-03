@@ -1176,7 +1176,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     if database == None:
         database =  db.Database('./jim.db')
     if news == None:
-        news = sys.prefix + './news.txt'
+        news = './news.txt'
     if bootstrap_token == None:
         bootstrap_token = 'deadbeef'
 
@@ -1218,6 +1218,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     _log = util.get_syslog_logger("web")
     _database = database
     _news = news
+    _log.info("news file: {}".format(_news))
     handlers.append(('/(.*)', NoCacheStaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
                                   cookie_secret = binascii.b2a_hex(os.urandom(32)))
