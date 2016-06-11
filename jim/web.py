@@ -103,9 +103,10 @@ class MainMenuHandler(DynamicBaseHandler):
                     news_content = f.read()
             except:
                 news_content = "No news today"
+            news_content_list = news_content.split('\n')
             self.render('main_menu.html',
                         admin = self.current_user['admin'],
-                        news_content = news_content)
+                        news_content_list = news_content_list)
         else:
             self.redirect('/login')
 
