@@ -98,8 +98,10 @@ class MainMenuHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
+            news_content = "No news today"
             self.render('main_menu.html',
-                        admin = self.current_user['admin'])
+                        admin = self.current_user['admin'],
+                        news_content = news_content)
         else:
             self.redirect('/login')
 
