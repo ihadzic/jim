@@ -102,6 +102,8 @@ class MainMenuHandler(DynamicBaseHandler):
                 with open(_news, 'r') as f:
                     news_content = f.read()
             except:
+                news_content = None
+            if not news_content:
                 news_content = "No news today"
             news_content_list = news_content.split('\n')
             self.render('main_menu.html',
