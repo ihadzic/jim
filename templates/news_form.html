@@ -16,14 +16,16 @@
         </div>
         <div id="news_list"></div>
         <input id="publish_news" class="button_text" type="submit" name="news_content" value="Publish"/>
-        <input id="clear_form" class="button_text" type="reset" name="clear_form" value="Clear"/>
+        <input id="reset_form" class="button_text" type="reset" name="reset_form" value="Reset"/>
         <ul >
           <li id="li_1" >
             <label class="description" for="title">Enter News </label>
             <div>
-                 <textarea id="news_content" name="news_content" class="element textarea large"></textarea>
+                 <textarea id="news_content" name="news_content" class="element textarea large">
+                   {{news_content}}
+                 </textarea>
             </div>
-	  </li>
+          </li>
         </ul>
       </form>
       <div id="footer">

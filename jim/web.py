@@ -151,7 +151,12 @@ class TokenFormHandler(GenericAdminFormHandler):
 
 class NewsFormHandler(GenericAdminFormHandler):
     def get(self):
-        self.generic_get('news_form.html')
+        try:
+            with open(_news, 'r') as f:
+                news_content = f.read()
+        except:
+            news_content = ""
+        self.generic_get('news_form.html', news_content=news_content)
 
     def post(self):
         self.log_request()
