@@ -111,10 +111,10 @@ class MainMenuHandler(DynamicBaseHandler):
             self.redirect('/login')
 
 class GenericAdminFormHandler(DynamicBaseHandler):
-    def generic_get(self, form_filename):
+    def generic_get(self, form_filename, **kwargs):
         self.log_request()
         if self.authorized(admin = True, quiet = True):
-            self.render(form_filename)
+            self.render(form_filename, **kwargs)
         else:
             self.redirect('/login')
 
