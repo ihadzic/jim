@@ -44,6 +44,10 @@ def read_config(parser):
     except:
         cfg['db_file'] = "./jim.db"
     try:
+        cfg['news_file'] = parser.get("db", "news_file")
+    except:
+        cfg['news_file'] = "./news.txt"
+    try:
         cfg['bootstrap_token'] = parser.get("web", "bootstrap_token")
     except:
         cfg['bootstrap_token'] = 'jimimproved'
@@ -81,7 +85,7 @@ def do_main():
             database = db.Database(db_file)
         else:
             database = None
-        news = cfg.get('news') 
+        news = cfg.get('news_file') 
         certs_path = cfg.get('certs_path')
         if certs_path:
             ssl_options = { 'certfile' : certs_path + '/cert.pem',
