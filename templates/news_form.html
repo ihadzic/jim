@@ -4,21 +4,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>News Editor</title>
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
-<script type="text/javascript" src="calendar.js"></script>
-<script type="text/javascript" src="form_handler.js"></script>
 </head>
 <body id="main_body" >
   <img id="top" src="top.png" alt="">
     <div id="form_container">
-      <form id="news_form" class="appnitro"  method="post" action="/"
-            onsubmit="return false">
+      <form id="news_form" class="appnitro"  method="post" action="news_form">
         <div class="form_description">
           <h2>News Editor</h2>
           <h3><a href="main_menu">Main Menu</a>
             <a href="logout">Logout</a></h3>
         </div>
         <div id="news_list"></div>
-        <input id="publish_news" class="button_text" type="button" name="publish news" value="Publish"/>
+        <input id="publish_news" class="button_text" type="submit" name="news_content" value="Publish"/>
+        <input id="clear_form" class="button_text" type="reset" name="clear_form" value="Clear"/>
         <ul >
           <li id="li_1" >
             <label class="description" for="title">Enter News </label>
