@@ -153,6 +153,19 @@ class NewsFormHandler(GenericAdminFormHandler):
     def get(self):
         self.generic_get('news_form.html')
 
+    def post(self):
+        self.log_request()
+        if not self.authorized(admin = True):
+            return
+        news_content = self.get_argument('news_content')
+        try:
+            with open(_news, 'w') as f:
+                n = f.write(news_content)
+                _log.info("wrote {} characters to {}".format(n, _news))
+        except:
+            _log.error("error writing to file {}".format(_news))
+        self.redirect('/main_menu')
+
 class LoginHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
