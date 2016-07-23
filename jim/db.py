@@ -71,7 +71,10 @@ _schema = [
      'ALTER TABLE players ADD COLUMN note TEXT;',
      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added note and location");'],
     [ 'ALTER TABLE players ADD COLUMN wlocation TEXT;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added work location");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "added work location");'],
+    [ 'ALTER TABLE players ADD COLUMN tournament_qualified_override INTEGER NOT NULL DEFAULT 0;',
+      'ALTER TABLE player_archive ADD COLUMN tournament_qualified_override INTEGER NOT NULL DEFAULT 0;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "fields needed for tournament qualification");']
 ]
 
 class Database:

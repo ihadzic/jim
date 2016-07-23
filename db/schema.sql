@@ -110,3 +110,11 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "added note and locat
  */
 ALTER TABLE players ADD COLUMN wlocation TEXT;
 INSERT INTO revisions (date, comment) VALUES (date("now"), "added work location");
+
+/*
+ * Version 15
+ * Add tournament qualification flag
+ */
+ALTER TABLE players ADD COLUMN tournament_qualified_override INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE player_archive ADD COLUMN tournament_qualified_override INTEGER NOT NULL DEFAULT 0;
+INSERT INTO revisions (date, comment) VALUES (date("now"), "fields needed for tournament qualification");
