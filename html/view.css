@@ -67,6 +67,27 @@ a:hover {
         text-decoration: underline;
 } 
 	
+/**** Table Formatting  *****/
+
+table {
+	border-collapse: collapse;
+}
+
+table, th, td {
+	border: 1px solid blue;
+}
+
+th {
+	padding: 4px;
+	text-align: left;
+}
+
+td {
+	height: 16px;
+	vertical-align: bottom;
+	padding: 3px;
+	text-align: left;
+}
 
 /**** Logo Section  *****/
 h1
