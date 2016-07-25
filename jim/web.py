@@ -473,7 +473,20 @@ class ReportHandler(InfoBaseHandler):
                     roster = roster,
                     season_string = season_string)
 
+
+def format_phone_number(phone_number):
+    p_dd = ''.join(c for c in phone_number if c.isdigit())
+    if (len(p_dd)==10):
+        ret_phone_number = '-'.join([p_dd[0:3],p_dd[3:6],p_dd[6:10]])
+    else: 
+        ret_phone_number = None
+    return ret_phone_number
+    
+
+
+
 class PlayerBaseHandler(DynamicBaseHandler):
+
     def parse_args(self, args, add_flag, password):
         try:
             username = args['username'][0]
@@ -503,16 +516,37 @@ class PlayerBaseHandler(DynamicBaseHandler):
             home_phone = args['home_phone'][0]
         except:
             home_phone = None
+
+        if (home_phone != None):
+            p_dd = ''.join(c for c in home_phone if c.isdigit())
+            if (len(p_dd)==10):
+                home_phone = '-'.join([p_dd[0:3],p_dd[3:6],p_dd[6:10]])
+            else: 
+                home_phone = None
+                self.finish_failure("A 10-digit home phone number is required.")
+                return None
+            
         try:
             cell_phone = args['cell_phone'][0]
         except:
             cell_phone = None
+        if (cell_phone != None):
+            cell_phone = format_phone_number(cell_phone)
+            if (cell_phone == None):
+               self.finish_failure("A 10-digit cell phone number is required.")
+               return None    
         try:
             work_phone = args['work_phone'][0]
         except:
             work_phone = None
+        if (work_phone != None):
+            work_phone = format_phone_number(work_phone)
+            if (work_phone == None):
+               self.finish_failure("A 10-digit work phone number is required.")
+               return None    
+            
         if add_flag and not (home_phone or cell_phone or work_phone):
-            self.finish_failure("at least one phone number is required")
+            self.finish_failure("At least one 10-digit phone number is required.")
             return None
         try:
             email = args['email'][0]
