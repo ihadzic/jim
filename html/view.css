@@ -55,6 +55,19 @@ form.appnitro
 	padding:0 0 20px;
 }
 
+/**** Hyperlinks    *****/
+
+a:link {
+        color: green;
+        text-decoration: none;
+}
+
+a:hover {
+        color: orange;
+        text-decoration: underline;
+} 
+	
+
 /**** Logo Section  *****/
 h1
 {
