@@ -671,6 +671,8 @@ class UpdatePlayerHandler(PlayerBaseHandler):
             player.pop('initial_points')
         if player.get('active') != None:
             player.pop('active')
+        if player.get('tournament_qualified_override') != None:
+            player.pop('tournament_qualified_override')
 
     def update_database(self, player, player_id):
         player_id, err = _database.update_player(player, player_id)
