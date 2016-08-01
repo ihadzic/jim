@@ -118,3 +118,12 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "added work location"
 ALTER TABLE players ADD COLUMN tournament_qualified_override INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE player_archive ADD COLUMN tournament_qualified_override INTEGER NOT NULL DEFAULT 0;
 INSERT INTO revisions (date, comment) VALUES (date("now"), "fields needed for tournament qualification");
+
+/*
+ * Version 16
+ * Add tournament qualification criteria
+ */
+ALTER TABLE seasons ADD COLUMN tournament_date DATE;
+ALTER TABLE seasons ADD COLUMN tournament_min_matches INTEGER NOT NULL DEFAULT 9;
+ALTER TABLE seasons ADD COLUMN tournament_min_opponents INTEGER NOT NULL DEFAULT 5;
+INSERT INTO revisions (date, comment) VALUES (date("now"), "more fields needed for tournament qualification");
