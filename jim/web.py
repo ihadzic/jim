@@ -580,6 +580,27 @@ class PlayerBaseHandler(DynamicBaseHandler):
                 active = True
             else:
                 active = None
+        try:
+            tournament_qualified_override_str = args['tournament_qualified_override'][0]
+        except:
+            if add_flag:
+                tournament_qualified_override_str = '0'
+            else:
+                tournament_qualified_override_str = None
+        if tournament_qualified_override_str:
+            try:
+                tournament_qualified_override = int(tournament_qualified_override_str)
+            except:
+                self.finish_failure("tournament flag must be an integer")
+                return None
+            if tournament_qualified_override not in [-1, 0, 1]:
+                self.finish_failure("tournament flag must be -1, 0, or 1")
+                return None
+        else:
+            if add_flag:
+                tournament_qualified_override = 0
+            else:
+                tournament_qualified_override = None
         player = { 'username': username,
                    'password': password,
                    'first_name': first_name,
@@ -594,7 +615,8 @@ class PlayerBaseHandler(DynamicBaseHandler):
                    'note': note,
                    'ladder': ladder,
                    'initial_points': initial_points,
-                   'active': active}
+                   'active': active,
+                   'tournament_qualified_override' : tournament_qualified_override}
         if add_flag:
             return player
         else:
