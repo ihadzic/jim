@@ -213,11 +213,26 @@ class Database:
                 self._log.debug("check_password: {} in {} password check failed".format(username, table))
                 return None
 
+    def _expand_with_tournament_flag(self, player):
+        qualified = False
+        player_id = player.get('id')
+        qualified_override = player.get('tournament_qualified_override')
+        if player_id != None and qualified_override != None:
+            if qualified_override == 0:
+                min_matches, min_opponents = self.get_tournament_parameters()
+                matches, opponents = self.get_match_and_opponent_count(player_id)
+                qualified = (matches >= min_matches and opponents >= min_opponents)
+            elif qualified_override > 0:
+                qualified = True
+        player.update({'tournament_qualified': qualified})
+        return player
+
     def get_roster(self):
-        fields = ["first_name", "last_name", "cell_phone", "home_phone", "work_phone", "email", "id", "ladder", "company", "location", "wlocation"]
+        fields = ["first_name", "last_name", "cell_phone", "home_phone", "work_phone", "email", "id", "ladder", "company", "location", "wlocation", "tournament_qualified_override"]
         fields_string = string.join(fields, ',')
         r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM players WHERE active=1 ORDER BY last_name".format(fields_string)) ]
-        return r
+        er = [ self._expand_with_tournament_flag(record) for record in r ]
+        return er
 
     def update_player(self, player, player_id = None):
         # first override initial points if necessary
