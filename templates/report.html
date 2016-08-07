@@ -45,7 +45,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(a.get('id')) }}</td>
-            <td>{{ str(a.get('first_name')) + " " + str(a.get('last_name')) }}</td>
+            <td>{{ ("* " if a.get('tournament_qualified') else "") + str(a.get('first_name')) + " " + str(a.get('last_name')) }}</td>
             <td>{{ str(a.get('points')) }}</td>
             <td>{{ str(a.get('a_wins')) }}</td>
             <td>{{ str(a.get('a_losses')) }}</td>
@@ -86,7 +86,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(b.get('id')) }}</td>
-            <td>{{ str(b.get('first_name')) + " " + str(b.get('last_name')) }}</td>
+            <td>{{ ("* " if b.get('tournament_qualified') else "") + str(b.get('first_name')) + " " + str(b.get('last_name')) }}</td>
             <td>{{ str(b.get('points')) }}</td>
             <td>{{ str(b.get('b_wins')) }}</td>
             <td>{{ str(b.get('b_losses')) }}</td>
@@ -127,7 +127,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(c.get('id')) }}</td>
-            <td>{{ str(c.get('first_name')) + " " + str(c.get('last_name')) }}</td>
+            <td>{{ ("* " if c.get('tournament_qualified') else "") + str(c.get('first_name')) + " " + str(c.get('last_name')) }}</td>
             <td>{{ str(c.get('points')) }}</td>
             <td>{{ str(c.get('c_wins')) }}</td>
             <td>{{ str(c.get('c_losses')) }}</td>
@@ -156,7 +156,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(u.get('id')) }}</td>
-            <td>{{ str(u.get('first_name')) + " " + str(u.get('last_name')) }}</td>
+            <td>{{ ("* " if u.get('tournament_qualified') else "") + str(u.get('first_name')) + " " + str(u.get('last_name')) }}</td>
             <td>{{ str(u.get('points')) }}</td>
             <td>0</td>
             <td>0</td>

@@ -79,7 +79,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(a.get('id')) }}</td>
-            <td><a href="profile?player_id={{str(a.get('id'))}}">{{ str(a.get('first_name')) + " " + str(a.get('last_name')) }}</a></td>
+            <td><a href="profile?player_id={{str(a.get('id'))}}">{{ ("* " if a.get('tournament_qualified') else "") + str(a.get('first_name')) + " " + str(a.get('last_name')) }}</a></td>
             <td>{{ str(a.get('points')) }}</td>
             <td>{{ str(a.get('a_wins')) }}</td>
             <td>{{ str(a.get('a_losses')) }}</td>
@@ -120,7 +120,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(b.get('id')) }}</td>
-            <td><a href="profile?player_id={{str(b.get('id'))}}">{{ str(b.get('first_name')) + " " + str(b.get('last_name')) }}</a></td>
+            <td><a href="profile?player_id={{str(b.get('id'))}}">{{ ("* " if b.get('tournament_qualified') else "") + str(b.get('first_name')) + " " + str(b.get('last_name')) }}</a></td>
             <td>{{ str(b.get('points')) }}</td>
             <td>{{ str(b.get('b_wins')) }}</td>
             <td>{{ str(b.get('b_losses')) }}</td>
@@ -161,7 +161,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(c.get('id')) }}</td>
-            <td><a href="profile?player_id={{str(c.get('id'))}}">{{ str(c.get('first_name')) + " " + str(c.get('last_name')) }}</a></td>
+            <td><a href="profile?player_id={{str(c.get('id'))}}">{{ ("* " if c.get('tournament_qualified') else "") + str(c.get('first_name')) + " " + str(c.get('last_name')) }}</a></td>
             <td>{{ str(c.get('points')) }}</td>
             <td>{{ str(c.get('c_wins')) }}</td>
             <td>{{ str(c.get('c_losses')) }}</td>
@@ -190,7 +190,7 @@
           <tr>
             <td>{{ str(i) }}</td>
             <td>{{ str(u.get('id')) }}</td>
-            <td><a href="profile?player_id={{str(u.get('id'))}}">{{ str(u.get('first_name')) + " " + str(u.get('last_name')) }}</a></td>
+            <td><a href="profile?player_id={{str(u.get('id'))}}">{{ ("* " if u.get('tournament_qualified') else "") + str(u.get('first_name')) + " " + str(u.get('last_name')) }}</a></td>
             <td>{{ str(u.get('points')) }}</td>
             <td>0</td>
             <td>0</td>
