@@ -185,7 +185,7 @@
       {% for p in roster %}
         {% block p %}
           <tr>
-            <td>{{ str(p.get('first_name')) + " " + str(p.get('last_name')) }}</td>
+            <td>{{ ("* " if p.get('tournament_qualified') else "") + str(p.get('first_name')) + " " + str(p.get('last_name')) }}</td>
             <td>{{ str(p.get('id')) }}</td>
             <td>{{ str(p.get('ladder'))[0:3].capitalize() }}</td>
             <td>{{ str(p.get('location')) if p.get('location') else "" }}</td>
