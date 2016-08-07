@@ -98,6 +98,12 @@ class Database:
         v = v[0]
         return v
 
+    def get_tournament_parameters(self):
+        self._cursor.execute('SELECT tournament_min_matches, tournament_min_opponents FROM seasons WHERE active=1')
+        v = self._cursor.fetchall()
+        assert len(v) == 1
+        return v[0]
+
     def new_token(self, token_type, since_date, expires_date):
         token_value = None
         while not token_value:
