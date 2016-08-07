@@ -104,6 +104,19 @@ class Database:
         assert len(v) == 1
         return v[0]
 
+    def get_match_and_opponent_count(self, player_id):
+        # all-opponent set cardinal number is the number of different opponents the player had
+        self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? UNION SELECT challenger_id FROM matches WHERE opponent_id=?)', (player_id, player_id))
+        v = self._cursor.fetchall()
+        assert len(v) == 1
+        num_opponents_tuple = v[0]
+        # very similar query, but without unique union will give us all matches played
+        self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? UNION ALL SELECT challenger_id FROM matches WHERE opponent_id=?)', (player_id, player_id))
+        v = self._cursor.fetchall()
+        assert len(v) == 1
+        num_matches_tuple = v[0]
+        return num_matches_tuple + num_opponents_tuple
+
     def new_token(self, token_type, since_date, expires_date):
         token_value = None
         while not token_value:
