@@ -523,7 +523,7 @@ class PlayerBaseHandler(DynamicBaseHandler):
                 home_phone = '-'.join([p_dd[0:3],p_dd[3:6],p_dd[6:10]])
             else: 
                 home_phone = None
-                self.finish_failure("A 10-digit home phone number is required.")
+                self.finish_failure("home phone number format invalid")
                 return None
             
         try:
@@ -533,7 +533,7 @@ class PlayerBaseHandler(DynamicBaseHandler):
         if (cell_phone != None):
             cell_phone = format_phone_number(cell_phone)
             if (cell_phone == None):
-               self.finish_failure("A 10-digit cell phone number is required.")
+               self.finish_failure("cell phone number format invalid")
                return None    
         try:
             work_phone = args['work_phone'][0]
@@ -542,11 +542,11 @@ class PlayerBaseHandler(DynamicBaseHandler):
         if (work_phone != None):
             work_phone = format_phone_number(work_phone)
             if (work_phone == None):
-               self.finish_failure("A 10-digit work phone number is required.")
+               self.finish_failure("work phone number format invalid")
                return None    
             
         if add_flag and not (home_phone or cell_phone or work_phone):
-            self.finish_failure("At least one 10-digit phone number is required.")
+            self.finish_failure("at least one phone number is required")
             return None
         try:
             email = args['email'][0]
