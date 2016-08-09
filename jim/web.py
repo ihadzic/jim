@@ -1203,7 +1203,8 @@ class NewSeasonHandler(DynamicBaseHandler):
     def post(self):
         start_date = self.get_argument('start_date')
         end_date = self.get_argument('end_date')
-        args = {'start_date' : [start_date], 'end_date' : [end_date]}
+        title = self.get_argument('title')
+        args = {'start_date' : [start_date], 'end_date' : [end_date], 'title' : [title]}
         self.get_or_post(args)
 
 class NewTokenHandler(DynamicBaseHandler):
