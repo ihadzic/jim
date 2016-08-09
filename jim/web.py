@@ -1166,6 +1166,41 @@ class UpdateAccountHandler(AccountBaseHandler):
         else:
             self.get_or_post(None)
 
+class UpdateTournamentHandler(DynamicBaseHandler):
+    def get_or_post(self, args):
+        self.log_request()
+        if not self.authorized(admin = True):
+            return
+        try:
+            start_date = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
+            start_date = str(start_date).split()[0]
+        except:
+            start_date = None
+        try:
+            min_matches = int(args['min_matches'][0])
+        except:
+            min_matches = None
+        try:
+            min_opponents = int(args['min_opponents'][0])
+        except:
+            min_opponents = None
+        _log.info("new tournament parameters: {} {}/{}".format(start_date, min_matches, min_opponents))
+        # TODO: update database here
+        self.redirect('/tournament_form')
+
+    def get(self):
+        args = self.get_args()
+        if args == None:
+            return
+        self.get_or_post(args)
+
+    def post(self):
+        start_date = self.get_argument('start_date_3') + '-' + self.get_argument('start_date_1') + '-' + self.get_argument('start_date_2')
+        min_matches = self.get_argument('min_matches')
+        min_opponents = self.get_argument('min_opponents')
+        args = {'start_date' : [start_date], 'min_matches' : [min_matches], 'min_opponents' : [min_opponents]}
+        self.get_or_post(args)
+
 class NewSeasonHandler(DynamicBaseHandler):
     def get_or_post(self, args):
         self.log_request()
@@ -1297,6 +1332,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/del_account', DelAccountHandler),
         ('/get_account', GetAccountHandler),
         ('/update_account', UpdateAccountHandler),
+        ('/update_tournament', UpdateTournamentHandler),
         ('/new_season', NewSeasonHandler),
         ('/new_token', NewTokenHandler),
         ('/main_menu', MainMenuHandler),
