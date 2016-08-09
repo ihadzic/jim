@@ -104,7 +104,7 @@ class Database:
         self._conn.commit()
 
     def get_tournament_parameters(self):
-        self._cursor.execute('SELECT tournament_min_matches, tournament_min_opponents FROM seasons WHERE active=1')
+        self._cursor.execute('SELECT tournament_min_matches, tournament_min_opponents, tournament_date FROM seasons WHERE active=1')
         v = self._cursor.fetchall()
         assert len(v) == 1
         return v[0]
@@ -225,7 +225,7 @@ class Database:
         qualified_override = player.get('tournament_qualified_override')
         if player_id != None and qualified_override != None:
             if qualified_override == 0:
-                min_matches, min_opponents = self.get_tournament_parameters()
+                min_matches, min_opponents, _ = self.get_tournament_parameters()
                 matches, opponents = self.get_match_and_opponent_count(player_id)
                 qualified = (matches >= min_matches and opponents >= min_opponents)
             elif qualified_override > 0:
