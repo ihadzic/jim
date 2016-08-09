@@ -149,7 +149,17 @@ class SeasonFormHandler(GenericAdminFormHandler):
 
 class TournamentFormHandler(GenericAdminFormHandler):
     def get(self):
-        self.generic_get('tournament_form.html')
+        min_matches, min_opponents, start_date = _database.get_tournament_parameters()
+        # if tournament date is None, default to season-end date
+        if not start_date:
+            _, _ , start_date, _ = _database.get_season()
+        start_date_3, start_date_1, start_date_2 = tuple(start_date.split('-'))
+        self.generic_get('tournament_form.html',
+                         start_date_1 = start_date_1,
+                         start_date_2 = start_date_2,
+                         start_date_3 = start_date_3,
+                         min_matches = min_matches,
+                         min_opponents = min_opponents)
 
 class TokenFormHandler(GenericAdminFormHandler):
     def get(self):
