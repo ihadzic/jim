@@ -1169,8 +1169,8 @@ class UpdateAccountHandler(AccountBaseHandler):
 class UpdateTournamentHandler(DynamicBaseHandler):
     def get_or_post(self, args):
         self.log_request()
-        if not self.authorized(admin = True):
-            return
+        if not self.authorized(admin = True, quiet = True):
+            self.redirect('/login')
         try:
             start_date = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
             start_date = str(start_date).split()[0]
