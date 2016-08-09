@@ -1195,7 +1195,8 @@ class UpdateTournamentHandler(DynamicBaseHandler):
         except:
             min_opponents = None
         _log.info("new tournament parameters: {} {}/{}".format(start_date, min_matches, min_opponents))
-        _database.set_tournament_parameters(start_date, min_matches, min_opponents)
+        if start_date != None and min_matches != None and min_opponents != None:
+            _database.set_tournament_parameters(start_date, min_matches, min_opponents)
         self.redirect('/tournament_form')
 
     def get(self):
