@@ -98,6 +98,11 @@ class Database:
         v = v[0]
         return v
 
+    def set_tournament_parameters(self, start_date, min_matches, min_opponents):
+        season_id, _, _, _ = self.get_season()
+        self._cursor.execute("UPDATE seasons SET tournament_date=?, tournament_min_matches=?, tournament_min_opponents=? WHERE id=?", (start_date, min_matches, min_opponents, season_id))
+        self._conn.commit()
+
     def get_tournament_parameters(self):
         self._cursor.execute('SELECT tournament_min_matches, tournament_min_opponents FROM seasons WHERE active=1')
         v = self._cursor.fetchall()
