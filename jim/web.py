@@ -154,12 +154,15 @@ class TournamentFormHandler(GenericAdminFormHandler):
         if not start_date:
             _, _ , start_date, _ = _database.get_season()
         start_date_3, start_date_1, start_date_2 = tuple(start_date.split('-'))
+        qualified_players = [ p for p in _database.get_roster() if p.get('tournament_qualified') ]
+        _log.info("qualified players: {}".format(qualified_players))
         self.generic_get('tournament_form.html',
                          start_date_1 = start_date_1,
                          start_date_2 = start_date_2,
                          start_date_3 = start_date_3,
                          min_matches = min_matches,
-                         min_opponents = min_opponents)
+                         min_opponents = min_opponents,
+                         qualified_players = qualified_players)
 
 class TokenFormHandler(GenericAdminFormHandler):
     def get(self):
