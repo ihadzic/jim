@@ -416,13 +416,16 @@ class Database:
         # it came in without season_id, set it
         match['season_id'] = season_id
         match_date = match.get('date')
+        _, _, tournament_date = self.get_tournament_parameters()
         self._log.info("season id is {} ({}:{})".format(season_id, start_date, end_date))
         self._log.info("match date is {}".format(match_date))
+        self._log.info("tournament date is {}".format(tournament_date))
+        md = datetime.strptime(match_date, '%Y-%m-%d')
+        td = datetime.strptime(tournament_date, '%Y-%m-%d')
         if start_date != None and end_date != None:
             # enforce season dates if they exist
             sd = datetime.strptime(start_date, '%Y-%m-%d')
             ed = datetime.strptime(end_date, '%Y-%m-%d')
-            md = datetime.strptime(match_date, '%Y-%m-%d')
             if md > ed or md < sd:
                 return -1, None, None, "match date out of season date-range"
         fields_tuple = self._common_match_fields
@@ -454,6 +457,8 @@ class Database:
         else:
             challenger_ladder = check[0][0]
             challenger_last_name = check[0][1]
+        if md >= td and opponent_ladder != challenger_ladder:
+            return -1, None, None, "inter-ladder matches not allowed during the tournament"
         check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (winner_id,)) ]
         if len(check) == 0:
             return -1, None, None, "invalid winner ID"
