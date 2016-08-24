@@ -137,6 +137,11 @@ function season_form_to_query(form, command)
         document.getElementById('end_date_2').value;
     q += '&end_date=' + end_date;
 
+    tournament_date = document.getElementById('tournament_date_3').value + '-' +
+        document.getElementById('tournament_date_1').value + '-' +
+        document.getElementById('tournament_date_2').value;
+    q += '&tournament_date=' + tournament_date;
+
     return q;
 }
 
