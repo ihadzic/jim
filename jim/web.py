@@ -490,7 +490,6 @@ class ReportHandler(InfoBaseHandler):
                     roster = roster,
                     season_string = season_string)
 
-
 def format_phone_number(phone_number):
     p_dd = ''.join(c for c in phone_number if c.isdigit())
     if (len(p_dd)==10):
@@ -498,9 +497,6 @@ def format_phone_number(phone_number):
     else: 
         ret_phone_number = None
     return ret_phone_number
-    
-
-
 
 class PlayerBaseHandler(DynamicBaseHandler):
 
@@ -533,7 +529,6 @@ class PlayerBaseHandler(DynamicBaseHandler):
             home_phone = args['home_phone'][0]
         except:
             home_phone = None
-
         if (home_phone != None):
             p_dd = ''.join(c for c in home_phone if c.isdigit())
             if (len(p_dd)==10):
@@ -542,7 +537,6 @@ class PlayerBaseHandler(DynamicBaseHandler):
                 home_phone = None
                 self.finish_failure("home phone number format invalid")
                 return None
-            
         try:
             cell_phone = args['cell_phone'][0]
         except:
