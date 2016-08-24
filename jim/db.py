@@ -423,7 +423,10 @@ class Database:
         self._log.info("match date is {}".format(match_date))
         self._log.info("tournament date is {}".format(tournament_date))
         md = datetime.strptime(match_date, '%Y-%m-%d')
-        td = datetime.strptime(tournament_date, '%Y-%m-%d')
+        try:
+            td = datetime.strptime(tournament_date, '%Y-%m-%d')
+        except:
+            td = None
         if start_date != None and end_date != None:
             # enforce season dates if they exist
             sd = datetime.strptime(start_date, '%Y-%m-%d')
@@ -459,8 +462,9 @@ class Database:
         else:
             challenger_ladder = check[0][0]
             challenger_last_name = check[0][1]
-        if md >= td and opponent_ladder != challenger_ladder:
-            return -1, None, None, "inter-ladder matches not allowed during the tournament"
+        if td:
+            if md >= td and opponent_ladder != challenger_ladder:
+                return -1, None, None, "inter-ladder matches not allowed during the tournament"
         check = [ record for record in self._cursor.execute("SELECT id FROM players WHERE id=?", (winner_id,)) ]
         if len(check) == 0:
             return -1, None, None, "invalid winner ID"
