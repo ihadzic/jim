@@ -84,6 +84,34 @@
               });
             </script>
           </li>
+          <li id="li_7" >
+            <label class="description" for="tournament_date">Tournament start date </label>
+            <span>
+              <input id="tournament_date_1" name="tournament_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
+              <label for="tournament_date_1">MM</label>
+            </span>
+            <span>
+              <input id="tournament_date_2" name="tournament_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
+              <label for="tournament_date_2">DD</label>
+            </span>
+            <span>
+              <input id="tournament_date_3" name="tournament_date_3" class="element text" size="4" maxlength="4" value="" type="text">
+              <label for="tournament_date_3">YYYY</label>
+            </span>
+            <span id="calendar_tour">
+              <img id="cal_img_tour" class="datepicker" src="calendar.gif" alt="Pick a date.">
+            </span>
+            <script type="text/javascript">
+              Calendar.setup({
+              inputField         : "tournament_date_3",
+              baseField    : "tournament_date",
+              displayArea  : "calendar_tour",
+              button                 : "cal_img_tour",
+              ifFormat         : "%B %e, %Y",
+              onSelect         : selectDate
+              });
+            </script>
+          </li>
         </ul>
       </form>
       <div id="footer">
