@@ -1242,6 +1242,17 @@ class NewSeasonHandler(DynamicBaseHandler):
         except:
             tournament_date = None
         _log.info("new season requested: {}-{} (tournament: {})".format(start_date, end_date, tournament_date))
+        if (start_date and not end_date) or (not start_date and end_date):
+            self.finish_failure("start and end date should either be both set or both blank")
+            return
+        if start_date and end_date:
+            if sd > ed:
+                self.finish_failure("start date cannnot be after end date")
+                return
+        if tournament_date:
+            if td < sd or td > ed:
+                self.finish_failure("tournament date must be within the season")
+                return
         season_id, err = _database.new_season(start_date, end_date, title, tournament_date)
         if season_id:
             self.finish_success({'season_id' : season_id})
