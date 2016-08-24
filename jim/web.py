@@ -724,6 +724,11 @@ class DelPlayerHandler(PlayerBaseHandler):
         except:
             self.finish_failure("missing or invalid player ID")
             return
+        ch_matches = _database.lookup_match({ 'challenger_id': player_id})
+        op_matches = _database.lookup_match({ 'opponent_id' : player_id})
+        if ch_matches + op_matches:
+            self.finish_failure("cannot delete players which has played matches in the past")
+            return
         if _database.delete_player(player_id):
             self.finish_success({'player_id': player_id})
         else:
