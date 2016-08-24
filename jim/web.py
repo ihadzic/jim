@@ -1227,18 +1227,18 @@ class NewSeasonHandler(DynamicBaseHandler):
         if not title:
             title = "season created on {}".format(str(datetime.now()))
         try:
-            start_date = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
-            start_date = str(start_date).split()[0]
+            sd = datetime.strptime(args['start_date'][0], '%Y-%m-%d')
+            start_date = str(sd).split()[0]
         except:
             start_date = None
         try:
-            end_date = datetime.strptime(args['end_date'][0], '%Y-%m-%d')
-            end_date = str(end_date).split()[0]
+            ed = datetime.strptime(args['end_date'][0], '%Y-%m-%d')
+            end_date = str(ed).split()[0]
         except:
             end_date = None
         try:
-            tournament_date = datetime.strptime(args['tournament_date'][0], '%Y-%m-%d')
-            tournament_date = str(tournament_date).split()[0]
+            td = datetime.strptime(args['tournament_date'][0], '%Y-%m-%d')
+            tournament_date = str(td).split()[0]
         except:
             tournament_date = None
         _log.info("new season requested: {}-{} (tournament: {})".format(start_date, end_date, tournament_date))
