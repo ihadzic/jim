@@ -78,7 +78,11 @@ _schema = [
     [ 'ALTER TABLE seasons ADD COLUMN tournament_date DATE;',
       'ALTER TABLE seasons ADD COLUMN tournament_min_matches INTEGER NOT NULL DEFAULT 9;',
       'ALTER TABLE seasons ADD COLUMN tournament_min_opponents INTEGER NOT NULL DEFAULT 5;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "more fields needed for tournament qualification");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "more fields needed for tournament qualification");'],
+    [ 'ALTER TABLE players ADD COLUMN a_promotion DATE;',
+      'ALTER TABLE players ADD COLUMN b_promotion DATE;',
+      'ALTER TABLE players ADD COLUMN c_promotion DATE;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add ladder promotion dates");']
 ]
 
 class Database:
