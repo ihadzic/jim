@@ -1236,8 +1236,13 @@ class NewSeasonHandler(DynamicBaseHandler):
             end_date = str(end_date).split()[0]
         except:
             end_date = None
-        _log.info("new season requested: {}-{}".format(start_date, end_date))
-        season_id, err = _database.new_season(start_date, end_date, title)
+        try:
+            tournament_date = datetime.strptime(args['tournament_date'][0], '%Y-%m-%d')
+            tournament_date = str(tournament_date).split()[0]
+        except:
+            tournament_date = None
+        _log.info("new season requested: {}-{} (tournament: {})".format(start_date, end_date, tournament_date))
+        season_id, err = _database.new_season(start_date, end_date, title, tournament_date)
         if season_id:
             self.finish_success({'season_id' : season_id})
         else:
