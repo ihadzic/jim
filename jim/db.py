@@ -95,6 +95,94 @@ class Database:
         if self._ladder_weights.get(l1) < self._ladder_weights.get(l2):
             return -1
 
+    def player_ladder_for_date(self, player_id, date):
+        self._cursor.execute('SELECT a_promotion, b_promotion, c_promotion, ladder FROM players WHERE id=?', (player_id,))
+        v = self._cursor.fetchall()
+        if len(v) == 0:
+            self._log.error("player {} not found".format(player_id))
+            return None
+        assert len(v) == 1
+        a_promotion, b_promotion, c_promotion, ladder = v[0]
+        a_prm, b_prm, c_prm = None, None, None
+        if ladder.lower() == 'a':
+            if not a_promotion:
+                # A-player that has been in A-ladder forever
+                a_prm = datetime.min
+                if b_promotion or c_promotion:
+                    self._log.warning("expected None for a-ladder player {}, got: b_promotion={}, c_promotion={}".format(player_id, b_promotion, c_promotion))
+                b_promotion = None
+                c_promotion = None
+            else:
+                # A-player that entered A-ladder at some point
+                a_prm = datetime.strptime(a_promotion, '%Y-%m-%d')
+            if not b_promotion:
+                # A-player that has been in B forever before being
+                # promoted to A or started directly in A
+                b_prm = datetime.min
+                if c_promotion:
+                    self._log.warning("expected None for a-ladder player {}, got: c_promotion={}".format(player_id, c_promotion));
+                c_promotion = None;
+            else:
+                # A-player that entered B at some point
+                b_prm = datetime.strptime(b_promotion, '%Y-%m-%d')
+            if not c_promotion:
+                # A player that has been in C forever before being promoted
+                # to A or B or started directly in either B or C
+                c_prm = datetime.min
+            else:
+                c_prm = datetime.strptime(c_promotion, '%Y-%m-%d')
+        elif ladder.lower() == 'b':
+            # B-player, can't have A-promotion date, period
+            if a_promotion:
+                self._log.warning("expected None for b-ladder player {}, got: a_promotion={}".format(player_id, a_promotion))
+            a_promotion = None
+            a_prm = datetime.max
+            if not b_promotion:
+                # B-player that has been in B forever
+                b_prm = datetime.min
+                if c_promotion:
+                    self._log.warning("expected None for b-ladder player {}, got: c_prmotion={}".format(player_id, c_promotion))
+                c_promotion = None
+            else:
+                # B-player that has entered B at some point
+                b_prm = datetime.strptime(b_promotion, '%Y-%m-%d')
+            if not c_promotion:
+                # B-player that has been in C forever before promoted to B or
+                # started directly in B
+                c_prm = datetime.min
+            else:
+                # B-player that has been at some point promoted to C
+                c_prm = datetime.strptime(c_promotion, '%Y-%m-%d')
+        elif ladder.lower() == 'c':
+            if a_promotion or b_promotion:
+                self._log.warning("expected None for c-ladder player {}, got: a_promotion={}, b_promotion={}".format(player_id, a_promotion, b_promotion))
+            a_promotion = None
+            b_promotion = None
+            a_prm = datetime.max
+            b_prm = datetime.max
+            if not c_promotion:
+                # C-player that has been in C forever or started in C
+                c_prm = datetime.min
+            else:
+                # C-player that has been promoted to C at some point
+                c_prm = datetime.strptime(c_promotion, '%Y-%m-%d')
+        else:
+            if ladder.lower() != "unranked":
+                self._log.warning("expected unranked player ladder, got: {}".format(ladder.lower()))
+            return "unranked"
+        assert (a_prm and b_prm and c_prm) is not None
+        self._log.info("checking player {} for {} in ranges {}-{}-{}".format(player_id, date, c_prm, b_prm, a_prm))
+        if date >= a_prm:
+            ladder = "a"
+        elif date >= b_prm and date < a_prm:
+            ladder = "b"
+        elif date >= c_prm and date < b_prm:
+            ladder = "c"
+        else:
+            ladder = "unranked"
+        self._log.info("player {} was in ladder {} on {}".format(player_id, ladder, date))
+        return ladder
+
     def get_season(self):
         self._cursor.execute('SELECT id, start_date, end_date, title FROM seasons WHERE active=1')
         v = self._cursor.fetchall()
