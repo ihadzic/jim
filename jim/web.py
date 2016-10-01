@@ -1317,6 +1317,29 @@ class NewTokenHandler(DynamicBaseHandler):
         args = {'start_date' : [start_date], 'end_date' : [end_date]}
         self.get_or_post(args)
 
+
+class PlayerLadderOnDateHandler(DynamicBaseHandler):
+    def get(self):
+        if not self.authorized(admin = True):
+            return
+        args = self.get_args()
+        if args == None:
+            return
+        try:
+            date = datetime.strptime(args['date'][0], "%Y-%m-%d")
+        except:
+            today = datetime.now()
+            date = datetime(today.year, today.month, today.day)
+        try:
+            player_id = int(args['player_id'][0])
+        except:
+            self.finish_failure('missing or invalid player_id')
+            return
+        _log.info("checking player {} ladder on date {}".format(player_id, date))
+        ladder = _database.player_ladder_for_date(player_id, date)
+        self.finish_success({'player_id': player_id, 'date': str(date).split()[0],
+                             'ladder': ladder})
+
 def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', news = sys.prefix + './news.txt', bootstrap_token = 'deadbeef' ):
     global _http_server
     global _https_server
@@ -1352,6 +1375,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/add_player', AddPlayerHandler),
         ('/del_player', DelPlayerHandler),
         ('/get_player', GetPlayerHandler),
+        ('/player_ladder_on_date', PlayerLadderOnDateHandler),
         ('/update_player', UpdatePlayerHandler),
         ('/add_match', AddMatchHandler),
         ('/del_match', DelMatchHandler),
