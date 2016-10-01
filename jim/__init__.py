@@ -9,7 +9,6 @@ import web
 import ConfigParser
 import os
 import db
-import sys
 import util
 import daemon
 import rules
