@@ -577,6 +577,13 @@ class Database:
             # if winner is promoted, the points reset to zero they will be updated to 30
             # in subsequent operations within this transaction
             self._cursor.execute("UPDATE players SET points=0 WHERE id=?", (winner_id,))
+            # record the promotion date
+            if winner_ladder == 'a':
+                self._cursor.execute("UPDATE players SET a_promotion=? WHERE id=?", (match_date, winner_id))
+            elif winner_ladder == 'b':
+                self._cursor.execute("UPDATE players SET b_promotion=? WHERE id=?", (match_date, winner_id))
+            elif winner_ladder == 'c':
+                self._cursor.execute("UPDATE players SET c_promotion=? WHERE id=?", (match_date, winner_id))
         self._log.debug("add_match: fields are {}".format(fields_tuple))
         self._log.debug("add_match: values are {}".format(values_tuple))
         # loser in beginner or unranked ladder gets no points
