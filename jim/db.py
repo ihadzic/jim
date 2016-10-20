@@ -279,6 +279,14 @@ class Database:
         er = [ self._expand_with_tournament_flag(record) for record in r ]
         return er
 
+    def ladder_changed(self, player_id, new_ladder):
+        if not player_id:
+            return False
+        self._cursor.execute("SELECT ladder FROM players WHERE id=?", (player_id,))
+        current_ladder = self._cursor.fetchall()[0]
+        self._log.debug("ladder change check: {} vs. {}".format(new_ladder, current_ladder))
+        return current_ladder != new_ladder
+
     def no_admins(self):
         check = [ record for record in self._cursor.execute("SELECT id FROM admins") ]
         if len(check) == 0:
