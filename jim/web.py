@@ -747,6 +747,21 @@ class UpdatePlayerHandler(PlayerBaseHandler):
             player.pop('tournament_qualified_override')
 
     def update_database(self, player, player_id):
+        new_ladder = player.get('ladder')
+        if _database.ladder_changed(player_id, new_ladder):
+            if new_ladder == 'a':
+                player.update({'a_promotion' : str(datetime.now()).split()[0]})
+            elif new_ladder == 'b':
+                player.update({'a_promotion' : None})
+                player.update({'b_promotion' : str(datetime.now()).split()[0]})
+            elif new_ladder == 'c':
+                player.update({'a_promotion' : None})
+                player.update({'b_promotion' : None})
+                player.update({'c_promotion' : str(datetime.now()).split()[0]})
+            else:
+                player.update({'a_promotion' : None})
+                player.update({'b_promotion' : None})
+                player.update({'c_promotion' : None})
         player_id, err = _database.update_player(player, player_id)
         if player_id > 0:
             player.update({'player_id': player_id})
