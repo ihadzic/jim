@@ -750,14 +750,17 @@ class UpdatePlayerHandler(PlayerBaseHandler):
         new_ladder = player.get('ladder')
         if _database.ladder_changed(player_id, new_ladder):
             if new_ladder == 'a':
-                player.update({'a_promotion' : str(datetime.now()).split()[0]})
+                player.update({'a_promotion' : None})
+                player.update({'b_promotion' : None})
+                player.update({'c_promotion' : None})
             elif new_ladder == 'b':
                 player.update({'a_promotion' : None})
-                player.update({'b_promotion' : str(datetime.now()).split()[0]})
+                player.update({'b_promotion' : None})
+                player.update({'c_promotion' : None})
             elif new_ladder == 'c':
                 player.update({'a_promotion' : None})
                 player.update({'b_promotion' : None})
-                player.update({'c_promotion' : str(datetime.now()).split()[0]})
+                player.update({'c_promotion' : None})
             else:
                 player.update({'a_promotion' : None})
                 player.update({'b_promotion' : None})
