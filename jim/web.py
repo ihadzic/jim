@@ -749,6 +749,13 @@ class UpdatePlayerHandler(PlayerBaseHandler):
     def update_database(self, player, player_id):
         new_ladder = player.get('ladder')
         if _database.ladder_changed(player_id, new_ladder):
+            _, season_start_date, season_end_date, _  = _database.get_season()
+            ssd = datetime.strptime(season_start_date, '%Y-%m-%d')
+            sed = datetime.strptime(season_end_date, '%Y-%m-%d')
+            today = datetime.now()
+            date = datetime(today.year, today.month, today.day)
+            if ssd <= date <= sed:
+                return False, "administrative ladder change not allowed in mid-season"
             if new_ladder == 'a':
                 player.update({'a_promotion' : None})
                 player.update({'b_promotion' : None})
