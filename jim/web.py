@@ -754,6 +754,17 @@ class UpdatePlayerHandler(PlayerBaseHandler):
             sed = datetime.strptime(season_end_date, '%Y-%m-%d')
             today = datetime.now()
             date = datetime(today.year, today.month, today.day)
+            # mid season administrative changes are a problem
+            # because if the user is moved up and down, we can
+            # run into the cases when promotion dates become invalid.
+            #
+            # For example, if we move the user from C ladder to A ladder
+            # on date Da followed by moving the user back to B ladder
+            # on date Db where Db > Da, the algorithm that determines which
+            # ladder was the user in on any date breaks. There is no
+            # way to tell that user was ever in ladder A.
+            #
+            # Restricting administrative moves to off-season solves the problem
             if ssd <= date <= sed:
                 return False, "administrative ladder change not allowed in mid-season"
             if new_ladder == 'a':
