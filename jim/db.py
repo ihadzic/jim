@@ -242,7 +242,7 @@ class Database:
             self._cursor.execute("INSERT INTO player_archive (season_id, player_id, ladder, points, initial_points, active, wins, losses, a_wins, a_losses, b_wins, b_losses, c_wins, c_losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ap)
         season_value_tuple = (start_date, end_date, tournament_date, title, 1)
         self._cursor.execute("UPDATE seasons set active=0")
-        self._cursor.execute("UPDATE players set active=0, points=0, initial_points=0, wins=0, losses=0, a_wins=0, a_losses=0, b_wins=0, b_losses=0, c_wins=0, c_losses=0,  tournament_qualified_override=0")
+        self._cursor.execute("UPDATE players set active=0, points=0, initial_points=0, wins=0, losses=0, a_wins=0, a_losses=0, b_wins=0, b_losses=0, c_wins=0, c_losses=0,  tournament_qualified_override=0, a_promotion=NULL, b_promotion=NULL, c_promotion=NULL")
         self._log.debug("new season value tuple: {}".format(season_value_tuple))
         self._cursor.execute("INSERT INTO seasons (start_date, end_date, tournament_date, title, active) VALUES (?, ?, ?, ?, ?)", season_value_tuple)
         self._conn.commit()
