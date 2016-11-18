@@ -204,12 +204,12 @@ class Database:
     def get_match_and_opponent_count(self, player_id):
         season_id, _, _, _ = self.get_season()
         # all-opponent set cardinal number is the number of different opponents the player had
-        self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? UNION SELECT challenger_id FROM matches WHERE opponent_id=? AND season_id=?)', (player_id, player_id, season_id))
+        self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? AND season_id=? UNION SELECT challenger_id FROM matches WHERE opponent_id=? AND season_id=?)', (player_id, season_id, player_id, season_id))
         v = self._cursor.fetchall()
         assert len(v) == 1
         num_opponents_tuple = v[0]
         # very similar query, but without unique union will give us all matches played
-        self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? UNION ALL SELECT challenger_id FROM matches WHERE opponent_id=? AND season_id=?)', (player_id, player_id, season_id))
+        self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? and season_id=? UNION ALL SELECT challenger_id FROM matches WHERE opponent_id=? AND season_id=?)', (player_id, season_id, player_id, season_id))
         v = self._cursor.fetchall()
         assert len(v) == 1
         num_matches_tuple = v[0]
