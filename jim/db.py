@@ -513,7 +513,10 @@ class Database:
         return check[0][0], None
 
     # credit points for the match and promote the player if the winner is from the lower ladder
-    def _credit_match(self, match_date, match_ladder, winner_id, loser_id, winner_ladder, loser_ladder, cpoints, opoints, challenger_id, opponent_id, challenger_ladder, opponent_ladder):
+    def _credit_match(self, match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id, challenger_ladder, opponent_ladder):
+        winner_ladder = challenger_ladder if winner_id == challenger_id else opponent_ladder
+        loser_ladder = challenger_ladder if winner_id == opponent_id else opponent_ladder
+        loser_id = opponent_id if winner_id == challenger_id else challenger_id
         # promotion to higher ladder if winner is from lower ladder
         if self._compare_ladders(winner_ladder, loser_ladder) < 0:
             winner_ladder = loser_ladder
@@ -586,7 +589,6 @@ class Database:
         self._log.info("match limit inputs {} {} {}".format(challenger_matches, opponent_matches, challenger_vs_opponent))
         if rules.match_limit_reached(challenger_vs_opponent, challenger_matches, opponent_matches):
             return -1, None, None, 'match limit reached for this pair of players'
-        loser_id = opponent_id if winner_id == challenger_id else challenger_id
         # check that referred player IDs are valid
         check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=? and active=1", (opponent_id,)) ]
         if len(check) == 0:
@@ -620,7 +622,7 @@ class Database:
         cpoints = match.get('cpoints')
         opoints = match.get('opoints')
         # update player's scores based on match outcome
-        self._credit_match(match_date, match_ladder, winner_id, loser_id, winner_ladder, loser_ladder, cpoints, opoints, challenger_id, opponent_id, challenger_ladder, opponent_ladder)
+        self._credit_match(match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id, challenger_ladder, opponent_ladder)
         # record the match (add calculated ladder column and season column)
         fields_tuple = fields_tuple + ('ladder',)
         values_tuple = values_tuple + (match_ladder,)
