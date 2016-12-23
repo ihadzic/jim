@@ -513,7 +513,10 @@ class Database:
         return check[0][0], None
 
     # credit points for the match and promote the player if the winner is from the lower ladder
-    def _credit_match(self, match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id, challenger_ladder, opponent_ladder):
+    def _credit_match(self, match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id):
+        md = datetime.strptime(match_date, '%Y-%m-%d')
+        challenger_ladder = self.player_ladder_for_date(challenger_id, md)
+        opponent_ladder = self.player_ladder_for_date(opponent_id, md)
         winner_ladder = challenger_ladder if winner_id == challenger_id else opponent_ladder
         loser_ladder = challenger_ladder if winner_id == opponent_id else opponent_ladder
         loser_id = opponent_id if winner_id == challenger_id else challenger_id
@@ -590,18 +593,18 @@ class Database:
         if rules.match_limit_reached(challenger_vs_opponent, challenger_matches, opponent_matches):
             return -1, None, None, 'match limit reached for this pair of players'
         # check that referred player IDs are valid
-        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=? and active=1", (opponent_id,)) ]
+        check = [ record for record in self._cursor.execute("SELECT last_name FROM players WHERE id=? and active=1", (opponent_id,)) ]
         if len(check) == 0:
             return -1, None, None, "invalid opponent ID (is the player active?)"
         else:
-            opponent_ladder = check[0][0]
-            opponent_last_name = check[0][1]
-        check = [ record for record in self._cursor.execute("SELECT ladder, last_name FROM players WHERE id=? and active=1", (challenger_id,)) ]
+            opponent_last_name = check[0][0]
+        opponent_ladder = self.player_ladder_for_date(opponent_id, md)
+        check = [ record for record in self._cursor.execute("SELECT last_name FROM players WHERE id=? and active=1", (challenger_id,)) ]
         if len(check) == 0:
             return -1, None, None, "invalid challenger ID (is the player active?)"
         else:
-            challenger_ladder = check[0][0]
-            challenger_last_name = check[0][1]
+            challenger_last_name = check[0][0]
+        challenger_ladder = self.player_ladder_for_date(challenger_id, md)
         if td:
             if md >= td and opponent_ladder != challenger_ladder:
                 return -1, None, None, "inter-ladder matches not allowed during the tournament"
@@ -622,7 +625,7 @@ class Database:
         cpoints = match.get('cpoints')
         opoints = match.get('opoints')
         # update player's scores based on match outcome
-        self._credit_match(match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id, challenger_ladder, opponent_ladder)
+        self._credit_match(match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id)
         # record the match (add calculated ladder column and season column)
         fields_tuple = fields_tuple + ('ladder',)
         values_tuple = values_tuple + (match_ladder,)
