@@ -575,8 +575,11 @@ class Database:
                 self._log.info("_credit_match: challenger_id={} promoted to the higher ladder by some other match, {} points are moot".format(challenger_id, cpoints))
         # credit the opponent and update all match counters normally
         # (opponent cannot be promoted because he/she is always in the same or higher ladder)
-        self._log.info("_credit_match: crediting opponent_id={} with {} points".format(opponent_id, opoints))
-        self._add_points(opponent_id, opponent_ladder, opoints)
+        if self._compare_ladders(current_opponent_ladder, opponent_ladder) <= 0:
+            self._log.info("_credit_match: crediting opponent_id={} with {} points".format(opponent_id, opoints))
+            self._add_points(opponent_id, opponent_ladder, opoints)
+        else:
+            self._log.info("_credit_match: opponent_id={} promoted to the higher ladder by some other match, {} points are moot".format(opponent_id, opoints))
         self._update_match_counters(match_ladder, winner_id, challenger_id, opponent_id)
 
     def add_match(self, match):
