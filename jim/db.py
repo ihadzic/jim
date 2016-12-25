@@ -512,35 +512,17 @@ class Database:
             return -1, err
         return check[0][0], None
 
-    # credit points for the match and promote the player if the winner is from the lower ladder
-    def _credit_match(self, match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id):
-        md = datetime.strptime(match_date, '%Y-%m-%d')
-        challenger_ladder = self.player_ladder_for_date(challenger_id, md)
-        opponent_ladder = self.player_ladder_for_date(opponent_id, md)
-        winner_ladder = challenger_ladder if winner_id == challenger_id else opponent_ladder
-        loser_ladder = challenger_ladder if winner_id == opponent_id else opponent_ladder
-        loser_id = opponent_id if winner_id == challenger_id else challenger_id
-        # promotion to higher ladder if winner is from lower ladder
-        if self._compare_ladders(winner_ladder, loser_ladder) < 0:
-            winner_ladder = loser_ladder
-            # if winner is promoted, the points reset to zero they will be updated to 30
-            # in subsequent operations within this transaction
-            self._cursor.execute("UPDATE players SET points=0 WHERE id=?", (winner_id,))
-            # record the promotion date
-            if winner_ladder == 'a':
-                self._cursor.execute("UPDATE players SET a_promotion=? WHERE id=?", (match_date, winner_id))
-            elif winner_ladder == 'b':
-                self._cursor.execute("UPDATE players SET b_promotion=? WHERE id=?", (match_date, winner_id))
-            elif winner_ladder == 'c':
-                self._cursor.execute("UPDATE players SET c_promotion=? WHERE id=?", (match_date, winner_id))
-        # loser in beginner or unranked ladder gets no points
-        if not (loser_id == challenger_id and challenger_ladder in ["unranked", "beginner"]):
-            self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
-                                 (cpoints, challenger_id))
-        if not (loser_id == opponent_id and opponent_ladder in ["unranked", "beginner"]):
-            self._cursor.execute("UPDATE players SET points=points+? WHERE id=?",
-                                 (opoints, opponent_id))
+    def _add_points(self, player_id, ladder, points):
+        # beginners and unranked players get no points
+        if ladder not in ["unranked", "beginner"]:
+            self._cursor.execute("UPDATE players SET points=points+? WHERE id=?", (points, player_id))
+
+    def _set_points(self, player_id, points):
+        self._cursor.execute("UPDATE players SET points=? WHERE id=?", (points, winner_id))
+
+    def _update_match_counters(self, match_ladder, winner_id, challenger_id, opponent_id):
         # record wins and losses counters
+        loser_id = opponent_id if winner_id == challenger_id else challenger_id
         self._cursor.execute("UPDATE players SET wins=wins+1 WHERE id=?", (winner_id,))
         self._cursor.execute("UPDATE players SET losses=losses+1 WHERE id=?", (loser_id,))
         if match_ladder == 'a':
@@ -552,8 +534,56 @@ class Database:
         elif match_ladder == 'c':
             self._cursor.execute("UPDATE players SET c_wins=c_wins+1 WHERE id=?", (winner_id,))
             self._cursor.execute("UPDATE players SET c_losses=c_losses+1 WHERE id=?", (loser_id,))
-        # writing winner ladder will make sure that possible promotion is recorded
+
+    def _record_promotion(self, match_date, winner_id, winner_ladder):
         self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
+        if winner_ladder == 'a':
+            self._cursor.execute("UPDATE players SET a_promotion=? WHERE id=?", (match_date, winner_id))
+        elif winner_ladder == 'b':
+            self._cursor.execute("UPDATE players SET b_promotion=? WHERE id=?", (match_date, winner_id))
+        elif winner_ladder == 'c':
+            self._cursor.execute("UPDATE players SET c_promotion=? WHERE id=?", (match_date, winner_id))
+
+    # credit points for the match and promote the player if the winner is from the lower ladder
+    def _credit_match(self, match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id):
+        md = datetime.strptime(match_date, '%Y-%m-%d')
+        present_datetime = datetime.now()
+        present_date = datetime(present_datetime.year, present_datetime.month, present_datetime.day)
+        challenger_ladder = self.player_ladder_for_date(challenger_id, md)
+        opponent_ladder = self.player_ladder_for_date(opponent_id, md)
+        current_challenger_ladder = self.player_ladder_for_date(challenger_id, present_date)
+        current_opponent_ladder = self.player_ladder_for_date(opponent_id, present_date)
+        # complex set of checks, because we could have other matches that happened after
+        # this one, but have been entered before it
+        if self._compare_ladders(challenger_ladder, opponent_ladder) < 0 and winner_id == challenger_id:
+            # the challenger should have been promoted on the match date
+            if self._compare_ladders(current_challenger_ladder, opponent_ladder) == 0:
+                # something else promoted the challenger in the meantime to the same ladder
+                # that this match would promote to, credit the (missing) points to challenger
+                self._add_points(challenger_id, challenger_ladder, cpoints)
+            elif self._compare_ladders(current_challenger_ladder, opponent_ladder) < 0:
+                # this is the actual promoting match, reset challenger score in the new ladder
+                # and promote the challenger
+                self._set_points(challenger_id, cpoints)
+                self._record_promotion(match_date, challenger_id, opponent_ladder)
+            else:
+                # something else promoted the challenger to higher ladder than this match
+                # would promote to, crediting points for this match is moot, and we should
+                # not touch the challenger's ladder
+                pass
+        else:
+            # not a promoting match
+            if self._compare_ladders(current_challenger_ladder, opponent_ladder) <= 0:
+                # nothing promoted the challenger in the meantime, so credit the loss points
+                self._add_points(challenger_id, challenger_ladder, cpoints)
+            else:
+                # challenger was promoted by a match that happened later but was entered
+                # earlier, adding loss points is moot
+                pass
+        # credit the opponent and update all match counters normally
+        # (opponent cannot be promoted because he/she is always in the same or higher ladder)
+        self._add_points(opponent_id, opponent_ladder, opoints)
+        self._update_match_counters(match_ladder, winner_id, challenger_id, opponent_id)
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
