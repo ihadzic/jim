@@ -535,8 +535,10 @@ class Database:
             self._cursor.execute("UPDATE players SET c_wins=c_wins+1 WHERE id=?", (winner_id,))
             self._cursor.execute("UPDATE players SET c_losses=c_losses+1 WHERE id=?", (loser_id,))
 
-    def _record_promotion(self, match_date, winner_id, winner_ladder):
+    def _record_new_ladder(self, winner_id, winner_ladder):
         self._cursor.execute("UPDATE players SET ladder=? WHERE id=?", (winner_ladder, winner_id))
+
+    def _record_promotion_date(self, match_date, winner_id, winner_ladder):
         if winner_ladder == 'a':
             self._cursor.execute("UPDATE players SET a_promotion=? WHERE id=?", (match_date, winner_id))
         elif winner_ladder == 'b':
@@ -557,13 +559,14 @@ class Database:
         # this one, but have been entered before it
         if self._compare_ladders(challenger_ladder, opponent_ladder) < 0 and winner_id == challenger_id:
             self._log.info("_credit_match: promoting match for challenger_id={}, opponent_id={}".format(challenger_id, opponent_id))
+            self._record_promotion_date(match_date, challenger_id, opponent_ladder)
             if self._compare_ladders(current_challenger_ladder, opponent_ladder) == 0:
                 self._log.info("_credit_match: challenger_id={} promoted to the same ladder by some other match, credit {} points only".format(challenger_id, cpoints))
                 self._add_points(challenger_id, challenger_ladder, cpoints)
             elif self._compare_ladders(current_challenger_ladder, opponent_ladder) < 0:
                 self._log.info("_credit_match: challenger_id={} promoted by this match, credit {} points and update the ladder".format(challenger_id, cpoints))
                 self._set_points(challenger_id, cpoints)
-                self._record_promotion(match_date, challenger_id, opponent_ladder)
+                self._record_new_ladder(challenger_id, opponent_ladder)
             else:
                 self._log.info("_credit_match: challenger_id={} promoted to the higher ladder by some other match, {} points are moot".format(challenger_id, cpoints))
         else:
