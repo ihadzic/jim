@@ -556,32 +556,26 @@ class Database:
         # complex set of checks, because we could have other matches that happened after
         # this one, but have been entered before it
         if self._compare_ladders(challenger_ladder, opponent_ladder) < 0 and winner_id == challenger_id:
-            # the challenger should have been promoted on the match date
+            self._log.info("_credit_match: promoting match for challenger_id={}, opponent_id={}".format(challenger_id, opponent_id))
             if self._compare_ladders(current_challenger_ladder, opponent_ladder) == 0:
-                # something else promoted the challenger in the meantime to the same ladder
-                # that this match would promote to, credit the (missing) points to challenger
+                self._log.info("_credit_match: challenger_id={} promoted to the same ladder by some other match, credit {} points only".format(challenger_id, cpoints))
                 self._add_points(challenger_id, challenger_ladder, cpoints)
             elif self._compare_ladders(current_challenger_ladder, opponent_ladder) < 0:
-                # this is the actual promoting match, reset challenger score in the new ladder
-                # and promote the challenger
+                self._log.info("_credit_match: challenger_id={} promoted by this match, credit {} points and update the ladder".format(challenger_id, cpoints))
                 self._set_points(challenger_id, cpoints)
                 self._record_promotion(match_date, challenger_id, opponent_ladder)
             else:
-                # something else promoted the challenger to higher ladder than this match
-                # would promote to, crediting points for this match is moot, and we should
-                # not touch the challenger's ladder
-                pass
+                self._log.info("_credit_match: challenger_id={} promoted to the higher ladder by some other match, {} points are moot".format(challenger_id, cpoints))
         else:
-            # not a promoting match
+            self._log.info("_credit_match: non-promoting match for challenger_id={}, opponent_id={}".format(challenger_id, opponent_id))
             if self._compare_ladders(current_challenger_ladder, opponent_ladder) <= 0:
-                # nothing promoted the challenger in the meantime, so credit the loss points
+                self._log.info("_credit_match: crediting challenger_id={} with {} points".format(challenger_id, cpoints))
                 self._add_points(challenger_id, challenger_ladder, cpoints)
             else:
-                # challenger was promoted by a match that happened later but was entered
-                # earlier, adding loss points is moot
-                pass
+                self._log.info("_credit_match: challenger_id={} promoted to the higher ladder by some other match, {} points are moot".format(challenger_id, cpoints))
         # credit the opponent and update all match counters normally
         # (opponent cannot be promoted because he/she is always in the same or higher ladder)
+        self._log.info("_credit_match: crediting opponent_id={} with {} points".format(opponent_id, opoints))
         self._add_points(opponent_id, opponent_ladder, opoints)
         self._update_match_counters(match_ladder, winner_id, challenger_id, opponent_id)
 
