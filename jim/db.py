@@ -646,7 +646,7 @@ class Database:
         if self._compare_ladders(opponent_ladder, challenger_ladder) >= 0:
             match_ladder = opponent_ladder
         else:
-            return -1, None, None, "Challenger must be from lower ladder"
+            return -1, None, None, "Challenger was in higher ladder on match date"
         winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
         loser_last_name = challenger_last_name if winner_id == opponent_id else opponent_last_name
         self._log.debug("winner is {} from ladder {}; loser is {} from ladder {}".format(winner_last_name, winner_ladder, loser_last_name, loser_ladder))
