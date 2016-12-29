@@ -518,7 +518,7 @@ class Database:
             self._cursor.execute("UPDATE players SET points=points+? WHERE id=?", (points, player_id))
 
     def _set_points(self, player_id, points):
-        self._cursor.execute("UPDATE players SET points=? WHERE id=?", (points, winner_id))
+        self._cursor.execute("UPDATE players SET points=? WHERE id=?", (points, player_id))
 
     def _update_match_counters(self, match_ladder, winner_id, challenger_id, opponent_id):
         # record wins and losses counters
