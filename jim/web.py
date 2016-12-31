@@ -951,6 +951,20 @@ class AddMatchHandler(DynamicBaseHandler):
         except:
             tournament = False
         try:
+            pending = util.str_to_bool(args['pending'][0])
+            if pending == None:
+                self.finish_failure("pending-flag must be boolean")
+                return
+        except:
+            pending = False
+        try:
+            disputed = util.str_to_bool(args['disputed'][0])
+            if disputed == None:
+                self.finish_failure("disputed-flag must be boolean")
+                return
+        except:
+            disputed = False
+        try:
             date = datetime.strptime(args['date'][0], '%Y-%m-%d')
         except:
             self.finish_failure("match date missing")
@@ -969,7 +983,10 @@ class AddMatchHandler(DynamicBaseHandler):
                  'retired': retired,
                  'forfeited' : forfeited,
                  'date': str(date).split()[0],
-                 'tournament': tournament}
+                 'tournament': tournament,
+                 'pending': pending,
+                 'disputed': disputed
+        }
         r, err = self.update_database(match)
         if r:
             self.finish_success(match)
