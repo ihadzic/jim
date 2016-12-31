@@ -546,6 +546,17 @@ class Database:
         elif winner_ladder == 'c':
             self._cursor.execute("UPDATE players SET c_promotion=? WHERE id=?", (match_date, winner_id))
 
+    def _get_conflicting_matches(self, match_date, player_id, new_ladder):
+        # match is conflicting with a promoted player if someone won a match after
+        # the promotion date in a lower ladder than the player being promoted
+        if new_ladder == 'a':
+            cm = [ r for r in self._cursor.execute("SELECT challenger_id, ladder, date FROM matches WHERE date >= ? AND opponent_id=? AND NOT winner_id=? AND ladder in ('b', 'c') UNION SELECT opponent_id, ladder, date FROM matches WHERE date >= ? AND challenger_id=? and NOT winner_id=? AND ladder in ('b', 'c')", (match_date, player_id, player_id, match_date, player_id, player_id)) ]
+        elif new_ladder == 'b':
+            cm = [r for r in self._cursor.execute("SELECT challenger_id, ladder, date FROM matches WHERE date >= ? AND opponent_id=? AND NOT winner_id=? AND ladder='c' UNION SELECT opponent_id, ladder, date FROM matches WHERE date >= ? AND challenger_id=? and NOT winner_id=? AND ladder='c'", (match_date, player_id, player_id, match_date, player_id, player_id)) ]
+        else:
+            cm = []
+        return cm
+
     # credit points for the match and promote the player if the winner is from the lower ladder
     def _credit_match(self, match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id):
         md = datetime.strptime(match_date, '%Y-%m-%d')
@@ -559,6 +570,11 @@ class Database:
         # this one, but have been entered before it
         if self._compare_ladders(challenger_ladder, opponent_ladder) < 0 and winner_id == challenger_id:
             self._log.info("_credit_match: promoting match for challenger_id={}, opponent_id={}".format(challenger_id, opponent_id))
+            conflicting_matches = self._get_conflicting_matches(match_date, challenger_id, opponent_ladder)
+            if conflicting_matches:
+                self._log.warning("_credit_match: found conflicting matches {}".format(conflicting_matches))
+            else:
+                self._log.info("_credit_match: no conflicting matches")
             self._record_promotion_date(match_date, challenger_id, opponent_ladder)
             if self._compare_ladders(current_challenger_ladder, opponent_ladder) == 0:
                 self._log.info("_credit_match: challenger_id={} promoted to the same ladder by some other match, credit {} points only".format(challenger_id, cpoints))
