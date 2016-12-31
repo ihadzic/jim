@@ -265,7 +265,7 @@ class Database:
 
     def get_recent_matches(self, ladder, since):
         season_id, _, _, _ = self.get_season()
-        keys = { 'ladder': ladder, 'since': since, 'season_id': season_id}
+        keys = { 'ladder': ladder, 'since': since, 'season_id': season_id, 'disputed': False}
         return self.lookup_match(keys)
 
     def get_ladder(self, ladder = None, player_id = None):

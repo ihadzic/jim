@@ -370,8 +370,8 @@ class ProfileHandler(InfoBaseHandler):
             return
         _log.debug("player: ladder info found: {}".format(ladder_info))
         season_id, _, _, _ = _database.get_season()
-        ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id})
-        op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id})
+        ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False})
+        op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False})
         matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
         _log.debug("player: matches found: {}".format(matches))
         player_e_mail = player.get('email')
