@@ -136,3 +136,11 @@ ALTER TABLE players ADD COLUMN a_promotion DATE;
 ALTER TABLE players ADD COLUMN b_promotion DATE;
 ALTER TABLE players ADD COLUMN c_promotion DATE;
 INSERT INTO revisions (date, comment) VALUES (date("now"), "add ladder promotion dates");
+
+/*
+ * Version 18
+ * Add pending and disputed flags for matches
+ */
+ALTER TABLE matches ADD COLUMN disputed BOOL NOT NULL DEFAULT FALSE;
+ALTER TABLE matches ADD COLUMN pending BOOL NOT NULL DEFAULT FALSE;
+INSERT INTO revisions (date, comment) VALUES (date("now"), "add disputed and pending flags");
