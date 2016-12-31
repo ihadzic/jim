@@ -554,9 +554,9 @@ class Database:
         # match is conflicting with a promoted player if someone won a match after
         # the promotion date in a lower ladder than the player being promoted
         if new_ladder == 'a':
-            cm = [ r for r in self._cursor.execute("SELECT challenger_id, ladder, date FROM matches WHERE date >= ? AND opponent_id=? AND NOT winner_id=? AND ladder in ('b', 'c') UNION SELECT opponent_id, ladder, date FROM matches WHERE date >= ? AND challenger_id=? and NOT winner_id=? AND ladder in ('b', 'c')", (match_date, player_id, player_id, match_date, player_id, player_id)) ]
+            cm = [ r for r in self._cursor.execute("SELECT challenger_id, ladder, date FROM matches WHERE date >= ? AND opponent_id=? AND NOT winner_id=? AND ladder in ('b', 'c') and NOT disputed UNION SELECT opponent_id, ladder, date FROM matches WHERE date >= ? AND challenger_id=? and NOT winner_id=? AND ladder in ('b', 'c') AND NOT disputed", (match_date, player_id, player_id, match_date, player_id, player_id)) ]
         elif new_ladder == 'b':
-            cm = [r for r in self._cursor.execute("SELECT challenger_id, ladder, date FROM matches WHERE date >= ? AND opponent_id=? AND NOT winner_id=? AND ladder='c' UNION SELECT opponent_id, ladder, date FROM matches WHERE date >= ? AND challenger_id=? and NOT winner_id=? AND ladder='c'", (match_date, player_id, player_id, match_date, player_id, player_id)) ]
+            cm = [r for r in self._cursor.execute("SELECT challenger_id, ladder, date FROM matches WHERE date >= ? AND opponent_id=? AND NOT winner_id=? AND ladder='c' AND NOT disputed UNION SELECT opponent_id, ladder, date FROM matches WHERE date >= ? AND challenger_id=? and NOT winner_id=? AND ladder='c' AND NOT disputed", (match_date, player_id, player_id, match_date, player_id, player_id)) ]
         else:
             cm = []
         return cm
