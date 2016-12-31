@@ -720,7 +720,7 @@ class Database:
         self._translated_player_fields = { 'player_id' : 'id' }
         self._common_account_fields = ( 'username', )
         self._translated_account_fields = { 'account_id' : 'id' }
-        self._common_match_fields = ('challenger_id', 'opponent_id', 'winner_id', 'cpoints', 'opoints', 'cgames', 'ogames', 'date', 'retired', 'forfeited', 'season_id')
+        self._common_match_fields = ('challenger_id', 'opponent_id', 'winner_id', 'cpoints', 'opoints', 'cgames', 'ogames', 'date', 'retired', 'forfeited', 'season_id', 'disputed', 'pending')
         self._translated_match_fields = { }
         self._special_match_fields = {'since': {'field': 'date', 'operator': '>='}}
         self._ladder_weights = {'a': 3, 'b': 2, 'c':1, 'unranked':0}
