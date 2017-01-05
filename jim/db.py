@@ -713,6 +713,19 @@ class Database:
             for q in t:
                 self._log.info("  {}".format(q))
                 self._cursor.execute(q)
+        # hacky fixer:
+        #  BOOLEAN NOT NULL DEFAULT FALSE fields won't match
+        #  boolean types when queried from Python SQLITE3 API
+        #  when the field is not explicitly set (probably a bug)
+        #  In other words, default value does not behave consistently
+        #  when used with Python SQLITE 3 API
+        #  This quirk will fix the problem by writing back
+        #  the boolean False wherever we see the string-FALSE (which
+        #  comes from default field)
+        self._log.debug("running hacky database fixer for default boolean fields")
+        self._cursor.execute("UPDATE matches SET tournament=? where tournament='FALSE'", (False,))
+        self._cursor.execute("UPDATE matches SET disputed=? where disputed='FALSE'", (False,))
+        self._cursor.execute("UPDATE matches SET pending=? where pending='FALSE'", (False,))
         self._conn.commit()
         db_version = self.get_db_version()
         assert db_version == v
