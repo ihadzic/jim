@@ -577,6 +577,8 @@ class Database:
             conflicting_matches = self._get_conflicting_matches(match_date, challenger_id, opponent_ladder)
             if conflicting_matches:
                 self._log.warning("_credit_match: found conflicting matches {}".format(conflicting_matches))
+                err = "This is a promoting match for player ID {} that conflicts with previously reported matches. Matches that player ID {} lost in the lower ladder on later dates would be invalidated. The system can no longer accept this match. Next time, please report all your matches promptly!".format(challenger_id, challenger_id)
+                return False, err
             else:
                 self._log.info("_credit_match: no conflicting matches")
             self._record_promotion_date(match_date, challenger_id, opponent_ladder)
@@ -604,6 +606,7 @@ class Database:
         else:
             self._log.info("_credit_match: opponent_id={} promoted to the higher ladder by some other match, {} points are moot".format(opponent_id, opoints))
         self._update_match_counters(match_ladder, winner_id, challenger_id, opponent_id)
+        return True, None
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
@@ -675,7 +678,9 @@ class Database:
         cpoints = match.get('cpoints')
         opoints = match.get('opoints')
         # update player's scores based on match outcome
-        self._credit_match(match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id)
+        credit_success, message = self._credit_match(match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id)
+        if not credit_success:
+            return -1, None, None, message
         # record the match (add calculated ladder column and season column)
         fields_tuple = fields_tuple + ('ladder',)
         values_tuple = values_tuple + (match_ladder,)
