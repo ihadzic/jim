@@ -919,7 +919,13 @@ class AddMatchHandler(DynamicBaseHandler):
 
     def get(self):
         self.log_request()
-        if not self.authorized(admin = True):
+        if self.authorized(admin = True, quiet = True):
+            pass
+        elif self.authorized(quiet = True):
+            self.finish_failure("Reporting user's mamtches coming soon. Please use E-mail until then.")
+            return
+        else:
+            self.finish_failure("not logged in", 401)
             return
         args = self.get_args()
         if args == None:
