@@ -143,6 +143,23 @@ class MatchFormHandler(GenericAdminFormHandler):
     def get(self):
         self.generic_get('match_form.html')
 
+class MatchFormRestrictedHandler(DynamicBaseHandler):
+    def get(self):
+        if self.authorized(admin = True, quiet = True):
+            # admin is redirected to its own player form
+            self.redirect('/match_form')
+        elif self.authorized(quiet = True):
+            player_id = self.current_user['id']
+            matched_players = _database.lookup_player({'player_id': player_id}, 'and')
+            assert(len(matched_players) == 1)
+            player_last_name = matched_players[0].get('last_name')
+            self.render('match_form_restricted.html',
+                        player_1_last_name = player_last_name,
+                        player_1_id = player_id)
+        else:
+            # nobody is logged in, redirect to login form
+            self.redirect('/login')
+
 class SeasonFormHandler(GenericAdminFormHandler):
     def get(self):
         self.generic_get('season_form.html')
@@ -1443,6 +1460,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/new_token', NewTokenHandler),
         ('/main_menu', MainMenuHandler),
         ('/match_form', MatchFormHandler),
+        ('/match_form_restricted', MatchFormRestrictedHandler),
         ('/player_form', PlayerFormHandler),
         ('/player_form_restricted', PlayerFormRestrictedHandler),
         ('/tournament_form', TournamentFormHandler),
