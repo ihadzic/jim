@@ -452,7 +452,7 @@ class Database:
     def lookup_match(self, fields):
         # ladder is special: it can be searched, but it is generated when match is added
         # so it's not listed in the common fields tuple; we add it for search
-        modified_common_match_fields = self._common_match_fields + ('ladder', 'last_name', '`last_name:1`', )
+        modified_common_match_fields = self._common_match_fields + ('last_name', '`last_name:1`', )
         res = self._lookup_something(fields, "and", "matches_with_names", modified_common_match_fields, self._translated_match_fields, self._special_match_fields)
         for r in res:
             r['challenger_last_name'] = r.pop('last_name')
@@ -562,7 +562,14 @@ class Database:
         return cm
 
     # credit points for the match and promote the player if the winner is from the lower ladder
-    def _credit_match(self, match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id):
+    def _credit_match(self, match):
+        cpoints = match.get('cpoints')
+        opoints = match.get('opoints')
+        match_date = match.get('date')
+        match_ladder = match.get('ladder')
+        winner_id = match.get('winnder_id')
+        challenger_id = match.get('challenger_id')
+        opponent_id = match.get('opponent_id')
         md = datetime.strptime(match_date, '%Y-%m-%d')
         present_datetime = datetime.now()
         present_date = datetime(present_datetime.year, present_datetime.month, present_datetime.day)
@@ -630,9 +637,6 @@ class Database:
             ed = datetime.strptime(end_date, '%Y-%m-%d')
             if md > ed or md < sd:
                 return -1, None, None, "match date out of season date-range"
-        fields_tuple = self._common_match_fields
-        values_tuple = tuple([ match.get(f) for f in fields_tuple ])
-        assert(len(fields_tuple) == len(values_tuple))
         winner_id = match.get("winner_id")
         challenger_id = match.get("challenger_id")
         opponent_id = match.get("opponent_id")
@@ -670,20 +674,19 @@ class Database:
             match_ladder = opponent_ladder
         else:
             return -1, None, None, "Challenger was in higher ladder on match date"
+        match.update({'ladder': match_ladder})
         winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
         loser_last_name = challenger_last_name if winner_id == opponent_id else opponent_last_name
         self._log.debug("winner is {} from ladder {}; loser is {} from ladder {}".format(winner_last_name, winner_ladder, loser_last_name, loser_ladder))
         if winner_ladder in ["beginner", "unranked"] and loser_ladder in ["beginner", "unranked"]:
             return -1, None, None, "Unranked or beginner players cannot play each other"
-        cpoints = match.get('cpoints')
-        opoints = match.get('opoints')
         # update player's scores based on match outcome
-        credit_success, message = self._credit_match(match_date, match_ladder, winner_id, cpoints, opoints, challenger_id, opponent_id)
+        credit_success, message = self._credit_match(match)
         if not credit_success:
             return -1, None, None, message
-        # record the match (add calculated ladder column and season column)
-        fields_tuple = fields_tuple + ('ladder',)
-        values_tuple = values_tuple + (match_ladder,)
+        fields_tuple = self._common_match_fields
+        values_tuple = tuple([ match.get(f) for f in fields_tuple ])
+        assert(len(fields_tuple) == len(values_tuple))
         values_pattern = ('?,' * len(values_tuple))[:-1]
         self._log.debug("add_match: fields are {}".format(fields_tuple))
         self._log.debug("add_match: values are {}".format(values_tuple))
@@ -738,7 +741,7 @@ class Database:
         self._translated_player_fields = { 'player_id' : 'id' }
         self._common_account_fields = ( 'username', )
         self._translated_account_fields = { 'account_id' : 'id' }
-        self._common_match_fields = ('challenger_id', 'opponent_id', 'winner_id', 'cpoints', 'opoints', 'cgames', 'ogames', 'date', 'retired', 'forfeited', 'season_id', 'disputed', 'pending', 'tournament')
+        self._common_match_fields = ('ladder', 'challenger_id', 'opponent_id', 'winner_id', 'cpoints', 'opoints', 'cgames', 'ogames', 'date', 'retired', 'forfeited', 'season_id', 'disputed', 'pending', 'tournament')
         self._translated_match_fields = { }
         self._special_match_fields = {'since': {'field': 'date', 'operator': '>='}}
         self._ladder_weights = {'a': 3, 'b': 2, 'c':1, 'unranked':0}
