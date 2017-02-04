@@ -700,6 +700,7 @@ class AddPlayerHandler(PlayerBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         player = self.parse_args(args, True, password)
         if player == None:
@@ -729,6 +730,7 @@ class DelPlayerHandler(PlayerBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         try:
             player_id = int(args['player_id'][0])
@@ -821,6 +823,7 @@ class UpdatePlayerHandler(PlayerBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         player = self.parse_args(args, False, password)
         if player == None:
@@ -867,6 +870,7 @@ class GetPlayerHandler(PlayerBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         # everything is optional except an empty set
         player = self.parse_args(args, False, None)
@@ -929,6 +933,7 @@ class AddMatchHandler(DynamicBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         try:
             challenger_id = int(args['challenger'][0])
@@ -1023,6 +1028,7 @@ class DelMatchHandler(DynamicBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         try:
             match_id = int(args['match_id'][0])
@@ -1041,6 +1047,7 @@ class GetMatchHandler(DynamicBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         try:
             challenger_id = int(args['challenger_id'][0])
@@ -1134,6 +1141,7 @@ class AddAccountHandler(AccountBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         account, err = self.parse_args(args, True, password)
         if account == None:
@@ -1162,6 +1170,7 @@ class DelAccountHandler(AccountBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         try:
             username = args['username'][0]
@@ -1187,6 +1196,7 @@ class GetAccountHandler(AccountBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         account, err = self.parse_args(args, False, None)
         # even an empty set is optional
@@ -1231,6 +1241,7 @@ class UpdateAccountHandler(AccountBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         account, err = self.parse_args(args, False, password)
         if account == None:
@@ -1280,6 +1291,7 @@ class UpdateTournamentHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         self.get_or_post(args)
 
@@ -1337,6 +1349,7 @@ class NewSeasonHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         self.get_or_post(args)
 
@@ -1384,6 +1397,7 @@ class NewTokenHandler(DynamicBaseHandler):
     def get(self):
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         self.get_or_post(args)
 
@@ -1400,6 +1414,7 @@ class PlayerLadderOnDateHandler(DynamicBaseHandler):
             return
         args = self.get_args()
         if args == None:
+            self.finish_failure("missing args", 400)
             return
         try:
             date = datetime.strptime(args['date'][0], "%Y-%m-%d")
