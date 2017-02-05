@@ -681,9 +681,10 @@ class Database:
         if winner_ladder in ["beginner", "unranked"] and loser_ladder in ["beginner", "unranked"]:
             return -1, None, None, "Unranked or beginner players cannot play each other"
         # update player's scores based on match outcome
-        credit_success, message = self._credit_match(match)
-        if not credit_success:
-            return -1, None, None, message
+        if not match.get('pending'):
+            credit_success, message = self._credit_match(match)
+            if not credit_success:
+                return -1, None, None, message
         fields_tuple = self._common_match_fields
         values_tuple = tuple([ match.get(f) for f in fields_tuple ])
         assert(len(fields_tuple) == len(values_tuple))
