@@ -924,8 +924,9 @@ class AddMatchHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(admin = True, quiet = True):
-            pass
+            is_admin = True
         elif self.authorized(quiet = True):
+            is_admin = False
             self.finish_failure("Reporting user's mamtches coming soon. Please use E-mail until then.")
             return
         else:
@@ -985,6 +986,9 @@ class AddMatchHandler(DynamicBaseHandler):
                 return
         except:
             pending = False
+        if not pending and not is_admin:
+            self.finish_failure("regular users can only submit pending matches")
+            return
         try:
             disputed = util.str_to_bool(args['disputed'][0])
             if disputed == None:
@@ -992,6 +996,12 @@ class AddMatchHandler(DynamicBaseHandler):
                 return
         except:
             disputed = False
+        if disputed and not is_admin:
+            # submitting matches that are disputed to begin
+            # with doesn't make sense, but admin can still
+            # do it for test purpose
+            self.finish_failure("new mactch should not be disputed to begin with")
+            return
         try:
             date = datetime.strptime(args['date'][0], '%Y-%m-%d')
         except:
