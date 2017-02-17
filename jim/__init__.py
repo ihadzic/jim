@@ -55,7 +55,11 @@ def read_config(parser):
     except:
         cfg['certs_path'] = None
     try:
-        cfg['player_reports_matches'] = parser.get("web", "player_reports_matches")
+        p = parser.get("web", "player_reports_matches")
+        if p.lower() == 'true':
+            cfg['player_reports_matches'] = True
+        else:
+            cfg['player_reports_matches'] = False
     except:
         cfg['player_reports_matches'] = False
     _log.info(cfg)
