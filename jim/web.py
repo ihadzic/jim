@@ -23,6 +23,7 @@ _log = None
 _database = None
 _news = None
 _bootstrap_token = None
+_player_reports_matches = None
 _recent_days = 14
 
 class BounceAllHandler(tornado.web.RequestHandler):
@@ -1441,7 +1442,7 @@ class PlayerLadderOnDateHandler(DynamicBaseHandler):
         self.finish_success({'player_id': player_id, 'date': str(date).split()[0],
                              'ladder': ladder})
 
-def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', news = sys.prefix + './news.txt', bootstrap_token = 'deadbeef' ):
+def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', news = sys.prefix + './news.txt', bootstrap_token = 'deadbeef', player_reports_matches = False ):
     global _http_server
     global _https_server
     global _bounce_server
@@ -1449,6 +1450,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     global _database
     global _news
     global _bootstrap_token
+    global _player_reports_matches
 
     # if some bozo calls us with None specified as an argument
     if template_root == None:
@@ -1461,6 +1463,8 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         news = './news.txt'
     if bootstrap_token == None:
         bootstrap_token = 'deadbeef'
+    if player_reports_matches == None:
+        player_reports_matches = False
 
     # list handlers for REST calls here
     handlers = [
@@ -1505,6 +1509,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     _log = util.get_syslog_logger("web")
     _database = database
     _news = news
+    _player_reports_matches = player_reports_matches
     _log.info("news file: {}".format(_news))
     handlers.append(('/(.*)', NoCacheStaticFileHandler, {'path': html_root}))
     app = tornado.web.Application(handlers = handlers, template_path = template_root,
