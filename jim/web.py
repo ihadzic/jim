@@ -109,7 +109,8 @@ class MainMenuHandler(DynamicBaseHandler):
             news_content_list = news_content.split('\n')
             self.render('main_menu.html',
                         admin = self.current_user['admin'],
-                        news_content_list = news_content_list)
+                        news_content_list = news_content_list,
+                        player_reports_matches = _player_reports_matches)
         else:
             self.redirect('/login')
 
@@ -928,8 +929,9 @@ class AddMatchHandler(DynamicBaseHandler):
             is_admin = True
         elif self.authorized(quiet = True):
             is_admin = False
-            self.finish_failure("Reporting user's mamtches coming soon. Please use E-mail until then.")
-            return
+            if not _player_reports_matches:
+                self.finish_failure("Reporting user's mamtches coming soon. Please use E-mail until then.")
+                return
         else:
             self.finish_failure("not logged in", 401)
             return

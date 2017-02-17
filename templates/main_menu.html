@@ -33,7 +33,9 @@
     {% else %}
       <h2><a href='player_form_restricted'>My Account</a></h2>
       <h2><a href='profile'>My Profile</a></h2>
-      <h2><a href='match_form_restricted'>Report Match</a></h2>
+      {% if player_reports_matches %}
+        <h2><a href='match_form_restricted'>Report Match</a></h2>
+      {% end %}
     {% end %}
     <h2><a href='logout'>Logout</a></h2>
     <div id="footer">
