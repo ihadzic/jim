@@ -272,6 +272,21 @@ class Database:
         keys = { 'ladder': ladder, 'since': since, 'season_id': season_id, 'disputed': False}
         return self.lookup_match(keys)
 
+    def get_archived_ladder(self, season_id, ladder = None):
+        fields = ['id', 'points', 'ladder']
+        fields_string = string.join(fields, ',')
+        query_fields = ['active=1', 'season_id=?']
+        query_values = [season_id]
+        if ladder:
+            query_fields += ['ladder=?']
+            query_values += [ladder]
+        query_string = string.join(query_fields, ' and ')
+        self._log.debug("query_string={}".format(query_string))
+        self._log.debug("query_values={}".format(tuple(query_values)))
+        self._log.debug("fields_string={}".format(fields_string))
+        r = [ dict(zip(fields, record)) for record in self._cursor.execute("SELECT {} FROM player_archive WHERE {} ORDER BY ladder, points DESC".format(fields_string, query_string), tuple(query_values)) ]
+        return r
+
     def get_ladder(self, ladder = None, player_id = None):
         fields = ["first_name", "last_name", "points", "id", "wins", "losses", "a_wins", "a_losses", "b_wins", "b_losses", "c_wins", "c_losses",  "tournament_qualified_override"]
         fields_string = string.join(fields, ',')
