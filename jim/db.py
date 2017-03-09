@@ -273,6 +273,8 @@ class Database:
         return self.lookup_match(keys)
 
     def get_archived_ladder(self, season_id, ladder = None):
+        if not season_id:
+            return []
         fields = ['id', 'points', 'ladder']
         fields_string = string.join(fields, ',')
         query_fields = ['active=1', 'season_id=?']
