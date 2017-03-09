@@ -1316,6 +1316,18 @@ class UpdateTournamentHandler(DynamicBaseHandler):
         args = {'start_date' : [start_date], 'min_matches' : [min_matches], 'min_opponents' : [min_opponents]}
         self.get_or_post(args)
 
+class KickSeasonHandler(DynamicBaseHandler):
+    def get(self):
+        self.log_request()
+        args = self.get_args()
+        if self.current_user['id']:
+            if not self.current_user['admin']:
+                self.finish_failure("test-only call for admins")
+        else:
+            self.finish_failure("test-only call for admins")
+        season_tuple = _database.get_season()
+        self.finish_success({'msg': "TODO: return the test info", 'args': args, 'season': season_tuple})
+
 class NewSeasonHandler(DynamicBaseHandler):
     def get_or_post(self, args):
         self.log_request()
@@ -1495,6 +1507,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/update_account', UpdateAccountHandler),
         ('/update_tournament', UpdateTournamentHandler),
         ('/new_season', NewSeasonHandler),
+        ('/kick_season', KickSeasonHandler),
         ('/new_token', NewTokenHandler),
         ('/main_menu', MainMenuHandler),
         ('/match_form', MatchFormHandler),
