@@ -235,6 +235,8 @@ class Database:
         return token_value, self._cursor.lastrowid, None
 
     def new_season(self, start_date, end_date, title, tournament_date = None):
+        prev_id, _, _, _, _ = self.get_season()
+        self._log.debug("archiving season {} before starting new season", prev_id)
         if not tournament_date:
             tournament_date = end_date
         self._cursor.execute("SELECT id FROM seasons WHERE title=?", (title,))
@@ -247,11 +249,11 @@ class Database:
         for ap in archived_players:
             self._log.debug("  {}".format(ap))
             self._cursor.execute("INSERT INTO player_archive (season_id, player_id, ladder, points, initial_points, active, wins, losses, a_wins, a_losses, b_wins, b_losses, c_wins, c_losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ap)
-        season_value_tuple = (start_date, end_date, tournament_date, title, 1)
+        season_value_tuple = (prev_id, start_date, end_date, tournament_date, title, 1)
         self._cursor.execute("UPDATE seasons set active=0")
         self._cursor.execute("UPDATE players set active=0, points=0, initial_points=0, wins=0, losses=0, a_wins=0, a_losses=0, b_wins=0, b_losses=0, c_wins=0, c_losses=0,  tournament_qualified_override=0, a_promotion=NULL, b_promotion=NULL, c_promotion=NULL")
         self._log.debug("new season value tuple: {}".format(season_value_tuple))
-        self._cursor.execute("INSERT INTO seasons (start_date, end_date, tournament_date, title, active) VALUES (?, ?, ?, ?, ?)", season_value_tuple)
+        self._cursor.execute("INSERT INTO seasons (prev_id, start_date, end_date, tournament_date, title, active) VALUES (?, ?, ?, ?, ?, ?)", season_value_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, None
 
