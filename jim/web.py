@@ -1326,7 +1326,14 @@ class KickSeasonHandler(DynamicBaseHandler):
         else:
             self.finish_failure("test-only call for admins")
         season_tuple = _database.get_season()
-        self.finish_success({'msg': "TODO: return the test info", 'args': args, 'season': season_tuple})
+        ladders = args.get('ladder')
+        if ladders:
+            ladder = []
+            for l in ladders:
+                ladder += _database.get_archived_ladder(season_tuple[4], l)
+        else:
+            ladder = _database.get_archived_ladder(season_tuple[4])
+        self.finish_success({'args': args, 'season': season_tuple, 'ladder': ladder})
 
 class NewSeasonHandler(DynamicBaseHandler):
     def get_or_post(self, args):
