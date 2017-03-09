@@ -392,6 +392,7 @@ class ProfileHandler(InfoBaseHandler):
         ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False})
         op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False})
         matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
+        matches.sort(util.cmp_date_field)
         _log.debug("player: matches found: {}".format(matches))
         player_e_mail = player.get('email')
         player_ladder = player.get('ladder').upper()
