@@ -86,7 +86,9 @@ _schema = [
 
     [ 'ALTER TABLE matches ADD COLUMN disputed BOOL NOT NULL DEFAULT FALSE;',
       'ALTER TABLE matches ADD COLUMN pending BOOL NOT NULL DEFAULT FALSE;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add disputed and pending flags");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add disputed and pending flags");'],
+    [ 'ALTER TABLE seasons ADD COLUMN prev_id INTEGER;',
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add previous season id to the seasons table");']
 ]
 
 class Database:
