@@ -1328,12 +1328,12 @@ class KickSeasonHandler(DynamicBaseHandler):
         season_tuple = _database.get_season()
         ladders = args.get('ladder')
         if ladders:
-            ladder = []
+            previous_season_ladder = []
             for l in ladders:
-                ladder += _database.get_archived_ladder(season_tuple[4], l)
+                previous_season_ladder += _database.get_archived_ladder(season_tuple[4], l)
         else:
-            ladder = _database.get_archived_ladder(season_tuple[4])
-        self.finish_success({'args': args, 'season': season_tuple, 'ladder': ladder})
+            previous_season_ladder = _database.get_archived_ladder(season_tuple[4])
+        self.finish_success({'args': args, 'season': season_tuple, 'previous_season_ladder': previous_season_ladder})
 
 class NewSeasonHandler(DynamicBaseHandler):
     def get_or_post(self, args):
