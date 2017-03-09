@@ -190,14 +190,14 @@ class Database:
         return ladder
 
     def get_season(self):
-        self._cursor.execute('SELECT id, start_date, end_date, title FROM seasons WHERE active=1')
+        self._cursor.execute('SELECT id, start_date, end_date, title, prev_id FROM seasons WHERE active=1')
         v = self._cursor.fetchall()
         assert len(v) == 1
         v = v[0]
         return v
 
     def set_tournament_parameters(self, start_date, min_matches, min_opponents):
-        season_id, _, _, _ = self.get_season()
+        season_id, _, _, _, _ = self.get_season()
         self._cursor.execute("UPDATE seasons SET tournament_date=?, tournament_min_matches=?, tournament_min_opponents=? WHERE id=?", (start_date, min_matches, min_opponents, season_id))
         self._conn.commit()
 
@@ -208,7 +208,7 @@ class Database:
         return v[0]
 
     def get_match_and_opponent_count(self, player_id):
-        season_id, _, _, _ = self.get_season()
+        season_id, _, _, _, _ = self.get_season()
         # all-opponent set cardinal number is the number of different opponents the player had
         self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? AND season_id=? AND NOT disputed AND NOT pending UNION SELECT challenger_id FROM matches WHERE opponent_id=? AND season_id=? AND NOT disputed and NOT pending)', (player_id, season_id, player_id, season_id))
         v = self._cursor.fetchall()
@@ -266,7 +266,7 @@ class Database:
         return v[0]
 
     def get_recent_matches(self, ladder, since):
-        season_id, _, _, _ = self.get_season()
+        season_id, _, _, _, _ = self.get_season()
         keys = { 'ladder': ladder, 'since': since, 'season_id': season_id, 'disputed': False}
         return self.lookup_match(keys)
 
@@ -619,7 +619,7 @@ class Database:
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
-        season_id, start_date, end_date, _ = self.get_season()
+        season_id, start_date, end_date, _, _ = self.get_season()
         # if query came in with season_id, override it to current season, if
         # it came in without season_id, set it
         match['season_id'] = season_id
