@@ -1325,15 +1325,21 @@ class KickSeasonHandler(DynamicBaseHandler):
                 self.finish_failure("test-only call for admins")
         else:
             self.finish_failure("test-only call for admins")
-        season_tuple = _database.get_season()
         ladders = args.get('ladder')
-        if ladders:
-            previous_season_ladder = []
-            for l in ladders:
-                previous_season_ladder += _database.get_archived_ladder(season_tuple[4], l)
-        else:
-            previous_season_ladder = _database.get_archived_ladder(season_tuple[4])
-        self.finish_success({'args': args, 'season': season_tuple, 'previous_season_ladder': previous_season_ladder})
+        if not ladders:
+            ladders = ['a', 'b', 'c']
+        previous_season_ladder = []
+        current_season_ladder = []
+        init_points = []
+        season_tuple = _database.get_season()
+        for l in ladders:
+            prev_ladder_l = _database.get_archived_ladder(season_tuple[4], l)
+            cur_ladder_l = _database.get_ladder(l)
+            init_points_l = rules.get_init_points(cur_ladder_l, prev_ladder_l)
+            previous_season_ladder += prev_ladder_l
+            current_season_ladder += cur_ladder_l
+            init_points += init_points_l
+        self.finish_success({'args': args, 'season': season_tuple, 'previous_season_ladder': previous_season_ladder, 'current_season_ladder': current_season_ladder, 'init_points': init_points})
 
 class NewSeasonHandler(DynamicBaseHandler):
     def get_or_post(self, args):
