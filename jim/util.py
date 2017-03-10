@@ -12,6 +12,13 @@ import logging
 # in the dictionary. Normally, we need one to point to the 'CA'
 test_ssl_options = { 'certfile' : sys.prefix + '/var/jim/certs/cert.pem', 'keyfile': sys.prefix + '/var/jim/certs/key.pem' }
 
+def min_or_default(x, d):
+    try:
+        m = min(x)
+    except:
+        m = d
+    return m
+
 def cmp_date_field(x, y):
     xd = x.get('date')
     yd = y.get('date')

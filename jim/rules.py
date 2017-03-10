@@ -120,3 +120,16 @@ def match_limit_reached(p1_vs_p2, p1, p2):
             return True
     return False
 
+# Rule ?
+#
+# At the beginning of the season, the players are given
+# points that reflect their rank in the previous season
+def get_init_points(active_players, prev_season_ladder):
+    # intersect_players_id_list contains the sorted list of player IDs that
+    # are active in this season and have played in the previous season;
+    # the list is sorted by the previous season rankings
+    active_players_id_list = [ player.get('id') for player in active_players ]
+    intersect_players_id_list = [ player.get('id') for player in prev_season_ladder if player.get('id') in active_players_id_list ]
+    max_points = len(intersect_players_id_list)
+    assigned_points = [(max_points - util.min_or_default([i for i in range(len(intersect_players_id_list)) if intersect_players_id_list[i] == player_id], max_points)) for player_id in active_players_id_list]
+    return assigned_points
