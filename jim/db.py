@@ -275,7 +275,7 @@ class Database:
     def get_archived_ladder(self, season_id, ladder = None):
         if not season_id:
             return []
-        fields = ['id', 'points', 'ladder']
+        fields = ['player_id', 'points', 'ladder']
         fields_string = string.join(fields, ',')
         query_fields = ['active=1', 'season_id=?']
         query_values = [season_id]

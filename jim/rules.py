@@ -129,7 +129,7 @@ def get_init_points(active_players, prev_season_ladder):
     # are active in this season and have played in the previous season;
     # the list is sorted by the previous season rankings
     active_players_id_list = [ player.get('id') for player in active_players ]
-    intersect_players_id_list = [ player.get('id') for player in prev_season_ladder if player.get('id') in active_players_id_list ]
+    intersect_players_id_list = [ player.get('player_id') for player in prev_season_ladder if player.get('player_id') in active_players_id_list ]
     max_points = len(intersect_players_id_list)
     assigned_points = [(max_points - util.min_or_default([i for i in range(len(intersect_players_id_list)) if intersect_players_id_list[i] == player_id], max_points)) for player_id in active_players_id_list]
     return assigned_points
