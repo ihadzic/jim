@@ -1325,6 +1325,11 @@ class KickSeasonHandler(DynamicBaseHandler):
                 self.finish_failure("test-only call for admins")
         else:
             self.finish_failure("test-only call for admins")
+        dbs = args.get('db')
+        if dbs:
+            db = dbs[0]
+        else:
+            db = None
         ladders = args.get('ladder')
         if not ladders:
             ladders = ['a', 'b', 'c']
@@ -1336,6 +1341,15 @@ class KickSeasonHandler(DynamicBaseHandler):
             prev_ladder_l = _database.get_archived_ladder(season_tuple[4], l)
             cur_ladder_l = _database.get_ladder(l)
             init_points_l = rules.get_init_points(cur_ladder_l, prev_ladder_l)
+            if db=='set':
+                _log.debug("setting initial points for ladder {}".format(l))
+                assert len(cur_ladder_l) == len(init_points_l)
+                for i in range(len(cur_ladder_l)):
+                    _database.set_init_points(cur_ladder_l[i].get('id'), init_points_l[i])
+            elif db=='clear':
+                _log.debug("clearing initial points for ladder {}".format(l))
+                for player in cur_ladder_l:
+                    _database.set_init_points(player.get('id'), 0)
             previous_season_ladder += prev_ladder_l
             current_season_ladder += cur_ladder_l
             init_points += init_points_l
