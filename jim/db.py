@@ -368,6 +368,12 @@ class Database:
         er = [ self._expand_with_tournament_flag(record) for record in r ]
         return er
 
+    def set_init_points(self, player_id, points):
+        self._log.debug("player_id={} points={}".format(player_id, points))
+        self._cursor.execute("UPDATE players SET initial_points=?, points=? WHERE id=?",
+                             (points, points, player_id))
+        self._conn.commit()
+
     def update_player(self, player, player_id = None):
         # first override initial points if necessary
         reset_points = False
