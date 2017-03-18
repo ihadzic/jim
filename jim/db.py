@@ -88,7 +88,9 @@ _schema = [
       'ALTER TABLE matches ADD COLUMN pending BOOL NOT NULL DEFAULT FALSE;',
       'INSERT INTO revisions (date, comment) VALUES (date("now"), "add disputed and pending flags");'],
     [ 'ALTER TABLE seasons ADD COLUMN prev_id INTEGER;',
-      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add previous season id to the seasons table");']
+      'INSERT INTO revisions (date, comment) VALUES (date("now"), "add previous season id to the seasons table");'],
+    ['ALTER TABLE seasons ADD COLUMN kicked NOT NULL DEFAULT TRUE;',
+     'INSERT INTO revisions (date, comment) VALUES (date("now"), "add kicked flag to the seasons table");']
 ]
 
 class Database:
@@ -784,6 +786,7 @@ class Database:
         self._cursor.execute("UPDATE matches SET tournament=? where tournament='FALSE'", (False,))
         self._cursor.execute("UPDATE matches SET disputed=? where disputed='FALSE'", (False,))
         self._cursor.execute("UPDATE matches SET pending=? where pending='FALSE'", (False,))
+        self._cursor.execute("UPDATE seasons SET kicked=? where kicked='TRUE'", (True,))
         self._conn.commit()
         db_version = self.get_db_version()
         assert db_version == v

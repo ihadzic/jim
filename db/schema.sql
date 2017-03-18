@@ -151,3 +151,10 @@ INSERT INTO revisions (date, comment) VALUES (date("now"), "add disputed and pen
  */
 ALTER TABLE seasons ADD COLUMN prev_id INTEGER;
 INSERT INTO revisions (date, comment) VALUES (date("now"), "add previous season id to the seasons table");
+
+/*
+ * Version 20
+ * Add 'kicked' flag to the seasons table
+ */
+ALTER TABLE seasons ADD COLUMN kicked NOT NULL DEFAULT TRUE;
+INSERT INTO revisions (date, comment) VALUES (date("now"), "add kicked flag to the seasons table");
