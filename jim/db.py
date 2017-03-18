@@ -374,6 +374,28 @@ class Database:
                              (points, points, player_id))
         self._conn.commit()
 
+    def kick_season(self, prev_season, ladders = [], op_code = None):
+        previous_season_ladder = []
+        current_season_ladder = []
+        init_points = []
+        for l in ladders:
+            prev_ladder_l = self.get_archived_ladder(prev_season, l)
+            cur_ladder_l = self.get_ladder(l)
+            init_points_l = rules.get_init_points(cur_ladder_l, prev_ladder_l)
+            if op_code=='set':
+                self._log.debug("setting initial points for ladder {}".format(l))
+                assert len(cur_ladder_l) == len(init_points_l)
+                for i in range(len(cur_ladder_l)):
+                    self.set_init_points(cur_ladder_l[i].get('id'), init_points_l[i])
+            elif op_code=='clear':
+                self._log.debug("clearing initial points for ladder {}".format(l))
+                for player in cur_ladder_l:
+                    self.set_init_points(player.get('id'), 0)
+            previous_season_ladder += prev_ladder_l
+            current_season_ladder += cur_ladder_l
+            init_points += init_points_l
+        return previous_season_ladder, current_season_ladder, init_points
+
     def update_player(self, player, player_id = None):
         # first override initial points if necessary
         reset_points = False
