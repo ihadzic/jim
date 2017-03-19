@@ -66,6 +66,7 @@ class DynamicBaseHandler(tornado.web.RequestHandler):
             return None
 
     def initialize(self):
+        _database.kick_if_needed()
         self.set_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
         self.set_header("Pragma", "no-cache")
         self.set_header("Expires", "0")

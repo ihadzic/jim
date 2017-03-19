@@ -398,6 +398,22 @@ class Database:
             init_points += init_points_l
         return previous_season_ladder, current_season_ladder, init_points
 
+    def kick_if_needed(self):
+        self._cursor.execute('SELECT start_date, end_date, kicked FROM seasons WHERE active=1')
+        v = self._cursor.fetchall()
+        assert len(v) == 1
+        start_date, end_date, kicked = v[0]
+        present_datetime = datetime.now()
+        sd = datetime.strptime(start_date, '%Y-%m-%d')
+        ed = datetime.strptime(end_date, '%Y-%m-%d')
+        if sd <= present_datetime <= ed:
+            if kicked:
+                self._log.debug("kick_if_needed: season already kicked")
+            else:
+                self._log.debug("kick_if_needed: one time season kick needed")
+        else:
+            self._log.debug("kick_if_needed: off-season, skipping kick")
+
     def update_player(self, player, player_id = None):
         # first override initial points if necessary
         reset_points = False
