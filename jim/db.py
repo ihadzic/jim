@@ -192,14 +192,14 @@ class Database:
         return ladder
 
     def get_season(self):
-        self._cursor.execute('SELECT id, start_date, end_date, title, prev_id FROM seasons WHERE active=1')
+        self._cursor.execute('SELECT id, start_date, end_date, title, prev_id, kicked FROM seasons WHERE active=1')
         v = self._cursor.fetchall()
         assert len(v) == 1
         v = v[0]
         return v
 
     def set_tournament_parameters(self, start_date, min_matches, min_opponents):
-        season_id, _, _, _, _ = self.get_season()
+        season_id, _, _, _, _, _ = self.get_season()
         self._cursor.execute("UPDATE seasons SET tournament_date=?, tournament_min_matches=?, tournament_min_opponents=? WHERE id=?", (start_date, min_matches, min_opponents, season_id))
         self._conn.commit()
 
@@ -210,7 +210,7 @@ class Database:
         return v[0]
 
     def get_match_and_opponent_count(self, player_id):
-        season_id, _, _, _, _ = self.get_season()
+        season_id, _, _, _, _, _ = self.get_season()
         # all-opponent set cardinal number is the number of different opponents the player had
         self._cursor.execute('SELECT COUNT(*) FROM (SELECT opponent_id FROM matches WHERE challenger_id=? AND season_id=? AND NOT disputed AND NOT pending UNION SELECT challenger_id FROM matches WHERE opponent_id=? AND season_id=? AND NOT disputed and NOT pending)', (player_id, season_id, player_id, season_id))
         v = self._cursor.fetchall()
@@ -237,7 +237,7 @@ class Database:
         return token_value, self._cursor.lastrowid, None
 
     def new_season(self, start_date, end_date, title, tournament_date = None):
-        prev_id, _, _, _, _ = self.get_season()
+        prev_id, _, _, _, _, _ = self.get_season()
         self._log.debug("archiving season {} before starting new season", prev_id)
         if not tournament_date:
             tournament_date = end_date
@@ -270,7 +270,7 @@ class Database:
         return v[0]
 
     def get_recent_matches(self, ladder, since):
-        season_id, _, _, _, _ = self.get_season()
+        season_id, _, _, _, _, _ = self.get_season()
         keys = { 'ladder': ladder, 'since': since, 'season_id': season_id, 'disputed': False}
         return self.lookup_match(keys)
 
@@ -399,10 +399,7 @@ class Database:
         return previous_season_ladder, current_season_ladder, init_points
 
     def kick_if_needed(self):
-        self._cursor.execute('SELECT start_date, end_date, kicked FROM seasons WHERE active=1')
-        v = self._cursor.fetchall()
-        assert len(v) == 1
-        start_date, end_date, kicked = v[0]
+        _, start_date, end_date, _, _, kicked  = self.get_season()
         present_datetime = datetime.now()
         sd = datetime.strptime(start_date, '%Y-%m-%d')
         ed = datetime.strptime(end_date, '%Y-%m-%d')
@@ -684,7 +681,7 @@ class Database:
 
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
-        season_id, start_date, end_date, _, _ = self.get_season()
+        season_id, start_date, end_date, _, _, _ = self.get_season()
         # if query came in with season_id, override it to current season, if
         # it came in without season_id, set it
         match['season_id'] = season_id

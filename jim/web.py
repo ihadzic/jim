@@ -172,7 +172,7 @@ class TournamentFormHandler(GenericAdminFormHandler):
         min_matches, min_opponents, start_date = _database.get_tournament_parameters()
         # if tournament date is None, default to season-end date
         if not start_date:
-            _, _ , start_date, _, _ = _database.get_season()
+            _, _ , start_date, _, _, _ = _database.get_season()
         start_date_3, start_date_1, start_date_2 = tuple(start_date.split('-'))
         qualified_players = [ p for p in _database.get_roster() if p.get('tournament_qualified') ]
         _log.info("qualified players: {}".format(qualified_players))
@@ -328,7 +328,7 @@ class LadderHandler(InfoBaseHandler):
         _log.debug("ladder: A matches found: {}".format(a_matches))
         _log.debug("ladder: B matches found: {}".format(b_matches))
         _log.debug("ladder: C matches found: {}".format(c_matches))
-        _, _, _, season_string, _ = _database.get_season()
+        _, _, _, season_string, _, _ = _database.get_season()
         self.render('ladder.html',
                     date_string = today,
                     season_string = season_string,
@@ -389,7 +389,7 @@ class ProfileHandler(InfoBaseHandler):
             self.finish_failure("ladder info lookup failed", 404)
             return
         _log.debug("player: ladder info found: {}".format(ladder_info))
-        season_id, _, _, _, _ = _database.get_season()
+        season_id, _, _, _, _, _ = _database.get_season()
         ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False})
         op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False})
         matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
@@ -456,7 +456,7 @@ class RosterHandler(DynamicBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
-            _, _, _, season_string, _ = _database.get_season()
+            _, _, _, season_string, _, _ = _database.get_season()
             self.render('roster.html',
                         season_string = season_string,
                         date_string = datetime.ctime(datetime.now()),
@@ -497,7 +497,7 @@ class ReportHandler(InfoBaseHandler):
         _log.debug("report: A matches found: {}".format(a_matches))
         _log.debug("report: B matches found: {}".format(b_matches))
         _log.debug("report: C matches found: {}".format(c_matches))
-        _, _, _, season_string, _ = _database.get_season()
+        _, _, _, season_string, _, _ = _database.get_season()
         today = datetime.ctime(datetime.now())
         roster = _database.get_roster()
         self.render('report.html', date_string = today,
@@ -772,7 +772,7 @@ class UpdatePlayerHandler(PlayerBaseHandler):
     def update_database(self, player, player_id):
         new_ladder = player.get('ladder')
         if _database.ladder_changed(player_id, new_ladder):
-            _, season_start_date, season_end_date, _, _  = _database.get_season()
+            _, season_start_date, season_end_date, _, _, _  = _database.get_season()
             ssd = datetime.strptime(season_start_date, '%Y-%m-%d')
             sed = datetime.strptime(season_end_date, '%Y-%m-%d')
             today = datetime.now()
@@ -1094,7 +1094,7 @@ class GetMatchHandler(DynamicBaseHandler):
         try:
             season_id = int(args['season_id'][0])
         except:
-            season_id, _, _, _, _ = _database.get_season()
+            season_id, _, _, _, _, _ = _database.get_season()
         keys =  util.purge_null_fields({ 'challenger_id': challenger_id,
                                          'opponent_id': opponent_id,
                                          'winner_id': winner_id,
