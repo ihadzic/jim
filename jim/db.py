@@ -251,11 +251,11 @@ class Database:
         for ap in archived_players:
             self._log.debug("  {}".format(ap))
             self._cursor.execute("INSERT INTO player_archive (season_id, player_id, ladder, points, initial_points, active, wins, losses, a_wins, a_losses, b_wins, b_losses, c_wins, c_losses) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", ap)
-        season_value_tuple = (prev_id, start_date, end_date, tournament_date, title, 1)
+        season_value_tuple = (prev_id, start_date, end_date, tournament_date, title, 1, 0)
         self._cursor.execute("UPDATE seasons set active=0")
         self._cursor.execute("UPDATE players set active=0, points=0, initial_points=0, wins=0, losses=0, a_wins=0, a_losses=0, b_wins=0, b_losses=0, c_wins=0, c_losses=0,  tournament_qualified_override=0, a_promotion=NULL, b_promotion=NULL, c_promotion=NULL")
         self._log.debug("new season value tuple: {}".format(season_value_tuple))
-        self._cursor.execute("INSERT INTO seasons (prev_id, start_date, end_date, tournament_date, title, active) VALUES (?, ?, ?, ?, ?, ?)", season_value_tuple)
+        self._cursor.execute("INSERT INTO seasons (prev_id, start_date, end_date, tournament_date, title, active, kicked) VALUES (?, ?, ?, ?, ?, ?, ?)", season_value_tuple)
         self._conn.commit()
         return self._cursor.lastrowid, None
 
@@ -396,10 +396,16 @@ class Database:
             previous_season_ladder += prev_ladder_l
             current_season_ladder += cur_ladder_l
             init_points += init_points_l
+        if op_code == 'set':
+            self._cursor.execute("UPDATE seasons SET kicked=1 WHERE active=1")
+            self._conn.commit()
+        elif op_code=='clear':
+            self._cursor.execute("UPDATE seasons SET kicked=0 WHERE active=1")
+            self._conn.commit()
         return previous_season_ladder, current_season_ladder, init_points
 
     def kick_if_needed(self):
-        _, start_date, end_date, _, _, kicked  = self.get_season()
+        _, start_date, end_date, _, prev_id, kicked  = self.get_season()
         present_datetime = datetime.now()
         sd = datetime.strptime(start_date, '%Y-%m-%d')
         ed = datetime.strptime(end_date, '%Y-%m-%d')
@@ -408,6 +414,7 @@ class Database:
                 self._log.debug("kick_if_needed: season already kicked")
             else:
                 self._log.debug("kick_if_needed: one time season kick needed")
+                self.kick_season(prev_id, ['a', 'b', 'c'], 'set')
         else:
             self._log.debug("kick_if_needed: off-season, skipping kick")
 
