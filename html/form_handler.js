@@ -315,10 +315,10 @@ function do_box_completion(player_last_name_box, player_id_box, timer_index, fie
     form = document.getElementById(form_name);
     q = form.action;
     if (field == "id") {
-        q += "get_player?last_name=";
+        q += "get_player?active=yes&last_name=";
         q += document.getElementById(player_last_name_box).value;
     } else {
-        q += "get_player?player_id=";
+        q += "get_player?active=yes&player_id=";
         q += document.getElementById(player_id_box).value;
     }
     xhttp.open("GET", q, true);
