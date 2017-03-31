@@ -63,7 +63,7 @@ function reset_checkbox(id)
         checkbox.checked = false;
 }
 
-function match_form_to_query(form, command)
+function match_form_to_query(form, command, append)
 {
     var q = form.action;
     var challenger = "nobody";
@@ -114,6 +114,8 @@ function match_form_to_query(form, command)
     if (document.getElementById('match_outcome_3').checked)
         q+= '&forfeited=true';
     q += '&date=' + match_date;
+    if (append)
+        q += '&' + append;
 
     console.log("query is " + q);
     return q;
@@ -543,7 +545,7 @@ function process_player_form(command)
     xhttp.send(password);
 }
 
-function process_match_form(command)
+function process_match_form(command, append)
 {
     var form, query;
     var xhttp = new XMLHttpRequest();
@@ -559,7 +561,7 @@ function process_match_form(command)
         }
     }
     form = document.getElementById(form_name);
-    query = match_form_to_query(form, command);
+    query = match_form_to_query(form, command, append);
     if (query) {
         xhttp.open("GET", query, true);
         xhttp.send();
