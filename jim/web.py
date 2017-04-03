@@ -379,7 +379,11 @@ class ProfileHandler(InfoBaseHandler):
         if len(matched_players) == 1:
             player = matched_players[0]
         else:
-            self.finish_failure("player lookup failed", 404)
+            matched_inactive_players = _database.lookup_player({'player_id': player_id, 'active': '0'}, 'and')
+            if len(matched_inactive_players) == 1:
+                self.finish_failure("player not active")
+            else:
+                self.finish_failure("player lookup failed", 404)
             return
         _log.debug("player: player found: {}".format(player))
         matched_ladder_info = _database.get_ladder(None, player_id)
