@@ -269,9 +269,9 @@ class Database:
         assert len(v) == 1
         return v[0]
 
-    def get_recent_matches(self, ladder, since):
+    def get_recent_matches(self, ladder, since, pending=False):
         season_id, _, _, _, _, _ = self.get_season()
-        keys = { 'ladder': ladder, 'since': since, 'season_id': season_id, 'disputed': False}
+        keys = { 'ladder': ladder, 'since': since, 'season_id': season_id, 'disputed': False, 'pending': pending}
         return self.lookup_match(keys)
 
     def get_archived_ladder(self, season_id, ladder = None):
