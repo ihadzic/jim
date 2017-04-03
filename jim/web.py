@@ -519,7 +519,7 @@ def format_phone_number(phone_number):
     p_dd = ''.join(c for c in phone_number if c.isdigit())
     if (len(p_dd)==10):
         ret_phone_number = '-'.join([p_dd[0:3],p_dd[3:6],p_dd[6:10]])
-    else: 
+    else:
         ret_phone_number = None
     return ret_phone_number
 
@@ -558,7 +558,7 @@ class PlayerBaseHandler(DynamicBaseHandler):
             p_dd = ''.join(c for c in home_phone if c.isdigit())
             if (len(p_dd)==10):
                 home_phone = '-'.join([p_dd[0:3],p_dd[3:6],p_dd[6:10]])
-            else: 
+            else:
                 home_phone = None
                 self.finish_failure("home phone number format invalid")
                 return None
@@ -570,7 +570,7 @@ class PlayerBaseHandler(DynamicBaseHandler):
             cell_phone = format_phone_number(cell_phone)
             if (cell_phone == None):
                self.finish_failure("cell phone number format invalid")
-               return None    
+               return None
         try:
             work_phone = args['work_phone'][0]
         except:
@@ -579,8 +579,8 @@ class PlayerBaseHandler(DynamicBaseHandler):
             work_phone = format_phone_number(work_phone)
             if (work_phone == None):
                self.finish_failure("work phone number format invalid")
-               return None    
-            
+               return None
+
         if add_flag and not (home_phone or cell_phone or work_phone):
             self.finish_failure("at least one phone number is required")
             return None
@@ -1104,7 +1104,7 @@ class GetMatchHandler(DynamicBaseHandler):
                                          'winner_id': winner_id,
                                          'ladder' : ladder,
                                          'season_id' : season_id,
-                                         'date': str(date).split()[0] if date else None, 
+                                         'date': str(date).split()[0] if date else None,
                                          'since': str(since).split()[0] if since else None })
         _log.info("keys = {}".format(keys))
         matches = _database.lookup_match(keys)
