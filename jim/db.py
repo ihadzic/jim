@@ -311,7 +311,7 @@ class Database:
         if not player_id:
             return False
         self._cursor.execute("SELECT ladder FROM players WHERE id=?", (player_id,))
-        current_ladder = self._cursor.fetchall()[0]
+        current_ladder = self._cursor.fetchall()[0][0]
         self._log.debug("ladder change check: {} vs. {}".format(new_ladder, current_ladder))
         return current_ladder != new_ladder
 
