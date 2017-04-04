@@ -394,11 +394,16 @@ class ProfileHandler(InfoBaseHandler):
             return
         _log.debug("player: ladder info found: {}".format(ladder_info))
         season_id, _, _, _, _, _ = _database.get_season()
-        ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False})
-        op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False})
+        ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False, 'pending': False})
+        op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False, 'pending' : False})
         matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
         matches.sort(util.cmp_date_field)
         _log.debug("player: matches found: {}".format(matches))
+        ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False, 'pending': True})
+        op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False, 'pending' : True})
+        pending_matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
+        pending_matches.sort(util.cmp_date_field)
+        _log.debug("player: pending matches found: {}".format(matches))
         player_e_mail = player.get('email')
         player_ladder = player.get('ladder').upper()
         player_company = player.get('company')
@@ -427,6 +432,7 @@ class ProfileHandler(InfoBaseHandler):
         self.render(
             'player_profile.html',
             matches =  matches,
+            pending_matches =  pending_matches,
             player_name_and_id = player_name_and_id,
             player_location = player_location,
             player_wlocation = player_wlocation,
