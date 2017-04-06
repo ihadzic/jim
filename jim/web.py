@@ -952,8 +952,15 @@ class ValidateMatchHandler(DynamicBaseHandler):
         _log.debug("got {} matches".format(len(matches)))
         assert(len(matches) == 1)
         match = matches[0]
-        # TODO: approve the match
-        self.finish_success({'match': match, 'action': action})
+        if action == 'approve':
+            if match.get('pending'):
+                if not match.get('disputed'):
+                    _database.approve_match(match)
+                    self.finish_success({'match': match, 'action': action})
+                else:
+                    self.finish_failure("cannot approve disputed matches")
+            else:
+                self.finish_failure("match already approved")
         return
 
 class AddMatchHandler(DynamicBaseHandler):

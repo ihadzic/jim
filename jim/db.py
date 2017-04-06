@@ -686,6 +686,12 @@ class Database:
         self._update_match_counters(match_ladder, winner_id, challenger_id, opponent_id)
         return True, None
 
+    def approve_match(self, match):
+        self._log.debug("approve_match: {}".format(match))
+        self._credit_match(match)
+        self._cursor.execute('UPDATE matches set pending=? where id=?', (False, match.get('match_id')))
+        self._conn.commit()
+
     def add_match(self, match):
         self._log.debug("add_match: {}".format(match))
         season_id, start_date, end_date, _, _, _ = self.get_season()
