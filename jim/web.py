@@ -942,9 +942,6 @@ class ValidateMatchHandler(DynamicBaseHandler):
             action = args['action'][0]
         except:
             action = 'approve'
-        if action not in ['approve', 'dispute']:
-            self.finish_failure("invalid action")
-            return
         matches = _database.lookup_match({'match_id': match_id})
         if not matches:
             self.finish_failure("match not found")
@@ -961,6 +958,17 @@ class ValidateMatchHandler(DynamicBaseHandler):
                     self.finish_failure("cannot approve disputed matches")
             else:
                 self.finish_failure("match already approved")
+        elif action == 'dispute':
+            if not match.get('disputed'):
+                if match.get('pending'):
+                    _database.dispute_match(match)
+                    self.finish_success({'match': match, 'action': action})
+                else:
+                    self.finish_failure("cannot dispute approved matches")
+            else:
+                self.finish_failure("match already disputed")
+        else:
+            self.finish_failure("invalid action")
         return
 
 class AddMatchHandler(DynamicBaseHandler):
