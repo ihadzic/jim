@@ -924,6 +924,38 @@ class GetPlayerHandler(PlayerBaseHandler):
     def post(self):
         self.get_or_post()
 
+class ValidateMatchHandler(DynamicBaseHandler):
+    def get(self):
+        self.log_request()
+        if not self.authorized(admin = True):
+            return
+        args = self.get_args()
+        if args == None:
+            self.finish_failure("missing args", 400)
+            return
+        try:
+            match_id = int(args['match_id'][0])
+        except:
+            self.finish_failure("missing or invalid match ID")
+            return
+        try:
+            action = args['action'][0]
+        except:
+            action = 'approve'
+        if action not in ['approve', 'dispute']:
+            self.finish_failure("invalid action")
+            return
+        matches = _database.lookup_match({'match_id': match_id})
+        if not matches:
+            self.finish_failure("match not found")
+            return
+        _log.debug("got {} matches".format(len(matches)))
+        assert(len(matches) == 1)
+        match = matches[0]
+        # TODO: approve the match
+        self.finish_success({'match': match, 'action': action})
+        return
+
 class AddMatchHandler(DynamicBaseHandler):
     def update_database(self, match):
         match_id, winner_last_name, loser_last_name, err = _database.add_match(match)
@@ -1520,6 +1552,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/add_match', AddMatchHandler),
         ('/del_match', DelMatchHandler),
         ('/get_match', GetMatchHandler),
+        ('/validate_match', ValidateMatchHandler),
         ('/update_match', UpdateMatchHandler),
         ('/add_account', AddAccountHandler),
         ('/del_account', DelAccountHandler),
