@@ -1145,6 +1145,14 @@ class GetMatchHandler(DynamicBaseHandler):
             ladder = args['ladder'][0].lower()
         except:
             ladder = None
+        try:
+            pending = util.str_to_bool(args['pending'][0])
+        except:
+            pending = None
+        try:
+            disputed = util.str_to_bool(args['disputed'][0])
+        except:
+            disputed = None
         if since and date:
             self.finish_failure("cannot have both since and date parameters")
             return
@@ -1158,7 +1166,9 @@ class GetMatchHandler(DynamicBaseHandler):
                                          'ladder' : ladder,
                                          'season_id' : season_id,
                                          'date': str(date).split()[0] if date else None,
-                                         'since': str(since).split()[0] if since else None })
+                                         'since': str(since).split()[0] if since else None,
+                                         'pending': pending,
+                                         'disputed': disputed})
         _log.info("keys = {}".format(keys))
         matches = _database.lookup_match(keys)
         self.finish_success({'entries': matches})
