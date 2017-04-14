@@ -14,11 +14,13 @@
       <h2>Jim Improved and Modernized (J.I.M.)</h2>
     </div>
     <h2>Club News</h2>
+    <h3>
     {% for news_line in news_content_list %}
       {% block news_line %}
         {{news_line}}<br>
       {% end %}
     {% end %}
+    </h3>
     <hr>
       {% if player_reports_matches and admin %}
         <h2>Pending Matches</h2>
