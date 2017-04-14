@@ -1112,7 +1112,7 @@ class DelMatchHandler(DynamicBaseHandler):
         # a player, that the player must be demoted to the rank it came from
         self.finish_success({'match_id': match_id})
 
-class GetMatchHandler(DynamicBaseHandler):
+class GetMatchHandler(InfoBaseHandler):
     def get(self):
         self.log_request()
         if not self.authorized():
@@ -1170,7 +1170,8 @@ class GetMatchHandler(DynamicBaseHandler):
                                          'pending': pending,
                                          'disputed': disputed})
         _log.info("keys = {}".format(keys))
-        matches = _database.lookup_match(keys)
+        ms = _database.lookup_match(keys)
+        matches = [self.expand_match_record(m) for m in ms]
         self.finish_success({'entries': matches})
 
 class UpdateMatchHandler(DynamicBaseHandler):
