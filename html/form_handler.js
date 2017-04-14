@@ -341,7 +341,7 @@ function player_box_completion(player_last_name_box, player_id_box, timer_index,
         typing_delay);
 }
 
-function populate_match_list(data)
+function populate_match_form_list(data)
 {
     var s;
     var match_list;
@@ -367,7 +367,7 @@ function process_match_form_response(command, response)
     if (response.result == "success") {
         form = document.getElementById(form_name);
         form.reset();
-        populate_match_list(response);
+        populate_match_form_list(response);
     } else {
         alert("Error: " + response.reason);
     }
