@@ -398,9 +398,31 @@ function get_pending_matches()
     xhttp.send();
 }
 
+function process_validate_pending_match_response(response)
+{
+    if (response.result != "success")
+        alert("Error: " + response.reason);
+    get_pending_matches();
+}
+
 function validate_pending_match(action, match_id)
 {
-    alert(action + ":" + match_id);
+    var xhttp = new XMLHttpRequest();
+
+    pending_matches = document.getElementById("pending_matches");
+    pending_matches.innerHTML = "Loading ...";
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_validate_pending_match_response(JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    query = '/validate_match?action=' + action + "&match_id=" + match_id;
+    xhttp.open("GET", query, true);
+    xhttp.send();
 }
 
 function populate_match_form_list(data)
