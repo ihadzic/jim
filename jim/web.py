@@ -397,12 +397,12 @@ class ProfileHandler(InfoBaseHandler):
         ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False, 'pending': False})
         op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False, 'pending' : False})
         matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
-        matches.sort(util.cmp_date_field)
+        matches.sort(lambda x, y: util.cmp_date_field(x, y))
         _log.debug("player: matches found: {}".format(matches))
         ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False, 'pending': True})
         op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False, 'pending' : True})
         pending_matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
-        pending_matches.sort(util.cmp_date_field)
+        pending_matches.sort(lambda x, y: util.cmp_date_field(x, y))
         _log.debug("player: pending matches found: {}".format(matches))
         player_e_mail = player.get('email')
         player_ladder = player.get('ladder').upper()
@@ -1178,9 +1178,9 @@ class GetMatchHandler(InfoBaseHandler):
         matches = [self.expand_match_record(m) for m in ms]
         if sort_by_date:
             if sort_by_date == 'asc':
-                matches.sort(util.cmp_date_field_rev)
+                matches.sort(lambda x, y: util.cmp_date_field(x, y, -1))
             elif sort_by_date == 'desc':
-                matches.sort(util.cmp_date_field)
+                matches.sort(lambda x, y: util.cmp_date_field(x, y))
         self.finish_success({'entries': matches})
 
 class UpdateMatchHandler(DynamicBaseHandler):

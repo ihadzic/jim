@@ -19,23 +19,13 @@ def min_or_default(x, d):
         m = d
     return m
 
-def cmp_date_field(x, y):
+def cmp_date_field(x, y, inverter = 1):
     xd = x.get('date')
     yd = y.get('date')
     if xd > yd:
-        return -1
+        return -1 * inverter
     elif xd < yd:
-        return 1
-    else:
-        return 0
-
-def cmp_date_field_rev(x, y):
-    xd = x.get('date')
-    yd = y.get('date')
-    if xd > yd:
-        return 1
-    elif xd < yd:
-        return -1
+        return 1 * inverter
     else:
         return 0
 
