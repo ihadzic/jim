@@ -1160,6 +1160,10 @@ class GetMatchHandler(InfoBaseHandler):
             season_id = int(args['season_id'][0])
         except:
             season_id, _, _, _, _, _ = _database.get_season()
+        try:
+            sort_by_date = args['sort_by_date'][0]
+        except:
+            sort_by_date = None
         keys =  util.purge_null_fields({ 'challenger_id': challenger_id,
                                          'opponent_id': opponent_id,
                                          'winner_id': winner_id,
@@ -1172,6 +1176,11 @@ class GetMatchHandler(InfoBaseHandler):
         _log.info("keys = {}".format(keys))
         ms = _database.lookup_match(keys)
         matches = [self.expand_match_record(m) for m in ms]
+        if sort_by_date:
+            if sort_by_date == 'asc':
+                matches.sort(util.cmp_date_field_rev)
+            elif sort_by_date == 'desc':
+                matches.sort(util.cmp_date_field)
         self.finish_success({'entries': matches})
 
 class UpdateMatchHandler(DynamicBaseHandler):

@@ -29,6 +29,16 @@ def cmp_date_field(x, y):
     else:
         return 0
 
+def cmp_date_field_rev(x, y):
+    xd = x.get('date')
+    yd = y.get('date')
+    if xd > yd:
+        return 1
+    elif xd < yd:
+        return -1
+    else:
+        return 0
+
 def str_to_bool(s):
     if s.lower() in ['true', 'yes', '1', 't', 'on']:
         return True
