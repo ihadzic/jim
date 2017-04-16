@@ -6,7 +6,11 @@
 <link rel="stylesheet" type="text/css" href="view.css" media="all">
 <script type="text/javascript" src="form_handler.js"></script>
 </head>
+{% if player_reports_matches and admin %}
+<body id="main_body" onload="get_pending_matches()">
+{% else %}
 <body id="main_body" >
+{% end %}
   <img id="top" src="top.png" alt="">
   <div id="form_container">
     <h1><a>Jim Improved and Modernized (J.I.M.)<</a></h1>
@@ -24,7 +28,7 @@
     <hr>
       {% if player_reports_matches and admin %}
         <h2>Pending Matches</h2>
-        <div id="pending_matches"><h3>None</h3></div>
+        <h3><div id="pending_matches">Loading ...</div></h3>
         <hr>
       {% end %}
     <h2><a href='ladder'>Ladder</a></h2>

@@ -341,6 +341,51 @@ function player_box_completion(player_last_name_box, player_id_box, timer_index,
         typing_delay);
 }
 
+function populate_pending_match_list(entries)
+{
+    pending_matches = document.getElementById("pending_matches");
+    pending_matches.innerHTML = "";
+    if (entries.length > 0) {
+        for (i = 0; i < entries.length; i++) {
+            s= "Match " + entries[i].match_id + ":";
+            s += entries[i].date + ", ";
+            s += "" + entries[i].winner_last_name;
+            s += " def. " + entries[i].loser_last_name;
+            s += ":" + entries[i].score; + "<br>";
+            // TODO: add buttons
+            pending_matches.innerHTML += s;
+        }
+    } else
+        pending_matches.innerHTML = "None";
+}
+
+function process_pending_match_response(response)
+{
+    if (response.result == "success") {
+        populate_pending_match_list(response.entries);
+    } else {
+        alert("Error: " + response.reason);
+    }
+}
+
+function get_pending_matches()
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4) {
+            if (xhttp.status == 200) {
+                process_pending_match_response(JSON.parse(xhttp.responseText));
+            } else {
+                process_submit_error(xhttp.status);
+            }
+        }
+    }
+    query="/get_match?pending=true&disputed=false";
+    xhttp.open("GET", query, true);
+    xhttp.send();
+}
+
 function populate_match_form_list(data)
 {
     var s;
@@ -355,7 +400,7 @@ function populate_match_form_list(data)
     }
     s = "<li>Match " + data.match_id + ": ";
     s += data.date + ", ";
-    s += "" + data.winner_last_name + " def. " + data.loser_last_name;    
+    s += "" + data.winner_last_name + " def. " + data.loser_last_name;
     s += "</li>";
     inner_match_list = document.getElementById("inner_match_list");
     inner_match_list.innerHTML += s;
