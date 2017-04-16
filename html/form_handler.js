@@ -393,7 +393,7 @@ function get_pending_matches()
             }
         }
     }
-    query="/get_match?pending=true&disputed=false";
+    query="/get_match?pending=true&disputed=false&sort_by_date=asc";
     xhttp.open("GET", query, true);
     xhttp.send();
 }
