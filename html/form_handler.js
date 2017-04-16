@@ -351,8 +351,20 @@ function populate_pending_match_list(entries)
             s += entries[i].date + ", ";
             s += "" + entries[i].winner_last_name;
             s += " def. " + entries[i].loser_last_name;
-            s += ":" + entries[i].score; + "<br>";
-            // TODO: add buttons
+            s += ":" + entries[i].score;
+            s += "&nbsp;&nbsp;&nbsp;";
+            s +=  '<input id="approve_' + entries[i].match_id + '"';
+            s += 'class="button_text" type="button" name="approve_';
+            s += entries[i].match_id + '" value="Approve"';
+            s += 'onclick="validate_pending_match(\'approve\',';
+            s += entries[i].match_id + ')"/>';
+            s += "&nbsp;&nbsp;&nbsp;";
+            s +=  '<input id="dispute_' + entries[i].match_id + '"';
+            s += 'class="button_text" type="button" name="dispute_';
+            s += entries[i].match_id + '" value="Dispute"';
+            s += 'onclick="validate_pending_match(\'dispute\',';
+            s += entries[i].match_id + ')"/>'
+            s += '<br>';
             pending_matches.innerHTML += s;
         }
     } else
@@ -384,6 +396,11 @@ function get_pending_matches()
     query="/get_match?pending=true&disputed=false";
     xhttp.open("GET", query, true);
     xhttp.send();
+}
+
+function validate_pending_match(action, match_id)
+{
+    alert(action + ":" + match_id);
 }
 
 function populate_match_form_list(data)
