@@ -353,6 +353,13 @@ function populate_pending_match_list(entries)
             s += " def. " + entries[i].loser_last_name;
             s += ":" + entries[i].score;
             s += "&nbsp;&nbsp;&nbsp;";
+            if (entries[i].retired) {
+	        s += "(retired)";
+                s += "&nbsp;&nbsp;&nbsp;";
+            } else if (entries[i].forfeited) {
+                s += "(forfeited)";
+                s += "&nbsp;&nbsp;&nbsp;";
+            }
             s +=  '<input id="approve_' + entries[i].match_id + '"';
             s += 'class="button_text" type="button" name="approve_';
             s += entries[i].match_id + '" value="Approve"';
