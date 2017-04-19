@@ -403,7 +403,7 @@ class ProfileHandler(InfoBaseHandler):
         op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False, 'pending' : True})
         pending_matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
         pending_matches.sort(lambda x, y: util.cmp_date_field(x, y))
-        _log.debug("player: pending matches found: {}".format(matches))
+        _log.debug("player: pending matches found: {}".format(pending_matches))
         player_e_mail = player.get('email')
         player_ladder = player.get('ladder').upper()
         player_company = player.get('company')
