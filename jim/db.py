@@ -238,7 +238,7 @@ class Database:
 
     def new_season(self, start_date, end_date, title, tournament_date = None):
         prev_id, _, _, _, _, _ = self.get_season()
-        self._log.debug("archiving season {} before starting new season", prev_id)
+        self._log.debug("archiving season {} before starting new season".format(prev_id))
         if not tournament_date:
             tournament_date = end_date
         self._cursor.execute("SELECT id FROM seasons WHERE title=?", (title,))
