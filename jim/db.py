@@ -638,7 +638,7 @@ class Database:
         opoints = match.get('opoints')
         match_date = match.get('date')
         match_ladder = match.get('ladder')
-        winner_id = match.get('winnder_id')
+        winner_id = match.get('winner_id')
         challenger_id = match.get('challenger_id')
         opponent_id = match.get('opponent_id')
         md = datetime.strptime(match_date, '%Y-%m-%d')
