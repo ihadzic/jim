@@ -9,7 +9,11 @@ from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
 from os import path
-from glob import glob
+from os import listdir
+
+def expand_files(d):
+    files_list = [path.join(d, f) for f in listdir(d) if path.isfile(path.join(d, f))]
+    return files_list
 
 here = path.abspath(path.dirname(__file__))
 
@@ -49,9 +53,9 @@ setup(
         'jim': ['jim.cfg']
     },
     data_files=[
-        ('var/jim/html', glob('html/*')),
-        ('var/jim/templates', glob('templates/*')),
-        ('var/jim/certs', glob('certs/*'))
+        ('var/jim/html', expand_files('html')),
+        ('var/jim/templates', expand_files('templates')),
+        ('var/jim/certs', expand_files('certs'))
     ],
     entry_points={
         'console_scripts': [
