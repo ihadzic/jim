@@ -55,6 +55,7 @@ setup(
     data_files=[
         ('var/jim/html', expand_files('html')),
         ('var/jim/html/js', expand_files('html/js')),
+        ('var/jim/html/css', expand_files('html/css')),
         ('var/jim/templates', expand_files('templates')),
         ('var/jim/certs', expand_files('certs'))
     ],
