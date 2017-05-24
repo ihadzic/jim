@@ -14,9 +14,10 @@
 
     <!-- Custom styles for this template -->
     <link href="css/dashboard.css" rel="stylesheet">
+    <script type="text/javascript" src="js/form_handler.js"></script>
   </head>
 
-  <body>
+  <body id="main_body" onload="get_pending_matches()">
     <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
       <a class="navbar-brand" href="#">J.I.M.</a>
       <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +79,7 @@
       <div class="row">
         <main class="col-sm-12 col-md-12 pt-3" role="main">
           <h1>Jim Improved and Modernized (J.I.M.)</h1>
-
+          {% if not admin %}
           <section class="row text-center placeholders">
             <div class="col-6 col-sm-3 placeholder">
               <img src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs=" width="200" height="200" class="img-fluid rounded-circle" alt="Generic placeholder thumbnail">
@@ -101,6 +102,12 @@
               <span class="text-muted">Enter your info</span>
             </div>
           </section>
+          {% end %}
+          {% if player_reports_matches and admin %}
+            <h2>Pending Matches</h2>
+            <p class = "lead"><div class = "lead" id="pending_matches">Loading ...</div></p>
+            <hr>
+          {% end %}
           <h2>Club News</h2>
           <p class = "lead">
               {% for news_line in news_content_list %}
