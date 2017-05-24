@@ -55,6 +55,10 @@ def read_config(parser):
     except:
         cfg['certs_path'] = None
     try:
+        cfg['autoreload'] = parser.get("web", "autoreload")
+    except:
+        cfg['autoreload'] = False
+    try:
         p = parser.get("web", "player_reports_matches")
         if p.lower() == 'true':
             cfg['player_reports_matches'] = True
@@ -99,7 +103,7 @@ def do_main():
                             'keyfile': certs_path + '/key.pem' }
         else:
             ssl_options = util.test_ssl_options
-        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), bounce_port = cfg.get('bounce_port'), html_root = cfg.get('html_root'), template_root = cfg.get('template_root'), database = database, news = news, bootstrap_token = cfg.get('bootstrap_token'), player_reports_matches = cfg.get('player_reports_matches'))
+        web.run_server(ssl_options = ssl_options, http_port = cfg.get('http_port'), https_port = cfg.get('https_port'), bounce_port = cfg.get('bounce_port'), html_root = cfg.get('html_root'), template_root = cfg.get('template_root'), database = database, news = news, bootstrap_token = cfg.get('bootstrap_token'), player_reports_matches = cfg.get('player_reports_matches'), autoreload = cfg.get('autoreload'))
         _log.info("server exited")
     else:
         _log.error("configuration error")

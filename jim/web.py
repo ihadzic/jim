@@ -1548,7 +1548,7 @@ class PlayerLadderOnDateHandler(DynamicBaseHandler):
         self.finish_success({'player_id': player_id, 'date': str(date).split()[0],
                              'ladder': ladder})
 
-def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', news = sys.prefix + './news.txt', bootstrap_token = 'deadbeef', player_reports_matches = False ):
+def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port = 443, bounce_port = 8000, html_root = sys.prefix + '/var/jim/html', template_root = sys.prefix + '/var/jim/templates', database = sys.prefix + './jim.db', news = sys.prefix + './news.txt', bootstrap_token = 'deadbeef', player_reports_matches = False, autoreload = False):
     global _http_server
     global _https_server
     global _bounce_server
@@ -1571,6 +1571,8 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         bootstrap_token = 'deadbeef'
     if player_reports_matches == None:
         player_reports_matches = False
+    if autoreload == None:
+        autoreload = False
 
     # list handlers for REST calls here
     handlers = [
@@ -1632,5 +1634,12 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     _https_server.listen(https_port)
     _bounce_server.listen(bounce_port)
     _log.info("starting server loop")
+    if autoreload:
+        from tornado import autoreload
+        tornado.autoreload.start();
+        for dir, _, files in os.walk(template_root):
+            [tornado.autoreload.watch(dir + '/' + f) for f in files if not f.startswith('.')]
+        for dir, _, files in os.walk(html_root):
+            [tornado.autoreload.watch(dir + '/' + f) for f in files if not f.startswith('.')]
     tornado.ioloop.IOLoop.instance().start()
     _log.info("server loop exited")
