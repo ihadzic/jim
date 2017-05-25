@@ -330,6 +330,8 @@ class LadderHandler(InfoBaseHandler):
         _log.debug("ladder: C matches found: {}".format(c_matches))
         _, _, _, season_string, _, _ = _database.get_season()
         self.render('ladder.html',
+                    admin = self.current_user['admin'],
+                    player_reports_matches = _player_reports_matches,
                     date_string = today,
                     season_string = season_string,
                     a_ladder = _database.get_ladder('a'),
