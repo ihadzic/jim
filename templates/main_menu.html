@@ -19,7 +19,7 @@
 
   <body id="main_body" onload="get_pending_matches()">
     <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
-      <a class="navbar-brand" href="#">J.I.M.</a>
+      <a class="navbar-brand" href="/">J.I.M.</a>
       <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -27,51 +27,51 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Ladder</a>
+            <a class="nav-link" href="ladder">Ladder</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Roster</a>
+            <a class="nav-link" href="roster">Roster</a>
           </li>
           {% if admin %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Manage Players</a>
+              <a class="nav-link" href="player_form">Manage Players</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Manage Matches</a>
+              <a class="nav-link" href="match_form">Manage Matches</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Manage Admins</a>
+              <a class="nav-link" href="account_form">Manage Admins</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Manage Seasons</a>
+              <a class="nav-link" href="season_form">Manage Seasons</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Manage Tournaments</a>
+              <a class="nav-link" href="tournament_form">Manage Tournaments</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Manage Token Access</a>
+              <a class="nav-link" href="token_form">Manage Token Access</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Edit News</a>
+              <a class="nav-link" href="news_form">Edit News</a>
             </li>
           {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="#">My Account</a>
+              <a class="nav-link" href="player_form_restricted">My Account</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">My Profile</a>
+              <a class="nav-link" href="profile">My Profile</a>
             </li>
             {% if player_reports_matches %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Report Match</a>
+              <a class="nav-link" href="match_form_restricted">Report Match</a>
             </li>
             {% end %}
           {% end %}
         </ul>
-        <a class="nav-link" href="#">Logout</a>
+        <a class="nav-link" href="logout">Logout</a>
       </div>
     </nav>
 
@@ -82,24 +82,24 @@
           {% if not admin %}
           <section class="row text-center placeholders">
             <div class="col-6 col-sm-3 placeholder">
-              <img src="ladder.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue" alt="Club Ladder">
+              <a href="ladder"><img src="ladder.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue" alt="Club Ladder"></a>
               <h4>Ladder</h4>
               <div class="text-muted">View the ladder</div>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <img src="roster.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue" alt="Club Roster">
+              <a href="roster"><img src="roster.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue" alt="Club Roster"></a>
               <h4>Roster</h4>
               <span class="text-muted">List players</span>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <img src="match.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue" alt="Report Match">
+              <a href="match_form_restricted"><img src="match.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue" alt="Report Match"></a>
               <h4>Match</h4>
               <span class="text-muted">Report your match</span>
             </div>
             <div class="col-6 col-sm-3 placeholder">
-              <img src="user.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue", alt="Edit Account">
+              <a href="player_form_restricted"><img src="user.png" width="200" height="200" class="img-fluid rounded-circle" style="background-color: royalblue", alt="Edit Account"></a>
               <h4>Account</h4>
-              <span class="text-muted">Enter your info</span>
+              <span class="text-muted">Edit your info</span>
             </div>
           </section>
           {% end %}
