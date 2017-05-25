@@ -74,12 +74,196 @@
         <a class="nav-link" href="logout">Logout</a>
       </div>
     </nav>
-
     <div class="container-fluid">
       <div class="row">
         <main class="col-sm-12 col-md-12 pt-3" role="main">
 	  <h1>Live ATTTC Ladder as of {{date_string}}</h1>
 	  <h2>Season: {{season_string}}</h2>
+          <form action="ladder" method="post">
+          <label class="description" for="since_date">Show matches since </label>
+          <span>
+            <input id="since_date_1" name="since_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
+            <label for="since_date_1">MM</label>
+          </span>
+          <span>
+            <input id="since_date_2" name="since_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
+            <label for="since_date_2">DD</label>
+          </span>
+          <span>
+            <input id="since_date_3" name="since_date_3" class="element text" size="4" maxlength="4" value="" type="text">
+            <label for="since_date_3">YYYY</label>
+          </span>
+          <span id="calendar_match">
+            <img id="cal_img_match" class="datepicker" src="calendar.gif" alt="Pick a date.">
+          </span>
+          <script type="text/javascript">
+            Calendar.setup({
+            inputField         : "since_date_3",
+            baseField    : "since_date",
+            displayArea  : "calendar_match",
+            button                 : "cal_img_match",
+            ifFormat         : "%B %e, %Y",
+            onSelect         : selectDate
+            });
+          </script>
+          <input type="submit" value="Refresh">
+          <form>
+            <p>&nbsp;</p>
+            <h2>A-Ladder</h2>
+            <h3>Recent matches:</h3>
+            {% for am in a_matches %}
+              {% block am %}
+              <p>
+                {{str(am.get('date'))}}:
+                {{str(am.get('winner_last_name'))}} <i>def.</i>
+                {{str(am.get('loser_last_name'))}} : &nbsp;&nbsp;
+                {{str(am.get('score'))}}
+                {{str(am.get('notes'))}}
+              </p>
+              {% end %}
+            {% end %}
+          <table border="1" style="width:98%; margin-left:auto; margin-right:auto">
+            <tr>
+              <th style="width:7%; text-align:center">Rank</th>
+              <th style="width:7%; text-align:center">ID</th>
+              <th style="width:49%; padding-left:12px">Name</th>
+              <th style="width:7%; text-align:center">Pts</th>
+              <th style="width:7%; text-align:center">W-A</th>
+              <th style="width:7%; text-align:center">L-A</th>
+              <th style="width:7%; text-align:center">W</th>
+              <th style="width:7%; text-align:center">L</th>
+            </tr>
+            {% set i = 0 %}
+            {% for a in a_ladder %}
+              {% set i = i + 1 %}
+              {% block a %}
+              <tr>
+                <td style="text-align:right; padding-right:24px">{{ str(i) }}</td>
+                <td style="text-align:right; padding-right:24px">{{ str(a.get('id')) }}</td>
+                <td style="padding-left:12px"><a href="profile?player_id={{str(a.get('id'))}}">{{ ("* " if a.get('tournament_qualified') else "") + str(a.get('first_name')) + " " + str(a.get('last_name')) }}</a></td>
+                <td style="text-align:right; padding-right:24px">{{ str(a.get('points')) }}</td>
+                <td style="text-align:right; padding-right:24px">{{ str(a.get('a_wins')) }}</td>
+                <td style="text-align:right; padding-right:24px">{{ str(a.get('a_losses')) }}</td>
+                <td style="text-align:right; padding-right:24px">{{ str(a.get('wins')) }}</td>
+                <td style="text-align:right; padding-right:24px">{{ str(a.get('losses')) }}</td>
+              </tr>
+              {% end %}
+            {% end %}
+          </table>
+          <p>&nbsp;</p>
+          <h2>B-Ladder</h2>
+          <h3>Recent matches:</h3>
+          {% for bm in b_matches %}
+            {% block bm %}
+              <p>
+                {{str(bm.get('date'))}}:
+                {{str(bm.get('winner_last_name'))}} <i>def.</i>
+                {{str(bm.get('loser_last_name'))}} : &nbsp;&nbsp;
+                {{str(bm.get('score'))}}
+                {{str(bm.get('notes'))}}
+              </p>
+            {% end %}
+          {% end %}
+          <table border="1" style="width:98%; margin-left:auto; margin-right:auto">
+            <tr>
+              <th style="width:7%; text-align:center">Rank</th>
+              <th style="width:7%; text-align:center">ID</th>
+              <th style="width:49%; padding-left:12px">Name</th>
+              <th style="width:7%; text-align:center">Pts</th>
+              <th style="width:7%; text-align:center">W-B</th>
+              <th style="width:7%; text-align:center">L-B</th>
+              <th style="width:7%; text-align:center">W</th>
+              <th style="width:7%; text-align:center">L</th>
+            </tr>
+            {% set i = 0 %}
+            {% for b in b_ladder %}
+              {% set i = i + 1 %}
+              {% block b %}
+                <tr>
+                  <td style="text-align:right; padding-right:24px">{{ str(i) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(b.get('id')) }}</td>
+                  <td style="padding-left:12px"><a href="profile?player_id={{str(b.get('id'))}}">{{ ("* " if b.get('tournament_qualified') else "") + str(b.get('first_name')) + " " + str(b.get('last_name')) }}</a></td>
+                  <td style="text-align:right; padding-right:24px">{{ str(b.get('points')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(b.get('b_wins')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(b.get('b_losses')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(b.get('wins')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(b.get('losses')) }}</td>
+                </tr>
+              {% end %}
+            {% end %}
+          </table>
+          <p>&nbsp;</p>
+          <h2>C-Ladder</h2>
+          <h3>Recent matches:</h3>
+          {% for cm in c_matches %}
+            {% block cm %}
+              <p>
+                {{str(cm.get('date'))}}:
+                {{str(cm.get('winner_last_name'))}} <i>def.</i>
+                {{str(cm.get('loser_last_name'))}} : &nbsp;&nbsp;
+                {{str(cm.get('score'))}}
+                {{str(cm.get('notes'))}}
+              </p>
+            {% end %}
+          {% end %}
+          <table border="1" style="width:98%; margin-left:auto; margin-right:auto">
+            <tr>
+              <th style="width:7%; text-align:center">Rank</th>
+              <th style="width:7%; text-align:center">ID</th>
+              <th style="width:49%; padding-left:12px">Name</th>
+              <th style="width:7%; text-align:center">Pts</th>
+              <th style="width:7%; text-align:center">W-C</th>
+              <th style="width:7%; text-align:center">L-C</th>
+              <th style="width:7%; text-align:center">W</th>
+              <th style="width:7%; text-align:center">L</th>
+            </tr>
+            {% set i = 0 %}
+            {% for c in c_ladder %}
+              {% set i = i + 1 %}
+              {% block c %}
+                <tr>
+                  <td style="text-align:right; padding-right:24px">{{ str(i) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(c.get('id')) }}</td>
+                  <td style="padding-left:12px"><a href="profile?player_id={{str(c.get('id'))}}">{{ ("* " if c.get('tournament_qualified') else "") + str(c.get('first_name')) + " " + str(c.get('last_name')) }}</a></td>
+                  <td style="text-align:right; padding-right:24px">{{ str(c.get('points')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(c.get('c_wins')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(c.get('c_losses')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(c.get('wins')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(c.get('losses')) }}</td>
+                </tr>
+              {% end %}
+            {% end %}
+          </table>
+          <p>&nbsp;</p>
+          <h2>Unranked</h2>
+          <table border="1" style="width:98%; margin-left:auto; margin-right:auto">
+            <tr>
+              <th style="width:7%; text-align:center">Rank</th>
+              <th style="width:7%; text-align:center">ID</th>
+              <th style="width:49%; padding-left:12px">Name</th>
+              <th style="width:7%; text-align:center">Pts</th>
+              <th style="width:7%; text-align:center">W-U</th>
+              <th style="width:7%; text-align:center">L-U</th>
+              <th style="width:7%; text-align:center">W</th>
+              <th style="width:7%; text-align:center">L</th>
+            </tr>
+            {% set i = 0 %}
+            {% for u in u_ladder %}
+              {% set i = i + 1 %}
+              {% block u %}
+                <tr>
+                  <td style="text-align:right; padding-right:24px">{{ str(i) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(u.get('id')) }}</td>
+                  <td style="padding-left:12px"><a href="profile?player_id={{str(u.get('id'))}}">{{ ("* " if u.get('tournament_qualified') else "") + str(u.get('first_name')) + " " + str(u.get('last_name')) }}</a></td>
+                  <td style="text-align:right; padding-right:24px">{{ str(u.get('points')) }}</td>
+                  <td style="text-align:right; padding-right:24px">0</td>
+                  <td style="text-align:right; padding-right:24px">0</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(u.get('wins')) }}</td>
+                  <td style="text-align:right; padding-right:24px">{{ str(u.get('losses')) }}</td>
+                </tr>
+              {% end %}
+            {% end %}
+          </table>
         </main>
       </div>
     </div>
