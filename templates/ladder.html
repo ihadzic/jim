@@ -112,7 +112,9 @@
           </form>
           <p>&nbsp;</p>
           <h2>A-Ladder</h2>
-          <h3>Recent matches:</h3>
+          {% if a_matches %}
+            <h3>Recent matches:</h3>
+          {% end %}
           {% for am in a_matches %}
             {% block am %}
             <p>
@@ -157,7 +159,9 @@
 
           <p>&nbsp;</p>
           <h2>B-Ladder</h2>
-          <h3>Recent matches:</h3>
+          {% if b_matches %}
+            <h3>Recent matches:</h3>
+          {% end %}
           {% for bm in b_matches %}
             {% block bm %}
               <p>
@@ -202,7 +206,9 @@
 
           <p>&nbsp;</p>
           <h2>C-Ladder</h2>
-          <h3>Recent matches:</h3>
+          {% if c_matches %}
+            <h3>Recent matches:</h3>
+          {% end %}
           {% for cm in c_matches %}
             {% block cm %}
               <p>
