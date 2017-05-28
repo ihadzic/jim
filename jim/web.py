@@ -470,6 +470,8 @@ class RosterHandler(DynamicBaseHandler):
         if self.authorized(quiet = True):
             _, _, _, season_string, _, _ = _database.get_season()
             self.render('roster.html',
+                        admin = self.current_user['admin'],
+                        player_reports_matches = _player_reports_matches,
                         season_string = season_string,
                         date_string = datetime.ctime(datetime.now()),
                         roster = _database.get_roster()

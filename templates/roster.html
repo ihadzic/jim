@@ -1,58 +1,126 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Player Roster</title>
-<link rel="stylesheet" type="text/css" href="css/view.css" media="all">
-<script type="text/javascript" src="js/form_handler.js"></script>
-</head>
-<body id="main_body" >
-  <img id="top" src="top.png" alt="">
-  <div id="form_container">
-    <h1><a>Player Roster</a></h1>
-    <div class="form_description">
-      <h2>ATTTC Roster as of {{date_string}}</h2>
-      <h2>Season: {{season_string}}</h2>
-      <h3><a href="main_menu">Main Menu</a>
-        <a href="ladder">Ladder</a>
-        <a href="logout">Logout</a>
-      </h3>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Jim Improved and Modernized (J.I.M.)</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+    <script type="text/javascript" src="js/form_handler.js"></script>
+  </head>
+
+  <body id="main_body">
+    <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
+      <a class="navbar-brand" href="/">J.I.M.</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ladder">Ladder</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="roster">Roster</a>
+          </li>
+          {% if admin %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form">Manage Players</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="match_form">Manage Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account_form">Manage Admins</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="season_form">Manage Seasons</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tournament_form">Manage Tournaments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="token_form">Manage Token Access</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="news_form">Edit News</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form_restricted">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile">My Profile</a>
+            </li>
+            {% if player_reports_matches %}
+            <li class="nav-item">
+              <a class="nav-link" href="match_form_restricted">Report Match</a>
+            </li>
+            {% end %}
+          {% end %}
+        </ul>
+        <a class="nav-link" href="logout">Logout</a>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <main class="col-sm-12 col-md-12 pt-3" role="main">
+          <h2>ATTTC Roster as of {{date_string}}</h2>
+          <h2>Season: {{season_string}}</h2>
+        </main>
+        <div class="table-responsive"><table class="table table-stripped">
+            <thead>
+              <th>Name</th>
+              <th>ID</th>
+              <th>LDR</th>
+              <th>Home Loc.</th>
+              <th>Work Loc.</th>
+              <th>Home #</th>
+              <th>Cell #</th>
+              <th>Work #</th>
+              <th>E-mail</th>
+            </thead>
+            <tbody>
+              {% for p in roster %}
+                {% block p %}
+                  <tr>
+                    <td><a href="profile?player_id={{str(p.get('id'))}}">{{ ("* " if p.get('tournament_qualified') else "") + str(p.get('first_name')) + " " + str(p.get('last_name')) }}</a></td>
+                    <td>{{ str(p.get('id')) }}</td>
+                    <td>{{ str(p.get('ladder'))[0:3].capitalize() }}</td>
+                    <td>{{ str(p.get('location')) if p.get('location') else "" }}</td>
+                    <td>{{ str(p.get('wlocation')) if p.get('wlocation') else "" }}</td>
+                    <td>{{ str(p.get('home_phone')) if p.get('home_phone') else ""}}</td>
+                    <td>{{ str(p.get('cell_phone')) if p.get('cell_phone') else ""}}</td>
+                    <td>{{ str(p.get('work_phone')) if p.get('work_phone') else ""}}</td>
+                    <td><a href="mailto:{{str(p.get('email'))}}">{{ str(p.get('email')) }}</a></td>
+                  </tr>
+                {% end %}
+              {% end %}
+            <tbody>
+        </table></div>
+      </div>
     </div>
-    <table border="1" style="width:98%; margin-left:auto; margin-right:auto">
-      <tr>
-        <th style="width:23%">Name</th>
-        <th style="width:3%;text-align:center">ID</th>
-        <th style="width:3%;text-align:center">LDR</th>
-        <th style="width:10%">Home Loc.</th>
-        <th style="width:10%">Work Loc.</th>
-        <th style="width:9%">Home #</th>
-        <th style="width:9%">Cell #</th>
-        <th style="width:9%">Work #</th>
-        <th style="width:22%">E-mail</th>
-      </tr>
-      {% for p in roster %}
-        {% block p %}
-          <tr>
-            <td><a href="profile?player_id={{str(p.get('id'))}}">{{ ("* " if p.get('tournament_qualified') else "") + str(p.get('first_name')) + " " + str(p.get('last_name')) }}</a></td>
-            <td style="text-align:right; padding-right:6px">{{ str(p.get('id')) }}</td>
-            <td style="text-align:center">{{ str(p.get('ladder'))[0:3].capitalize() }}</td>
-            <td>{{ str(p.get('location')) if p.get('location') else "" }}</td>
-            <td>{{ str(p.get('wlocation')) if p.get('wlocation') else "" }}</td>
-            <td>{{ str(p.get('home_phone')) if p.get('home_phone') else ""}}</td>
-            <td>{{ str(p.get('cell_phone')) if p.get('cell_phone') else ""}}</td>
-            <td>{{ str(p.get('work_phone')) if p.get('work_phone') else ""}}</td>
-            <td><a href="mailto:{{str(p.get('email'))}}">{{ str(p.get('email')) }}</a></td>
-          </tr>
-        {% end %}
-      {% end %}
-    </table>
-    <p>
-    <br>
-    </p>
-    <div id="footer">
-      Generated by <a href="http://www.phpform.org">pForm</a>
-    </div>
-  </div>
-  <img id="bottom" src="bottom.png" alt="">
-</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.9.4/umd/popper.min.js" integrity="sha256-KTKnuJPRS70XKLm+ka+irprJFaz/MLZQKHIID7ECCmw=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>
