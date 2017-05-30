@@ -1,141 +1,251 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Match Entry Form</title>
-<link rel="stylesheet" type="text/css" href="css/view.css" media="all">
-<script type="text/javascript" src="js/calendar.js"></script>
-<script type="text/javascript" src="js/form_handler.js"></script>
-</head>
-<body id="main_body" >
-  <img id="top" src="top.png" alt="">
-    <div id="form_container">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
 
-      <h1><a>Match Entry Form</a></h1>
-      <form id="match_form" class="appnitro"  method="post" action="/"
-            onsubmit="return false">
-        <div class="form_description">
-          <h2>Match Entry Form</h2>
-          <h3><a href="main_menu">Main Menu</a>
-            <a href="logout">Logout</a></h3>
-        </div>
-        <div id="match_list"></div>
-        <input id="add_match_2" class="button_text" type="button" name="submit" value="Submit" onclick="process_match_form('add_match', 'pending=yes')"/>
-        <ul >
+    <title>Jim Improved and Modernized (J.I.M.)</title>
 
-          <li id="li_1" >
-            <label class="description" for="player_1">Player 1</label>
-            <div style="float:left;width:30%">
-              <label class="description" for="player_1_last_name">Last Name </label>
-              <input style="width:100%" id="player_1_last_name" name="player_1_last_name" class="element text small" type="text" maxlength="255" value="{{player_1_last_name}}" readonly/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="player_1_id">ID </label>
-              <input style="width:100%" id="player_1_id" name="player_1_id" class="element text small" type="text" maxlength="5" value="{{player_1_id}}" readonly/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="player_1_challenger">Challenger </label>
-              <input style="width:100%" id="player_1_challenger" name="player_1_challenger" class="element text small" type="checkbox" onclick="reset_checkbox('player_2_challenger')" checked/>
-            </div>
-            <div style="float:left;width:10%">
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="set_1_player_1_score">Set 1 </label>
-              <input style="width:100%" id="set_1_player_1_score" name="set_1_player_1_score" class="element text small" type="text" maxlength="1" value=""/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="set_2_player_1_score">Set 2 </label>
-              <input style="width:100%" id="set_2_player_1_score" name="set_2_player_1_score" class="element text small" type="text" maxlength="1" value=""/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="set_3_player_1_score">Set 3 </label>
-              <input style="width:100%" id="set_3_player_1_score" name="set_3_player_1_score" class="element text small" type="text" maxlength="1" value=""/>
-            </div>
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/calendar.css" rel="stylesheet">
+    <script type="text/javascript" src="js/form_handler.js"></script>
+    <script type="text/javascript" src="js/calendar.js"></script>
+  </head>
+
+  <body id="main_body">
+    <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
+      <a class="navbar-brand" href="/">J.I.M.</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
-
-          <li id="li_2" >
-            <label class="description" for="player_2">Player 2</label>
-            <div style="float:left;width:30%">
-              <label class="description" for="player_2_last_name">Last Name </label>
-              <input style="width:100%" id="player_2_last_name" name="player_2_last_name" class="element text small" type="text" maxlength="255" value="" oninput="player_box_completion('player_2_last_name', 'player_2_id', 2, 'id')"/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="player_2_id">ID </label>
-              <input style="width:100%" id="player_2_id" name="player_2_id" class="element text small" type="text" maxlength="5" value="" oninput="player_box_completion('player_2_last_name', 'player_2_id', 3, 'last_name')"/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="player_2_challenger">Challenger </label>
-              <input style="width:100%" id="player_2_challenger" name="player_2_challenger" class="element text small" type="checkbox" onclick="reset_checkbox('player_1_challenger')"/>
-            </div>
-            <div style="float:left;width:10%">
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="set_1_player_2_score">Set 1 </label>
-              <input style="width:100%" id="set_1_player_2_score" name="set_1_player_2_score" class="element text small" type="text" maxlength="1" value=""/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="set_2_player_2_score">Set 2 </label>
-              <input style="width:100%" id="set_2_player_2_score" name="set_2_player_2_score" class="element text small" type="text" maxlength="1" value=""/>
-            </div>
-            <div style="float:left;width:10%">
-              <label class="description" for="set_3_player_2_score">Set 3 </label>
-              <input style="width:100%" id="set_3_player_2_score" name="set_3_player_2_score" class="element text small" type="text" maxlength="1" value=""/>
-            </div>
+          <li class="nav-item">
+            <a class="nav-link" href="ladder">Ladder</a>
           </li>
-
-          <li id="li_3" >
+          <li class="nav-item">
+            <a class="nav-link" href="roster">Roster</a>
           </li>
-          <li id="li_5" >
-            <label class="description" for="match_date">Date match completed </label>
-            <span>
-              <input id="match_date_1" name="match_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
-                <label for="match_date_1">MM</label>
-              </span>
-              <span>
-                <input id="match_date_2" name="match_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
-                  <label for="match_date_2">DD</label>
-                </span>
-                <span>
-                  <input id="match_date_3" name="match_date_3" class="element text" size="4" maxlength="4" value="" type="text">
-                    <label for="match_date_3">YYYY</label>
-                  </span>
+          {% if admin %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form">Manage Players</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="match_form">Manage Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account_form">Manage Admins</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="season_form">Manage Seasons</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tournament_form">Manage Tournaments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="token_form">Manage Token Access</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="news_form">Edit News</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form_restricted">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile">My Profile</a>
+            </li>
+            {% if player_reports_matches %}
+            <li class="nav-item">
+              <a class="nav-link active" href="match_form_restricted">Report Match</a>
+            </li>
+            {% end %}
+          {% end %}
+        </ul>
+        <a class="nav-link" href="logout">Logout</a>
+      </div>
+    </nav>
 
-                  <span id="calendar_match">
-                    <img id="cal_img_match" class="datepicker" src="calendar.gif" alt="Pick a date.">
-                    </span>
-                    <script type="text/javascript">
-                      Calendar.setup({
-                      inputField         : "match_date_3",
-                      baseField    : "match_date",
-                      displayArea  : "calendar_match",
-                      button                 : "cal_img_match",
-                      ifFormat         : "%B %e, %Y",
-                      onSelect         : selectDate
-                      });
-                    </script>
-                  </li>                <li id="li_12" >
-                    <label class="description" for="match_outcome">Match outcome </label>
-                    <span>
-                      <input id="match_outcome_1" name="match_outcome" class="element radio" type="radio" value="1" />
-                      <label class="choice" for="match_outcome_1">Completed normally</label>
-                      <input id="match_outcome_2" name="match_outcome" class="element radio" type="radio" value="2" />
-                      <label class="choice" for="match_outcome_2">Retired</label>
-                      <input id="match_outcome_3" name="match_outcome" class="element radio" type="radio" value="3" />
-                      <label class="choice" for="match_outcome_3">No-show or forfeit</label>
+    <div class="container-fluid">
+      <h1>Match Report Form</h1>
+      <div id="match_list"></div>
 
-                    </span>
-                  </li>
-                  <li class="buttons">
-                    <input type="hidden" name="form_id" value="1066362" />
-
-                    <input id="add_match" class="button_text" type="button" name="submit" value="Submit" onclick="process_match_form('add_match', 'pending=yes')"/>
-                  </li>
-                </ul>
-              </form>
-              <div id="footer">
-                Generated by <a href="http://www.phpform.org">pForm</a>
+      <main class="col-sm-12 col-md-12 pt-3" role="main">
+        <form id="match_form" method="post" action="/"
+              onsubmit="return false">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <div class="row">
+                <label for="player_1"><span style="font-weight:bold;">Player 1</span></label>
+              </div>
+              <div class="row" id="player_1">
+                <div class="col-md-5">
+                  <label for="player_1_last_name">Last Name </label>
+                  <input id="player_1_last_name" name="player_1_last_name" class="form-control" type="text" maxlength="255" value="{{player_1_last_name}}" readonly>
+                </div>
+                <div class="col-md-3">
+                  <label for="player_1_id">ID </label>
+                  <input id="player_1_id" name="player_1_id" class="form-control" type="text" maxlength="5" value="{{player_1_id}}" readonly>
+                </div>
+                <div class="col-md-1 checkbox-inline">
+                  <label for="player_1_challenger">Challenger </label>
+                  <input id="player_1_challenger" name="player_1_challenger" type="checkbox" onclick="reset_checkbox('player_2_challenger')" checked>
+                </div>
+              </div>
+              <div class="row">
+                <label for "player_2"><span style="font-weight:bold;">Player 2</span></label>
+              </div>
+              <div class="row" id="player_2">
+                <div class="col-md-5">
+                  <label for="player_2_last_name">Last Name </label>
+                  <input id="player_2_last_name" name="player_2_last_name" class="form-control" type="text" maxlength="255" value="" oninput="player_box_completion('player_2_last_name', 'player_2_id', 2, 'id')">
+                </div>
+                <div class="col-md-3">
+                  <label for="player_2_id">ID </label>
+                  <input id="player_2_id" name="player_2_id" class="form-control" type="text" maxlength="5" value="" oninput="player_box_completion('player_2_last_name', 'player_2_id', 3, 'last_name')">
+                </div>
+                <div class="col-md-1 checkbox-inline">
+                  <label for="player_2_challenger">Challenger </label>
+                  <input id="player_2_challenger" name="player_2_challenger" type="checkbox" onclick="reset_checkbox('player_1_challenger')"/>
+                </div>
               </div>
             </div>
-            <img id="bottom" src="bottom.png" alt="">
-            </body>
-          </html>
+            <div class="form-group col-md-6">
+              <div class="row">
+                <label><span style="font-weight:bold;">Score</span></label>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-2">
+                  <div class="row">
+                    <label for="set_1_player_1_score">Set 1 </label>
+                    <input id="set_1_player_1_score" name="set_1_player_1_score" class="form-control" type="text" maxlength="1" value="">
+                  </div>
+                  <div class="row">
+                    <label>&nbsp;</label>
+                  </div>
+                  <div class="row">
+                    <label>&nbsp;</label>
+                    <input id="set_1_player_2_score" name="set_1_player_2_score" class="form-control" type="text" maxlength="1" value="">
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <div class="row">
+                    <label for="set_2_player_1_score">Set 2 </label>
+                    <input id="set_2_player_1_score" name="set_2_player_1_score" class="form-control" type="text" maxlength="1" value="">
+                  </div>
+                  <div class="row">
+                    <label>&nbsp;</label>
+                  </div>
+                  <div class="row">
+                    <label>&nbsp;</label>
+                    <input id="set_2_player_2_score" name="set_2_player_2_score" class="form-control" type="text" maxlength="1" value="">
+                  </div>
+                </div>
+                <div class="form-group col-md-2">
+                  <div class="row">
+                    <label for="set_3_player_1_score">Set 3 </label>
+                    <input id="set_3_player_1_score" name="set_3_player_1_score" class="form-control" type="text" maxlength="1" value="">
+                  </div>
+                  <div class="row">
+                    <label>&nbsp;</label>
+                  </div>
+                  <div class="row">
+                    <label>&nbsp;</label>
+                    <input id="set_3_player_2_score" name="set_3_player_2_score" class="form-control" type="text" maxlength="1" value="">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label for="match_date"><span style="font-weight:bold;">Date match completed</span></label>
+          </div>
+          <div class="row" id="match_date">
+            <div class="form-group col-md-8">
+              <div class="row">
+                <div class="col-md-2">
+                  <label for="match_date_1">MM</label>
+                  <input id="match_date_1" name="match_date_1" class="form-control" value="" type="text">
+                </div>
+                <div class="col-md-2">
+                  <label for="match_date_2">DD</label>
+                  <input id="match_date_2" name="match_date_2" class="form-control" value="" type="text">
+                </div>
+                <div class="col-md-4">
+                  <label for="match_date_3">YYYY</label>
+                  <input id="match_date_3" name="match_date_3" class="form-control" value="" type="text">
+                </div>
+                <div class="col-md-2" id="calendar_match">
+                  <div class="row">
+                    <label for="cal_img_match">&nbsp;</label>
+                  </div>
+                  <img id="cal_img_match" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
+                </div>
+                <script type="text/javascript">
+                  Calendar.setup({
+                  inputField         : "match_date_3",
+                  baseField    : "match_date",
+                  displayArea  : "calendar_match",
+                  button                 : "cal_img_match",
+                  ifFormat         : "%B %e, %Y",
+                  onSelect         : selectDate
+                  });
+                </script>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label for="match_date"><span style="font-weight:bold;">Match outcome</span></label>
+          </div>
+          <div class="row" id="match_date">
+            <div class="form-group col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <input id="match_outcome_1" name="match_outcome" class="radio-inline" type="radio" value="1" >
+                  <label for="match_outcome_1">Completed normally</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <input id="match_outcome_2" name="match_outcome" class="radio-inline" type="radio" value="2" >
+                  <label for="match_outcome_2">Retired</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <input id="match_outcome_3" name="match_outcome" class="radio_inline" type="radio" value="3" >
+                  <label for="match_outcome_3">No-show or forfeit</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <input type="submit" class="btn-block" value="Submit" onclick="process_match_form('add_match', 'pending=yes')">
+	  </div>
+        </form>
+        </main>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.9.4/umd/popper.min.js" integrity="sha256-KTKnuJPRS70XKLm+ka+irprJFaz/MLZQKHIID7ECCmw=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

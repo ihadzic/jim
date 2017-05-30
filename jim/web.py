@@ -157,6 +157,8 @@ class MatchFormRestrictedHandler(DynamicBaseHandler):
             assert(len(matched_players) == 1)
             player_last_name = matched_players[0].get('last_name')
             self.render('match_form_restricted.html',
+                        admin = self.current_user['admin'],
+                        player_reports_matches = _player_reports_matches,
                         player_1_last_name = player_last_name,
                         player_1_id = player_id)
         else:
