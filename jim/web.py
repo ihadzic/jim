@@ -144,7 +144,9 @@ class PlayerFormHandler(GenericAdminFormHandler):
 
 class MatchFormHandler(GenericAdminFormHandler):
     def get(self):
-        self.generic_get('match_form.html')
+        self.generic_get('match_form.html',
+                         admin = self.current_user['admin'],
+                         player_reports_matches = _player_reports_matches)
 
 class MatchFormRestrictedHandler(DynamicBaseHandler):
     def get(self):
@@ -156,7 +158,7 @@ class MatchFormRestrictedHandler(DynamicBaseHandler):
             matched_players = _database.lookup_player({'player_id': player_id}, 'and')
             assert(len(matched_players) == 1)
             player_last_name = matched_players[0].get('last_name')
-            self.render('match_form_restricted.html',
+            self.render('match_form.html',
                         admin = self.current_user['admin'],
                         player_reports_matches = _player_reports_matches,
                         player_1_last_name = player_last_name,
