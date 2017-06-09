@@ -129,7 +129,9 @@ class PlayerFormRestrictedHandler(DynamicBaseHandler):
             # admin is redirected to its own player form
             self.redirect('/player_form')
         elif self.authorized(quiet = True):
-            self.render('player_form_restricted.html')
+            self.render('player_form_restricted.html',
+                        admin = self.current_user['admin'],
+                        player_reports_matches = _player_reports_matches)
         else:
             # nobody is logged in, redirect to login form
             self.redirect('/login')
