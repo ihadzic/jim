@@ -1,60 +1,141 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>{{str(player_name_and_id)}}</title>
-<link rel="stylesheet" type="text/css" href="css/view.css" media="all">
-</head>
-<body id="main_body" >
-  <img id="top" src="top.png" alt="">
-  <div id="form_container">
-    <h1><a>{{str(player_name_and_id)}}</a></h1>
-    <div class="form_description">
-      <h2>{{str(player_name_and_id) + str(player_note)}}<br>{{str(player_company)}}<br>{{str(player_ladder)}}-ladder</h2>
-      <h3><a href="main_menu">Main Menu</a>
-        <a href="roster">Roster</a>
-        <a href="ladder">Ladder</a>
-        <a href="logout">Logout</a>
-      </h3>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Jim Improved and Modernized (J.I.M.)</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+    <script type="text/javascript" src="js/form_handler.js"></script>
+  </head>
+
+  <body id="main_body" onload="get_pending_matches()">
+    <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
+      <a class="navbar-brand" href="/">J.I.M.</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="ladder">Ladder</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="roster">Roster</a>
+          </li>
+          {% if admin %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form">Players</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="match_form">Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account_form">Admins</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="season_form">Seasons</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tournament_form">Tournaments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="token_form">Tokens</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="news_form">News</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form_restricted">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile">My Profile</a>
+            </li>
+            {% if player_reports_matches %}
+            <li class="nav-item">
+              <a class="nav-link" href="match_form_restricted">Report Match</a>
+            </li>
+            {% end %}
+          {% end %}
+        </ul>
+        <a class="nav-link" href="logout">Logout</a>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <main class="col-sm-12 col-md-12 pt-3" role="main">
+          <h1>{{str(player_name_and_id)}}</h1>
+          <h2>{% if player_note %}
+                {{str(player_note)}}<br>
+              {% end %}
+            {{str(player_company)}}<br>
+            {% if player_ladder == "Unranked" %}
+              {{str(player_ladder)}}
+            {% else %}
+              {{str(player_ladder)}}-ladder
+            {% end %}
+          </h2>
+          <h2>Home location: {{str(player_location)}}<br>
+            Work location: {{str(player_wlocation)}}<br>
+            {{str(player_phone_numbers)}}<br>
+            <a href="mailto:{{str(player_e_mail)}}">{{str(player_e_mail)}}</a>
+          </h2>
+          <h3>A-ladder matches: {{str(a_ladder_matches)}}<br>
+            B-ladder matches: {{str(b_ladder_matches)}}<br>
+            C-ladder matches: {{str(c_ladder_matches)}}
+          </h3>
+          {% if pending_matches %}
+            <h3>Pending matches:</h3>
+            {% for m in pending_matches %}
+              {% block m %}
+              <p>
+                {{str(m.get('date'))}}:
+                {{str(m.get('winner_last_name'))}} <i>def.</i>
+                {{str(m.get('loser_last_name'))}} : &nbsp;&nbsp;
+                {{str(m.get('score'))}}
+                {{str(m.get('notes'))}}
+              </p>
+              {% end %}
+            {% end %}
+          {% end %}
+          <h3>Matches this season:</h3>
+          {% for m in matches %}
+            {% block m %}
+            <p>
+              {{str(m.get('date'))}}:
+              {{str(m.get('winner_last_name'))}} <i>def.</i>
+              {{str(m.get('loser_last_name'))}} : &nbsp;&nbsp;
+              {{str(m.get('score'))}}
+              {{str(m.get('notes'))}}
+            </p>
+            {% end %}
+          {% end %}
+        </main>
+      </div>
     </div>
-    <h2>Home location: {{str(player_location)}}<br>
-        Work location: {{str(player_wlocation)}}<br>
-        {{str(player_phone_numbers)}}<br>
-        <a href="mailto:{{str(player_e_mail)}}">{{str(player_e_mail)}}</a></h2>
-    <h3>A-ladder matches: {{str(a_ladder_matches)}}<br>
-        B-ladder matches: {{str(b_ladder_matches)}}<br>
-        C-ladder matches: {{str(c_ladder_matches)}}
-    </h3>
-    {% if pending_matches %}
-      <h3>Pending matches:</h3>
-      {% for m in pending_matches %}
-      {% block m %}
-      <p>
-        {{str(m.get('date'))}}:
-        {{str(m.get('winner_last_name'))}} <i>def.</i>
-        {{str(m.get('loser_last_name'))}} : &nbsp;&nbsp;
-        {{str(m.get('score'))}}
-        {{str(m.get('notes'))}}
-      </p>
-      {% end %}
-      {% end %}
-    {% end %}
-    <h3>Matches this season:</h3>
-    {% for m in matches %}
-    {% block m %}
-    <p>
-      {{str(m.get('date'))}}:
-      {{str(m.get('winner_last_name'))}} <i>def.</i>
-      {{str(m.get('loser_last_name'))}} : &nbsp;&nbsp;
-      {{str(m.get('score'))}}
-      {{str(m.get('notes'))}}
-    </p>
-    {% end %}
-    {% end %}
-  </div>
-  <div id="footer">
-    Generated by <a href="http://www.phpform.org">pForm</a>
-  </div>
-  <img id="bottom" src="bottom.png" alt="">
-</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.9.4/umd/popper.min.js" integrity="sha256-KTKnuJPRS70XKLm+ka+irprJFaz/MLZQKHIID7ECCmw=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>

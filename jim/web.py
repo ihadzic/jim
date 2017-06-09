@@ -420,10 +420,6 @@ class ProfileHandler(InfoBaseHandler):
         if not player_wlocation:
             player_wlocation = "unknown"
         player_note = player.get('note')
-        if player_note:
-            player_note = " --- " + player_note
-        else:
-            player_note = ""
         player_phone_numbers = ""
         if player.get('home_phone'):
             player_phone_numbers += player.get('home_phone') + " (h) "
@@ -437,6 +433,8 @@ class ProfileHandler(InfoBaseHandler):
         c_ladder_matches = str(ladder_info.get('c_wins')) + " wins, " + str(ladder_info.get('c_losses')) + " losses"
         self.render(
             'player_profile.html',
+            admin = self.current_user['admin'],
+            player_reports_matches = _player_reports_matches,
             matches =  matches,
             pending_matches =  pending_matches,
             player_name_and_id = player_name_and_id,
