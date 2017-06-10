@@ -82,39 +82,48 @@
 	  <h1>Live ATTTC Ladder as of {{date_string}}</h1>
 	  <h2>Season: {{season_string}}</h2>
           <form action="ladder" method="post">
-            <div class="form-group row">
-              <div class="form-group col-sm-4">
-                <label class="col-form-label" for="since_date">Show matches since </label>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="form-group col-md-1">
-                <input id="since_date_1" name="since_date_1" class="form-control" value="" type="text">
-                <label for="since_date_1">MM</label>
-              </div>
-              <div class="form-group col-md-1">
-                <input id="since_date_2" name="since_date_2" class="form-control" value="" type="text">
-                <label for="since_date_2">DD</label>
-              </div>
-              <div class="form-group col-md-2">
-                <input id="since_date_3" name="since_date_3" class="form-control" value="" type="text">
-                <label for="since_date_3">YYYY</label>
-              </div>
-              <div class="form-group col-md-1" id="calendar_match">
-                <img id="cal_img_match" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
-              </div>
-              <script type="text/javascript">
-                Calendar.setup({
-                inputField         : "since_date_3",
-                baseField    : "since_date",
-                displayArea  : "calendar_match",
-                button                 : "cal_img_match",
-                ifFormat         : "%B %e, %Y",
-                onSelect         : selectDate
-                });
-              </script>
-              <div class="form-group col-sm-2">
-                <input type="submit" class="btn-block" value="Refresh">
+            <div class="row" id="since_date">
+              <div class="form-group col-md-8">
+                <div class="row">
+                  &nbsp;
+                </div>
+                <div class="row">
+                  <span style="font-weight:bold;">Show matches since</span>
+                </div>
+                <div class="row">
+                  <div class="col-md-2">
+                    <label for="since_date_1">MM</label>
+                    <input id="since_date_1" name="since_date_1" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="since_date_2">DD</label>
+                    <input id="since_date_2" name="since_date_2" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="since_date_3">YYYY</label>
+                    <input id="since_date_3" name="since_date_3" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2" id="calendar_match">
+                    <div class="row">
+                      <label for="cal_img_match">&nbsp;</label>
+                    </div>
+                    <img id="cal_img_match" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
+                  </div>
+                  <script type="text/javascript">
+                    Calendar.setup({
+                    inputField         : "since_date_3",
+                    baseField    : "since_date",
+                    displayArea  : "calendar_match",
+                    button                 : "cal_img_match",
+                    ifFormat         : "%B %e, %Y",
+                    onSelect         : selectDate
+                    });
+                  </script>
+                  <div class="form-group col-md-2">
+                    <label>&nbsp;</label>
+                    <input type="submit" class="btn-block" value="Refresh">
+                  </div>
+                </div>
               </div>
             </div>
           </form>
