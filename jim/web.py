@@ -169,7 +169,7 @@ class PlayerFormRestrictedHandler(DynamicBaseHandler):
             # admin is redirected to its own player form
             self.redirect('/player_form')
         elif self.authorized(quiet = True):
-            self.render('player_form_restricted.html',
+            self.render('player_form.html',
                         admin = self.current_user['admin'],
                         player_reports_matches = _player_reports_matches)
         else:
@@ -182,7 +182,9 @@ class AccountFormHandler(GenericAdminFormHandler):
 
 class PlayerFormHandler(GenericAdminFormHandler):
     def get(self):
-        self.generic_get('player_form.html')
+        self.generic_get('player_form.html',
+                        admin = self.current_user['admin'],
+                        player_reports_matches = _player_reports_matches)
 
 class MatchFormHandler(GenericAdminFormHandler):
     def get(self):

@@ -1,159 +1,279 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Player Information</title>
-<link rel="stylesheet" type="text/css" href="css/view.css" media="all">
-<script type="text/javascript" src="js/form_handler.js"></script>
-</head>
-<body id="main_body" >
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
 
-	<img id="top" src="top.png" alt="">
-	<div id="form_container">
-		<h1><a>Player Information</a></h1>
-		<form id="player_form" class="appnitro" method="get" action="/"
-                      onsubmit="return false">
-		  <div class="form_description">
-			<h2>Player Information</h2>
-                        <h3><a href="main_menu">Main Menu</a>
-                          <a href="logout">Logout</a></h3>
-                        <div align="right"><input id="clear_form" class="button_text" type="button" value="Clear Form" onclick="clear_form_and_list('player_form', 'player_list')" /></div>
-			<p></p>
-		  </div>
-                  <div id="player_list">
-                  </div>
+    <title>Jim Improved and Modernized (J.I.M.)</title>
 
-			<ul >
-		<li class="buttons">
-			    <input type="hidden" name="form_id" value="player_form" />
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-				<input id="add_player_1" class="button_text" type="button" value="Add" onclick="add_player_pre_check()" />
-				<input id="update_player_1" class="button_text" type="button" value="Update" onclick="process_player_form('update_player')" />
-				<input id="get_player_1" class="button_text" type="button" value="Find" onclick="process_player_form('get_player')" />
-				<input id="del_player_1" class="button_text" type="button" value="Delete" onclick="process_player_form('del_player')" />
-		</li>
-		<li id="li_1" >
-		<label class="description" for="name">Name </label>
-		<span>
-			<input id="first_name" name= "first_name" class="element text" maxlength="255" size="8" value=""/>
-			<label>First</label>
-		</span>
-		<span>
-			<input id="last_name" name= "last_name" class="element text" maxlength="255" size="14" value=""/>
-			<label>Last</label>
-		</span>
-		</li>		<li id="li_4_5" >
-		<label class="description" for="player_id">ID (for update and search only)</label>
-		<div>
-			<input id="player_id" name="player_id" class="element text" type="text" maxlength="8" size="8" value=""/>
-		</div>
-		</li>		<li id="li_5" >
-		<label class="description" for="username">Username </label>
-		<div>
-			<input id="username" name="username" class="element text medium" type="text" maxlength="255" value=""/>
-		</div>
-		</li>		<li id="li_6" >
-		<label class="description" for="password">Password (leave blank if not changing on update)</label>
-		<div>
-			<input id="password" name="password" class="element text medium" type="password" maxlength="255" value=""/>
-		</div>
-		</li>		<li id="li_2" >
-		<label class="description" for="home_phone">Home Phone </label>
-		<span>
-			<input id="home_phone" name="home_phone" class="element text" size="12" maxlength="12" value="" type="text">
-			<label for="home_phone">(###-###-####)</label>
-		</span>
-		</li>		<li id="li_3" >
-		<label class="description" for="work_phone">Work Phone </label>
-		<span>
-			<input id="work_phone" name="work_phone" class="element text" size="12" maxlength="12" value="" type="text">
-			<label for="work_phone">(###-###-####)</label>
-		</span>
-		</li>		<li id="li_4" >
-		<label class="description" for="cell_phone">Cell Phone </label>
-		<span>
-			<input id="cell_phone" name="cell_phone" class="element text" size="12" maxlength="12" value="" type="text"> -
-			<label for="cell_phone">(###-####-####)</label>
-		</span>
-		</li>		<li id="li_7" >
-		<label class="description" for="email">E-mail </label>
-		<div>
-			<input id="email" name="email" class="element text medium" type="text" maxlength="255" value=""/>
-		</div>
-		</li>		<li id="li_8" >
-		<label class="description" for="company">Company </label>
-		<div>
-			<input id="company" name="company" class="element text medium" type="text" maxlength="255" value=""/>
-		</div>
-		</li>		<li id="li_9" >
-		<label class="description" for="location">Home location </label>
-		<div>
-			<input id="location" name="location" class="element text medium" type="text" maxlength="255" value=""/>
-		</div>
-		</li>		<li id="li_9w" >
-		<label class="description" for="wlocation">Work location </label>
-		<div>
-			<input id="wlocation" name="wlocation" class="element text medium" type="text" maxlength="255" value=""/>
-		</div>
-		</li>		<li id="li_10" >
-		<label class="description" for="note">Note </label>
-		<div>
-			<input id="note" name="note" class="element text medium" type="text" maxlength="255" value=""/>
-		</div>
-		</li>		<li id="li_11" >
-		<label class="description" for="ladder">Ladder </label>
-		<div>
-		<select class="element select small" id="ladder" name="ladder">
-			<option value="" selected="selected"></option>
-<option value="a" >A</option>
-<option value="b" >B</option>
-<option value="c" >C</option>
-<option value="unranked" >Unranked</option>
-<option value="beginner" >Beginner</option>
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+    <script type="text/javascript" src="js/form_handler.js"></script>
+  </head>
 
-		</select>
-		</div>
-		</li>		<li id="li_9a" >
-		<div>
-		  <label class="description" for="tournament_qualified_override">Tournament</label>
-		  <select class="element select small" id="tournament_qualified_override" name="tournament_qualified_override">
-		    <option value="" selected="0"></option>
-                    <option value="0" >Auto</option>
-                    <option value="-1" >Out</option>
-                    <option value="1" >In</option>
-		  </select>
-		</div>
-		</li>		<li id="li_10" >
-		<div>
-		  <label class="description" for="active">Active </label>
-		  <select class="element select small" id="active" name="active">
-		    <option value="" selected="selected"></option>
-                    <option value="true" >Yes</option>
-                    <option value="false" >No</option>
-		  </select>
-		</div>
+  {% if admin %}
+    <body id="main_body">
+  {% else %}
+    <body id="main_body" onload="get_logged_in_player_data()">
+  {% end %}
+    <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
+      <a class="navbar-brand" href="/">J.I.M.</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-		</li>		<li id="li_9" >
-		  <label class="description" for="initial_points">Initial Points (leave blank if not changing on update)</label>
-		<div>
-			<input id="initial_points" name="initial_points" class="element text medium" type="text" maxlength="255" value=""/>
-		</div>
-		</li>
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ladder">Ladder</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="roster">Roster</a>
+          </li>
+          {% if admin %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form">Players</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="match_form">Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account_form">Admins</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="season_form">Seasons</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tournament_form">Tournaments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="token_form">Tokens</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="news_form">News</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link active" href="player_form_restricted">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile">My Profile</a>
+            </li>
+            {% if player_reports_matches %}
+            <li class="nav-item">
+              <a class="nav-link" href="match_form_restricted">Report Match</a>
+            </li>
+            {% end %}
+          {% end %}
+        </ul>
+        <a class="nav-link" href="logout">Logout</a>
+      </div>
+    </nav>
 
-		<li class="buttons">
-			    <input type="hidden" name="form_id" value="player_form" />
+    <div class="container-fluid">
+      <h1>Player Information</h1>
+      <main class="col-sm-12 col-md-12 pt-3" role="main">
+        <div id="player_list">
+        </div>
+        <form id="player_form" method="get" action="/"
+              onsubmit="return false">
+          {% if admin %}
+          <div class="row">
+            <div class="col-md-9">
+            </div>
+            <div class="col-md-3">
+              <input type="submit" id="clear_form" class="btn-block" type="button" value="Clear Form" onclick="clear_form_and_list('player_form', 'player_list')" >
+            </div>
+          </div>
+          <div class="row"><hr></div>
+          <div class="row">
+            <div class="col-md-3">
+	      <input id="add_player_1" class="btn-block" type="button" value="Add" onclick="add_player_pre_check()">
+            </div>
+            <div class="col-md-3">
+	      <input id="update_player_1" class="btn-block" type="button" value="Update" onclick="process_player_form('update_player')">
+            </div>
+            <div class="col-md-3">
+	      <input id="get_player_1" class="btn-block" type="button" value="Find" onclick="process_player_form('get_player')">
+            </div>
+            <div class="col-md-3">
+	      <input id="del_player_1" class="btn-block" type="button" value="Delete" onclick="process_player_form('del_player')">
+            </div>
+          </div>
+          {% end %}
+          <div class="row">
+            <label for="name"><span style="font-weight:bold;">Name</span></label>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="first_name">First</label>
+              <input id="first_name" name="first_name" class="form-control" maxlength="255" value="">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="last_name">Last</label>
+              <input id="last_name" name="last_name" class="form-control" maxlength="255" value="">
+            </div>
+          </div>
+          <div class="row">
+            <label><span style="font-weight:bold;">Login</span></label>
+          </div>
+          <div class="row">
+            {% if admin %}
+            <div class="form-group col-md-5">
+            {% else %}
+            <div class="form-group col-md-6">
+            {% end %}
+              <label for="username">Username</label>
+              <input id="username" name="username" type="text" class="form-control" maxlength="255" value="">
+            </div>
+            {% if admin %}
+            <div class="form-group col-md-5">
+            {% else %}
+            <div class="form-group col-md-6">
+            {% end %}
+              <label for="password">Password (leave blank if not changing)</label>
+              <input id="password" name="password" type="password" class="form-control" maxlength="255" value="">
+            </div>
+            {% if admin %}
+            <div class="form-group col-md-2">
+              <label for="player_id">ID</label>
+              <input id="player_id" name="player_id" class="form-control" type="text" maxlength="8" value="">
+            </div>
+            {% end %}
+          </div>
+          <div class="row">
+            <label><span style="font-weight:bold;">Contact</span></label>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-4">
+              <label for="home_phone">Home Phone (###-###-####)</label>
+              <input id="home_phone" name="home_phone" class="form-control" maxlength="12" value="" type="text">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="work_phone">Work Phone (###-###-####)</label>
+              <input id="work_phone" name="work_phone" class="form-control" maxlength="12" value="" type="text">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="cell_phone">Cell Phone (###-####-####)</label>
+              <input id="cell_phone" name="cell_phone" class="form-control" maxlength="12" value="" type="text"> -
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              <label for="email">E-mail </label>
+              <input id="email" name="email" class="form-control" type="text" maxlength="255" value="">
+            </div>
+          </div>
+          <div class="row">
+            <label><span style="font-weight:bold;">Company</span></label>
+            <div class="form-group col-md-12">
+              <input id="company" name="company" class="form-control" type="text" maxlength="255" value="">
+            </div>
+          </div>
+          <div class="row">
+            <label><span style="font-weight:bold;">Location</span></label>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="location">Home</label>
+              <input id="location" name="location" class="form-control" type="text" maxlength="255" value="">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="wlocation">Work</label>
+              <input id="wlocation" name="wlocation" class="form-control" type="text" maxlength="255" value="">
+            </div>
+          </div>
+          <div class="row">
+            <label><span style="font-weight:bold;">Note</span></label>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-12">
+              {% if not admin %}
+              <label for="note">Anything you would like other players to know</label>
+              {% end %}
+              <input id="note" name="note" class="form-control" type="text" maxlength="255" value="">
+            </div>
+          </div>
+          {% if admin %}
+          <div class="row">
+            <label><span style="font-weight:bold;">Player Status</span></label>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label for="ladder">Ladder</label>
+              <select class="form-control" id="ladder" name="ladder">
+                <option value="" selected="selected"></option>
+                <option value="a" >A</option>
+                <option value="b" >B</option>
+                <option value="c" >C</option>
+                <option value="unranked" >Unranked</option>
+                <option value="beginner" >Beginner</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="tournament_qualified_override">Tournament</label>
+              <select class="form-control" id="tournament_qualified_override" name="tournament_qualified_override">
+                <option value="" selected="0"></option>
+                <option value="0" >Auto</option>
+                <option value="-1" >Out</option>
+                <option value="1" >In</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="active">Active </label>
+              <select class="form-control" id="active" name="active">
+                <option value="" selected="selected"></option>
+                <option value="true" >Yes</option>
+                <option value="false" >No</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="initial_points">Initial Points</label>
+	      <input id="initial_points" name="initial_points" class="form-control" type="text" maxlength="255" value="">
+            </div>
+          </div>
+          {% end %}
+          <div class="row"><hr></div>
+          <div class="row">
+            {% if admin %}
+            <div class="col-md-3">
+              <input id="add_player_2" class="btn-block" type="button" value="Add" onclick="add_player_pre_check()" >
+            </div>
+            <div class="col-md-3">
+	      <input id="update_player_2" class="btn-block" type="button" value="Update" onclick="process_player_form('update_player')" >
+            </div>
+            <div class="col-md-3">
+	      <input id="get_player_2" class="btn-block" type="button" value="Find" onclick="process_player_form('get_player')" >
+            </div>
+            <div class="col-md-3">
+	      <input id="del_player_2" class="btn-block" type="button" value="Delete" onclick="process_player_form('del_player')" >
+            </div>
+            {% else %}
+              <input type="submit" class="btn-block" type="button" value="Update" onclick="process_player_form('update_player_restricted')" >
+            {% end %}
+          </div>
+          <div class="row"><hr></div>
+        </form>
+      </main>
+    </div>
 
-				<input id="add_player_2" class="button_text" type="button" value="Add" onclick="add_player_pre_check()" />
-				<input id="update_player_2" class="button_text" type="button" value="Update" onclick="process_player_form('update_player')" />
-				<input id="get_player_2" class="button_text" type="button" value="Find" onclick="process_player_form('get_player')" />
-				<input id="del_player_2" class="button_text" type="button" value="Delete" onclick="process_player_form('del_player')" />
-		</li>
-			</ul>
-		</form>
-		<div id="footer">
-			Generated by <a href="http://www.phpform.org">pForm</a>
-		</div>
-	</div>
-	<img id="bottom" src="bottom.png" alt="">
-	</body>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.9.4/umd/popper.min.js" integrity="sha256-KTKnuJPRS70XKLm+ka+irprJFaz/MLZQKHIID7ECCmw=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>
