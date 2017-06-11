@@ -96,7 +96,36 @@ class RootHandler(tornado.web.RequestHandler):
     def get(self):
         self.redirect('/login', permanent = True)
 
-class MainMenuHandler(DynamicBaseHandler):
+class InfoBaseHandler(DynamicBaseHandler):
+    def expand_match_record(self, match):
+        winner_id = match.get('winner_id')
+        challenger_id = match.get('challenger_id')
+        opponent_id = match.get('opponent_id')
+        loser_id = opponent_id if winner_id == challenger_id else challenger_id
+        challenger_last_name = match.get('challenger_last_name') + " (c)"
+        opponent_last_name = match.get('opponent_last_name')
+        winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
+        loser_last_name = opponent_last_name if winner_id == challenger_id else challenger_last_name
+        ogames = match.get('ogames').split(',')
+        cgames = match.get('cgames').split(',')
+        assert len(ogames) == len(cgames)
+        score_list = zip(cgames, ogames) if winner_id == challenger_id else zip(ogames, cgames)
+        score_str =  "".join([str(x[0]) + "-" + str(x[1]) + " " for x in score_list])[:-1]
+        if match.get('retired'):
+            notes = "(retired)"
+        elif match.get('forfeited'):
+            notes = "(forfeited)"
+        else:
+            notes = ""
+        match.update({'winner_last_name' : winner_last_name,
+                      'loser_last_name' : loser_last_name,
+                      'score' : score_str,
+                      'winner_id': winner_id,
+                      'loser_id' : loser_id,
+                      'notes' : notes})
+        return match
+
+class MainMenuHandler(InfoBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
@@ -288,35 +317,6 @@ class DateHandler(DynamicBaseHandler):
         self.render('date.html',
                     date_string = str(datetime.now()),
                     user_string = name)
-
-class InfoBaseHandler(DynamicBaseHandler):
-    def expand_match_record(self, match):
-        winner_id = match.get('winner_id')
-        challenger_id = match.get('challenger_id')
-        opponent_id = match.get('opponent_id')
-        loser_id = opponent_id if winner_id == challenger_id else challenger_id
-        challenger_last_name = match.get('challenger_last_name') + " (c)"
-        opponent_last_name = match.get('opponent_last_name')
-        winner_last_name = challenger_last_name if winner_id == challenger_id else opponent_last_name
-        loser_last_name = opponent_last_name if winner_id == challenger_id else challenger_last_name
-        ogames = match.get('ogames').split(',')
-        cgames = match.get('cgames').split(',')
-        assert len(ogames) == len(cgames)
-        score_list = zip(cgames, ogames) if winner_id == challenger_id else zip(ogames, cgames)
-        score_str =  "".join([str(x[0]) + "-" + str(x[1]) + " " for x in score_list])[:-1]
-        if match.get('retired'):
-            notes = "(retired)"
-        elif match.get('forfeited'):
-            notes = "(forfeited)"
-        else:
-            notes = ""
-        match.update({'winner_last_name' : winner_last_name,
-                      'loser_last_name' : loser_last_name,
-                      'score' : score_str,
-                      'winner_id': winner_id,
-                      'loser_id' : loser_id,
-                      'notes' : notes})
-        return match
 
 class LadderHandler(InfoBaseHandler):
     def get_or_post(self, args):
