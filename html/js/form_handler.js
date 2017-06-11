@@ -347,31 +347,34 @@ function populate_pending_match_list(entries)
     pending_matches.innerHTML = "";
     if (entries.length > 0) {
         for (i = 0; i < entries.length; i++) {
-            s= "Match " + entries[i].match_id + ":";
+            s = '<div class="row"><div class="col-md-8">Match ';
+            s += entries[i].match_id + ":" + "&nbsp;&nbsp;&nbsp;";
             s += entries[i].date + ", ";
             s += "" + entries[i].winner_last_name;
             s += " def. " + entries[i].loser_last_name;
             s += ":" + entries[i].score;
             s += "&nbsp;&nbsp;&nbsp;";
             if (entries[i].retired) {
-	        s += "(retired)";
+                s += "(retired)";
                 s += "&nbsp;&nbsp;&nbsp;";
             } else if (entries[i].forfeited) {
                 s += "(forfeited)";
                 s += "&nbsp;&nbsp;&nbsp;";
             }
-            s +=  '<input id="approve_' + entries[i].match_id + '"';
-            s += 'class="button_text" type="button" name="approve_';
+            s += '</div>'
+            s += '<div class="col-md-2"><input id="approve_';
+            s += entries[i].match_id + '"';
+            s += 'class="btn-block" type="button" name="approve_';
             s += entries[i].match_id + '" value="Approve"';
             s += 'onclick="validate_pending_match(\'approve\',';
-            s += entries[i].match_id + ')"/>';
-            s += "&nbsp;&nbsp;&nbsp;";
-            s +=  '<input id="dispute_' + entries[i].match_id + '"';
-            s += 'class="button_text" type="button" name="dispute_';
+            s += entries[i].match_id + ')"></div>';
+            s +=  '<div class="col-md-2"><input id="dispute_';
+            s += entries[i].match_id + '"';
+            s += 'class="btn-block" type="button" name="dispute_';
             s += entries[i].match_id + '" value="Dispute"';
             s += 'onclick="validate_pending_match(\'dispute\',';
-            s += entries[i].match_id + ')"/>'
-            s += '<br>';
+            s += entries[i].match_id + ')"></div>'
+            s += '</div>';
             pending_matches.innerHTML += s;
         }
     } else
@@ -442,12 +445,12 @@ function populate_match_form_list(data)
     if (match_list.innerHTML == "") {
         match_list.innerHTML = "<h3>Recent Matches</h3><ul>";
         match_list.innerHTML += '<div id="inner_match_list"></div>';
-        match_list.innerHTML += '</ul><div class="form_description"><p></p></div>';
+        match_list.innerHTML += '<div class="lead"><p></p></div>';
     }
-    s = "<li>Match " + data.match_id + ": ";
+    s = "<p>Match " + data.match_id + ": ";
     s += data.date + ", ";
     s += "" + data.winner_last_name + " def. " + data.loser_last_name;
-    s += "</li>";
+    s += "</p>";
     inner_match_list = document.getElementById("inner_match_list");
     inner_match_list.innerHTML += s;
 }
