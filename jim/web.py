@@ -369,7 +369,7 @@ class LadderHandler(InfoBaseHandler):
 
 class ProfileHandler(InfoBaseHandler):
     def get_or_post(self, args):
-        _log.debug("ladder: args {}".format(args))
+        _log.debug("profile: args {}".format(args))
         player_ids = args.get('player_id')
         if not player_ids:
             if self.current_user['admin']:
