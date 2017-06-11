@@ -240,9 +240,9 @@
           </div>
           <div class="row">
             {% if admin %}
-              <input type="submit" class="btn-block" value="Submit" onclick="process_match_form('add_match', '')">
+              <input type="submit" class="btn-block" value="Submit" onclick="process_match_form('add_match', '', true)">
             {% else %}
-              <input type="submit" class="btn-block" value="Submit" onclick="process_match_form('add_match', 'pending=yes')">
+              <input type="submit" class="btn-block" value="Submit" onclick="process_match_form('add_match', 'pending=yes', false)">
             {% end %}
 	  </div>
         </form>

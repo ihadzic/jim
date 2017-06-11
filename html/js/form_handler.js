@@ -452,13 +452,16 @@ function populate_match_form_list(data)
     inner_match_list.innerHTML += s;
 }
 
-function process_match_form_response(command, response)
+function process_match_form_response(command, response, is_admin)
 {
     var form_name = "match_form";
     if (response.result == "success") {
-        form = document.getElementById(form_name);
-        form.reset();
-        populate_match_form_list(response);
+        if (is_admin) {
+            form = document.getElementById(form_name);
+            form.reset();
+            populate_match_form_list(response);
+        } else
+            window.location='main_menu';
     } else {
         alert("Error: " + response.reason);
     }
@@ -636,7 +639,7 @@ function process_player_form(command)
     xhttp.send(password);
 }
 
-function process_match_form(command, append)
+function process_match_form(command, append, is_admin)
 {
     var form, query;
     var xhttp = new XMLHttpRequest();
@@ -645,7 +648,7 @@ function process_match_form(command, append)
     xhttp.onreadystatechange = function() {
         if (xhttp.readyState == 4) {
             if (xhttp.status == 200) {
-                process_match_form_response(command, JSON.parse(xhttp.responseText));
+                process_match_form_response(command, JSON.parse(xhttp.responseText), is_admin);
             } else {
                 process_submit_error(xhttp.status);
             }
