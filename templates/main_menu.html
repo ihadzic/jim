@@ -118,7 +118,7 @@
                 {% for m in pending_matches %}
                   {% block m %}
                   <p>
-                    {{str(m.get('date'))}}:
+                    {{str(m.get('date'))}}:&nbsp;&nbsp;
                     {{str(m.get('winner_last_name'))}} <i>def.</i>
                     {{str(m.get('loser_last_name'))}} : &nbsp;&nbsp;
                     {{str(m.get('score'))}}
