@@ -17,7 +17,7 @@
     <script type="text/javascript" src="js/form_handler.js"></script>
   </head>
 
-  {% if player_reports_matches %}
+  {% if player_reports_matches and admin %}
     <body id="main_body" onload="get_pending_matches()">
   {% else %}
     <body id="main_body" onload="">
@@ -107,10 +107,27 @@
             </div>
           </section>
           {% end %}
-          {% if player_reports_matches and admin %}
-            <h2>Pending Matches</h2>
-            <p class = "lead"><div class = "lead" id="pending_matches">Loading ...</div></p>
-            <hr>
+          {% if player_reports_matches %}
+            {% if admin %}
+              <h2>Pending Matches</h2>
+              <p class = "lead"><div class = "lead" id="pending_matches">Loading ...</div></p>
+              <hr>
+            {% else %}
+              {% if pending_matches %}
+                <h3>Your Pending Matches:</h3>
+                {% for m in pending_matches %}
+                  {% block m %}
+                  <p>
+                    {{str(m.get('date'))}}:
+                    {{str(m.get('winner_last_name'))}} <i>def.</i>
+                    {{str(m.get('loser_last_name'))}} : &nbsp;&nbsp;
+                    {{str(m.get('score'))}}
+                    {{str(m.get('notes'))}}
+                  </p>
+                  {% end %}
+                {% end %}
+              {% end %}
+            {% end %}
           {% end %}
           <h2>Club News</h2>
           <p class = "lead">

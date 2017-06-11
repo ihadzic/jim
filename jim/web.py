@@ -137,10 +137,21 @@ class MainMenuHandler(InfoBaseHandler):
             if not news_content:
                 news_content = "No news today"
             news_content_list = news_content.split('\n')
+            pending_matches = [];
+            if _player_reports_matches and not self.current_user['admin']:
+                player_ids = [ str(self.current_user['id']) ]
+                player_id = player_ids[0]
+                season_id, _, _, _, _, _ = _database.get_season()
+                ch_matches = _database.lookup_match({ 'season_id': season_id, 'challenger_id': player_id, 'disputed': False, 'pending': True})
+                op_matches = _database.lookup_match({ 'season_id': season_id, 'opponent_id' : player_id, 'disputed': False, 'pending' : True})
+                pending_matches = [self.expand_match_record(r) for r in ch_matches + op_matches]
+                pending_matches.sort(lambda x, y: util.cmp_date_field(x, y))
+                _log.debug("main_menu: pending matches found: {}".format(pending_matches))
             self.render('main_menu.html',
                         admin = self.current_user['admin'],
                         news_content_list = news_content_list,
-                        player_reports_matches = _player_reports_matches)
+                        player_reports_matches = _player_reports_matches,
+                        pending_matches = pending_matches)
         else:
             self.redirect('/login')
 
