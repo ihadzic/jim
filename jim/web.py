@@ -178,7 +178,9 @@ class PlayerFormRestrictedHandler(DynamicBaseHandler):
 
 class AccountFormHandler(GenericAdminFormHandler):
     def get(self):
-        self.generic_get('account_form.html')
+        self.generic_get('account_form.html',
+                         admin = self.current_user['admin'],
+                         player_reports_matches = _player_reports_matches)
 
 class PlayerFormHandler(GenericAdminFormHandler):
     def get(self):
