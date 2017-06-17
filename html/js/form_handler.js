@@ -512,19 +512,24 @@ function populate_account_list(data)
 {
     var i, s;
     var account_list = document.getElementById("account_list");
-    account_list.innerHTML = "<h3>Admin Accounts in the System</h3><ul>"
+    account_list.innerHTML = '<div class="row"><span style="font-weight:bold;">';
+    account_list.innerHTML += 'Admin Accounts in the System</span></div>';
+    account_list.innerHTML += '<div class="row">&nbsp;</div>';
     for (i = 0; i < data.length; i++) {
-        s = "<li><div id=" + data[i].account_id + ">";
-        s +=  "" + data[i].username;
-        s += "&nbsp&nbsp&nbsp";
-        s += "<image src='pencil_edit.png' height='16' width='16'";
+        s = "<div class='row' id=" + data[i].account_id + ">";
+        s += "<div class='col-md-4'>" + data[i].username;
+        s += "</div>";
+        s += "<div class='col-md-1'>"
+        s += "<img src='pencil_edit.png' style='width:25px;'";
         s += "title='Edit " + data[i].username;
         s += "' alt='edit' onclick='"
         s += "populate_account_form_with_data(" + JSON.stringify(data[i]) + ")'>";
-        s += "</div></li>";
+        s += "</div>";
+        s += "</div>";
+        s += '<div class="row">&nbsp;</div>';
         account_list.innerHTML += s;
     }
-    account_list.innerHTML += '</ul><div class="form_description"><p></p></div>';
+    account_list.innerHTML += '<div class="row">&nbsp;</div>';
 }
 
 function process_account_form_response(command, response)
