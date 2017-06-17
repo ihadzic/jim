@@ -197,7 +197,7 @@ function populate_player_list(data)
 {
     var i, s;
     var player_list = document.getElementById("player_list");
-    player_list.innerHTML = '<div class="row"><span style="font-weight:bold;">Multiple Matches</span></div>'
+    player_list.innerHTML = '<div class="row"><span style="font-weight:bold;">Multiple Matches</span></div>';
     player_list.innerHTML += '<div class="row">&nbsp;</div>';
     for (i = 0; i < data.length; i++) {
         s = '<div class="row" id="' + data[i].player_id + '">';
