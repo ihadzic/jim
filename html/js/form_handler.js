@@ -197,19 +197,23 @@ function populate_player_list(data)
 {
     var i, s;
     var player_list = document.getElementById("player_list");
-    player_list.innerHTML = "<h3>Multiple Matches</h3><ul>"
+    player_list.innerHTML = '<div class="row"><span style="font-weight:bold;">Multiple Matches</span></div>'
+    player_list.innerHTML += '<div class="row">&nbsp;</div>';
     for (i = 0; i < data.length; i++) {
-        s = "<li><div id=" + data[i].player_id + ">";
-        s +=  "" + data[i].player_id + ": " + data[i].first_name + " " + data[i].last_name;
-        s += "&nbsp&nbsp&nbsp";
-        s += "<image src='pencil_edit.png' height='16' width='16'";
-        s += "title='Edit " + data[i].first_name + " " + data[i].last_name;
-        s += "' alt='edit' onclick='"
-        s += "populate_player_form_with_data(" + JSON.stringify(data[i]) + ")'>";
-        s += "</div></li>";
+        s = '<div class="row" id="' + data[i].player_id + '">';
+        s += '<div class="col-md-1" style="font-weight:bold">' + data[i].player_id + '</div>';
+        s += '<div class="col-md-4">' + data[i].first_name + '&nbsp;' + data[i].last_name + '</div>';
+        s += '<div class="col-md-1">';
+        s += '<img alt="Edit" src="pencil_edit.png" style="width:25px;" ';
+        s += 'title="Edit ' + data[i].first_name + ' ' + data[i].last_name + '" ';
+        // must use double quotes because of JSOn.stringify
+        s += "onclick='populate_player_form_with_data(" + JSON.stringify(data[i]) + ")'>";
+        s += '</div>';
+        s += '</div>';
+        s += '<div class="row">&nbsp;</div>';
         player_list.innerHTML += s;
     }
-    player_list.innerHTML += '</ul><div class="form_description"><p></p></div>';
+    player_list.innerHTML += '<div class="row">&nbsp;</div>';
 }
 
 function get_logged_in_player_data()
