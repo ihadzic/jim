@@ -1,123 +1,226 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Season Setup Form</title>
-<link rel="stylesheet" type="text/css" href="css/view.css" media="all">
-<script type="text/javascript" src="js/calendar.js"></script>
-<script type="text/javascript" src="js/form_handler.js"></script>
-</head>
-<body id="main_body" >
-  <img id="top" src="top.png" alt="">
-    <div id="form_container">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
 
-      <h1><a>Season Setup Form</a></h1>
-      <form id="season_form" class="appnitro"  method="post" action="/"
-            onsubmit="return false">
-        <div class="form_description">
-          <h2>Season Setup Form</h2>
-          <h3><a href="main_menu">Main Menu</a>
-            <a href="logout">Logout</a></h3>
-        </div>
-        <div id="season_list"></div>
-        <input id="new_season" class="button_text" type="button" name="new_season" value="Start New Season" onclick="check_season_form('new_season')"/>
-        <ul >
-          <li id="li_8" >
-            <label class="description" for="title">Season Title </label>
-            <div>
-              <input id="title" name="title" class="element text medium" type="text" maxlength="255" value=""/>
-            </div>
+    <title>Jim Improved and Modernized (J.I.M.)</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/calendar.css" rel="stylesheet">
+    <script type="text/javascript" src="js/calendar.js"></script>
+    <script type="text/javascript" src="js/form_handler.js"></script>
+  </head>
+
+  <body id="main_body">
+    <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
+      <a class="navbar-brand" href="/">J.I.M.</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
-          <li id="li_5" >
-            <label class="description" for="start_date">Season start date </label>
-            <span>
-              <input id="start_date_1" name="start_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
-              <label for="start_date_1">MM</label>
-            </span>
-            <span>
-              <input id="start_date_2" name="start_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
-              <label for="start_date_2">DD</label>
-            </span>
-            <span>
-              <input id="start_date_3" name="start_date_3" class="element text" size="4" maxlength="4" value="" type="text">
-              <label for="start_date_3">YYYY</label>
-            </span>
-            <span id="calendar_start">
-              <img id="cal_img_start" class="datepicker" src="calendar.gif" alt="Pick a date.">
-            </span>
-            <script type="text/javascript">
-              Calendar.setup({
-              inputField         : "start_date_3",
-              baseField    : "start_date",
-              displayArea  : "calendar_start",
-              button                 : "cal_img_start",
-              ifFormat         : "%B %e, %Y",
-              onSelect         : selectDate
-              });
-            </script>
-	  </li>
-          <li id="li_6" >
-            <label class="description" for="end_date">Season end date </label>
-            <span>
-              <input id="end_date_1" name="end_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
-              <label for="end_date_1">MM</label>
-            </span>
-            <span>
-              <input id="end_date_2" name="end_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
-              <label for="end_date_2">DD</label>
-            </span>
-            <span>
-              <input id="end_date_3" name="end_date_3" class="element text" size="4" maxlength="4" value="" type="text">
-              <label for="end_date_3">YYYY</label>
-            </span>
-            <span id="calendar_end">
-              <img id="cal_img_end" class="datepicker" src="calendar.gif" alt="Pick a date.">
-            </span>
-            <script type="text/javascript">
-              Calendar.setup({
-              inputField         : "end_date_3",
-              baseField    : "end_date",
-              displayArea  : "calendar_end",
-              button                 : "cal_img_end",
-              ifFormat         : "%B %e, %Y",
-              onSelect         : selectDate
-              });
-            </script>
+          <li class="nav-item">
+            <a class="nav-link" href="ladder">Ladder</a>
           </li>
-          <li id="li_7" >
-            <label class="description" for="tournament_date">Tournament start date </label>
-            <span>
-              <input id="tournament_date_1" name="tournament_date_1" class="element text" size="2" maxlength="2" value="" type="text"> /
-              <label for="tournament_date_1">MM</label>
-            </span>
-            <span>
-              <input id="tournament_date_2" name="tournament_date_2" class="element text" size="2" maxlength="2" value="" type="text"> /
-              <label for="tournament_date_2">DD</label>
-            </span>
-            <span>
-              <input id="tournament_date_3" name="tournament_date_3" class="element text" size="4" maxlength="4" value="" type="text">
-              <label for="tournament_date_3">YYYY</label>
-            </span>
-            <span id="calendar_tour">
-              <img id="cal_img_tour" class="datepicker" src="calendar.gif" alt="Pick a date.">
-            </span>
-            <script type="text/javascript">
-              Calendar.setup({
-              inputField         : "tournament_date_3",
-              baseField    : "tournament_date",
-              displayArea  : "calendar_tour",
-              button                 : "cal_img_tour",
-              ifFormat         : "%B %e, %Y",
-              onSelect         : selectDate
-              });
-            </script>
+          <li class="nav-item">
+            <a class="nav-link" href="roster">Roster</a>
           </li>
+          {% if admin %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form">Players</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="match_form">Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account_form">Admins</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="season_form">Seasons</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tournament_form">Tournaments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="token_form">Tokens</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="news_form">News</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form_restricted">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile">My Profile</a>
+            </li>
+            {% if player_reports_matches %}
+            <li class="nav-item">
+              <a class="nav-link" href="match_form_restricted">Report Match</a>
+            </li>
+            {% end %}
+          {% end %}
         </ul>
-      </form>
-      <div id="footer">
-        Generated by <a href="http://www.phpform.org">pForm</a>
+        <a class="nav-link" href="logout">Logout</a>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <main class="col-sm-12 col-md-12 pt-3" role="main">
+          <div id="season_list"></div>
+          <h1>Season Setup</h1>
+          <form id="season_form" method="get" action="/"
+                onsubmit="return false">
+            <div class="row">
+              <label for="title"><span style="font-weight:bold;">Season Title</span></label>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <input id="title" name="title" class="form-control" type="text" maxlength="255" value="">
+              </div>
+            </div>
+	    <div class="row">&nbsp;</div>
+            <div class="row">
+              <label for="start_date"><span style="font-weight:bold;">Start Date</span></label>
+            </div>
+            <div class="row" id="start_date">
+              <div class="form-group col-md-8">
+                <div class="row">
+                  <div class="col-md-2">
+                    <label for="start_date_1">MM</label>
+                    <input id="start_date_1" name="start_date_1" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="start_date_2">DD</label>
+                    <input id="start_date_2" name="start_date_2" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="start_date_3">YYYY</label>
+                    <input id="start_date_3" name="start_date_3" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2" id="calendar_start">
+                    <div class="row">
+                      <label for="cal_img_start">&nbsp;</label>
+                    </div>
+                    <img id="cal_img_start" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
+                  </div>
+                  <script type="text/javascript">
+                    Calendar.setup({
+                    inputField         : "start_date_3",
+                    baseField    : "start_date",
+                    displayArea  : "calendar_start",
+                    button                 : "cal_img_start",
+                    ifFormat         : "%B %e, %Y",
+                    onSelect         : selectDate
+                    });
+                  </script>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label for="end_date"><span style="font-weight:bold;">End Date</span></label>
+            </div>
+            <div class="row" id="end_date">
+              <div class="form-group col-md-8">
+                <div class="row">
+                  <div class="col-md-2">
+                    <label for="end_date_1">MM</label>
+                    <input id="end_date_1" name="end_date_1" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="end_date_2">DD</label>
+                    <input id="end_date_2" name="end_date_2" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="end_date_3">YYYY</label>
+                    <input id="end_date_3" name="end_date_3" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2" id="calendar_end">
+                    <div class="row">
+                      <label for="cal_img_end">&nbsp;</label>
+                    </div>
+                    <img id="cal_img_end" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
+                  </div>
+                  <script type="text/javascript">
+                    Calendar.setup({
+                    inputField         : "end_date_3",
+                    baseField    : "end_date",
+                    displayArea  : "calendar_end",
+                    button                 : "cal_img_end",
+                    ifFormat         : "%B %e, %Y",
+                    onSelect         : selectDate
+                    });
+                  </script>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <label for="tournament_date"><span style="font-weight:bold;">Tournament Date</span></label>
+            </div>
+            <div class="row" id="tournament_date">
+              <div class="form-group col-md-8">
+                <div class="row">
+                  <div class="col-md-2">
+                    <label for="tournament_date_1">MM</label>
+                    <input id="tournament_date_1" name="tournament_date_1" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2">
+                    <label for="tournament_date_2">DD</label>
+                    <input id="tournament_date_2" name="tournament_date_2" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="tournament_date_3">YYYY</label>
+                    <input id="tournament_date_3" name="tournament_date_3" class="form-control" value="" type="text">
+                  </div>
+                  <div class="col-md-2" id="calendar_tournament">
+                    <div class="row">
+                      <label for="cal_img_tournament">&nbsp;</label>
+                    </div>
+                    <img id="cal_img_tournament" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
+                  </div>
+                  <script type="text/javascript">
+                    Calendar.setup({
+                    inputField         : "tournament_date_3",
+                    baseField    : "tournament_date",
+                    displayArea  : "calendar_tournament",
+                    button                 : "cal_img_tournament",
+                    ifFormat         : "%B %e, %Y",
+                    onSelect         : selectDate
+                    });
+                  </script>
+                </div>
+              </div>
+            </div>
+	    <div class="row">
+	      <div class="col-md-6">
+		<input id="new_season" class="btn-block" type="button" name="new_season" value="Start New Season" onclick="check_season_form('new_season')">
+	      </div>
+	    </div>
+          </form>
+        </main>
       </div>
     </div>
-    <img id="bottom" src="bottom.png" alt="">
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.9.4/umd/popper.min.js" integrity="sha256-KTKnuJPRS70XKLm+ka+irprJFaz/MLZQKHIID7ECCmw=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>

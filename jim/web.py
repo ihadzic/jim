@@ -215,7 +215,9 @@ class MatchFormRestrictedHandler(DynamicBaseHandler):
 
 class SeasonFormHandler(GenericAdminFormHandler):
     def get(self):
-        self.generic_get('season_form.html')
+        self.generic_get('season_form.html',
+                         admin = self.current_user['admin'],
+                         player_reports_matches = _player_reports_matches)
 
 class TournamentFormHandler(GenericAdminFormHandler):
     def get(self):
