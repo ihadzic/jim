@@ -103,18 +103,18 @@
                     <label for="since_date_3">YYYY</label>
                     <input id="since_date_3" name="since_date_3" class="form-control" value="" type="text">
                   </div>
-                  <div class="col-md-2" id="calendar_match">
+                  <div class="col-md-2" id="calendar_since">
                     <div class="row">
-                      <label for="cal_img_match">&nbsp;</label>
+                      <label for="cal_img_since">&nbsp;</label>
                     </div>
-                    <img id="cal_img_match" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
+                    <img id="cal_img_since" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
                   </div>
                   <script type="text/javascript">
                     Calendar.setup({
                     inputField         : "since_date_3",
                     baseField    : "since_date",
-                    displayArea  : "calendar_match",
-                    button                 : "cal_img_match",
+                    displayArea  : "calendar_since",
+                    button                 : "cal_img_since",
                     ifFormat         : "%B %e, %Y",
                     onSelect         : selectDate
                     });
