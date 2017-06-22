@@ -223,19 +223,6 @@ class Database:
         num_matches_tuple = v[0]
         return num_matches_tuple + num_opponents_tuple
 
-    def new_token(self, token_type, since_date, expires_date):
-        token_value = None
-        while not token_value:
-            token_value = "".join([random.choice(string.ascii_letters + string.digits) for _ in xrange(32)])
-            self._cursor.execute('SELECT id FROM tokens WHERE token=?', (token_value,))
-            v = self._cursor.fetchall()
-            if len(v) > 0:
-                token_value = None
-        token_tuple = (token_type, since_date, expires_date, token_value)
-        self._cursor.execute("INSERT INTO tokens (type, since, expires, token) VALUES (?, ?, ?, ?)", token_tuple)
-        self._conn.commit()
-        return token_value, self._cursor.lastrowid, None
-
     def new_season(self, start_date, end_date, title, tournament_date = None):
         prev_id, _, _, _, _, _ = self.get_season()
         self._log.debug("archiving season {} before starting new season".format(prev_id))
@@ -321,16 +308,6 @@ class Database:
             return True
         else:
             return False
-
-    def check_token(self, token, token_type):
-        self._log.debug("check_token: {}".format(token))
-        self._cursor.execute("SELECT since, expires FROM tokens WHERE token=? and type=?", (token, token_type))
-        v = self._cursor.fetchall()
-        self._log.debug("check_token: {}".format(v))
-        if len(v) == 0:
-            return False, None, None
-        assert len(v) == 1
-        return True, v[0][0], v[0][1]
 
     def check_password(self, username, password, table):
         self._log.debug("check_password: {} in {}".format(username, table))

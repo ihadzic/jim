@@ -236,10 +236,6 @@ class TournamentFormHandler(GenericAdminFormHandler):
                          min_opponents = min_opponents,
                          qualified_players = qualified_players)
 
-class TokenFormHandler(GenericAdminFormHandler):
-    def get(self):
-        self.generic_get('token_form.html')
-
 class NewsFormHandler(GenericAdminFormHandler):
     def get(self):
         try:
@@ -499,52 +495,6 @@ class RosterHandler(DynamicBaseHandler):
                         )
         else:
             self.redirect('/login')
-
-class ReportHandler(InfoBaseHandler):
-    def token_error(self):
-        self.finish_failure('invalid or expired token', 401)
-
-    def get(self):
-        self.log_request()
-        args = self.get_args()
-        if args == None:
-            self.token_error()
-            return
-        try:
-            token = args['token'][0]
-        except:
-            token = None
-        if not token:
-            self.token_error()
-            return
-        authorized, since_date, expires_date = _database.check_token(token, 'report_and_roster')
-        if not authorized or datetime.now() > datetime.strptime(expires_date, '%Y-%m-%d'):
-            self.token_error()
-            return
-        a_ladder = _database.get_ladder('a')
-        b_ladder = _database.get_ladder('b')
-        c_ladder = _database.get_ladder('c')
-        u_ladder = _database.get_ladder('unranked')
-        _log.info("report: matches_since: {}".format(since_date))
-        a_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('a', since_date)]
-        b_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('b', since_date)]
-        c_matches = [self.expand_match_record(r) for r in _database.get_recent_matches('c', since_date)]
-        _log.debug("report: A matches found: {}".format(a_matches))
-        _log.debug("report: B matches found: {}".format(b_matches))
-        _log.debug("report: C matches found: {}".format(c_matches))
-        _, _, _, season_string, _, _ = _database.get_season()
-        today = datetime.ctime(datetime.now())
-        roster = _database.get_roster()
-        self.render('report.html', date_string = today,
-                    a_matches = a_matches,
-                    b_matches = b_matches,
-                    c_matches = c_matches,
-                    a_ladder = a_ladder,
-                    b_ladder = b_ladder,
-                    c_ladder = c_ladder,
-                    u_ladder = u_ladder,
-                    roster = roster,
-                    season_string = season_string)
 
 def format_phone_number(phone_number):
     p_dd = ''.join(c for c in phone_number if c.isdigit())
@@ -1502,54 +1452,6 @@ class NewSeasonHandler(DynamicBaseHandler):
         args = {'start_date' : [start_date], 'end_date' : [end_date], 'title' : [title]}
         self.get_or_post(args)
 
-class NewTokenHandler(DynamicBaseHandler):
-    def get_or_post(self, args):
-        self.log_request()
-        if not self.authorized(admin = True):
-            return
-        try:
-            token_type = args['token_type'][0]
-        except:
-            token_type = None
-        if not type:
-            token_type = 'report_and_roster'
-        # if we need other token types, list them here
-        if token_type not in ['report_and_roster']:
-            self.finish_failure("invalid token type")
-            return
-        try:
-            since_date = datetime.strptime(args['since_date'][0], '%Y-%m-%d')
-            since_date = str(since_date).split()[0]
-        except:
-            self.finish_failure('missing or invalid since-date')
-            return
-        try:
-            expires_date = datetime.strptime(args['expires_date'][0], '%Y-%m-%d')
-            expires_date = str(expires_date).split()[0]
-        except:
-            self.finish_failure('missing or invalid expiration date')
-            return
-        _log.info("new token requested: since {}, type is {}, expires on {}".format(since_date, expires_date, token_type))
-        token, token_id, err = _database.new_token(token_type, since_date, expires_date)
-        if token and token_id:
-            self.finish_success({'token' : token, 'token_id': token_id})
-        else:
-            self.finish_failure(err)
-
-    def get(self):
-        args = self.get_args()
-        if args == None:
-            self.finish_failure("missing args", 400)
-            return
-        self.get_or_post(args)
-
-    def post(self):
-        start_date = self.get_argument('start_date')
-        end_date = self.get_argument('end_date')
-        args = {'start_date' : [start_date], 'end_date' : [end_date]}
-        self.get_or_post(args)
-
-
 class PlayerLadderOnDateHandler(DynamicBaseHandler):
     def get(self):
         if not self.authorized(admin = True):
@@ -1608,7 +1510,6 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/date', DateHandler),
         ('/ladder', LadderHandler),
         ('/roster', RosterHandler),
-        ('/report', ReportHandler),
         ('/profile', ProfileHandler),
         ('/add_player', AddPlayerHandler),
         ('/del_player', DelPlayerHandler),
@@ -1627,7 +1528,6 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/update_tournament', UpdateTournamentHandler),
         ('/new_season', NewSeasonHandler),
         ('/kick_season', KickSeasonHandler),
-        ('/new_token', NewTokenHandler),
         ('/main_menu', MainMenuHandler),
         ('/match_form', MatchFormHandler),
         ('/match_form_restricted', MatchFormRestrictedHandler),
@@ -1635,7 +1535,6 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
         ('/player_form_restricted', PlayerFormRestrictedHandler),
         ('/tournament_form', TournamentFormHandler),
         ('/season_form', SeasonFormHandler),
-        ('/token_form', TokenFormHandler),
         ('/news_form', NewsFormHandler),
         ('/account_form', AccountFormHandler)
         ]
