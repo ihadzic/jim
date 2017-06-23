@@ -427,7 +427,7 @@ function populate_match_form_list(data)
 
     match_list = document.getElementById("match_list");
     if (match_list.innerHTML == "") {
-        match_list.innerHTML = "<h3>Recent Matches</h3><ul>";
+        match_list.innerHTML = "<h3>Recent Matches</h3>";
         match_list.innerHTML += '<div id="inner_match_list"></div>';
         match_list.innerHTML += '<div class="lead"><p></p></div>';
     }
