@@ -348,13 +348,13 @@ function populate_pending_match_list(entries)
             s += '</div>'
             s += '<div class="col-md-2"><input id="approve_';
             s += entries[i].match_id + '"';
-            s += 'class="btn-block" type="button" name="approve_';
+            s += 'class="btn btn-md btn-primary btn-block" type="button" name="approve_';
             s += entries[i].match_id + '" value="Approve"';
             s += 'onclick="validate_pending_match(\'approve\',';
             s += entries[i].match_id + ')"></div>';
             s +=  '<div class="col-md-2"><input id="dispute_';
             s += entries[i].match_id + '"';
-            s += 'class="btn-block" type="button" name="dispute_';
+            s += 'class="btn btn-md btn-secondary btn-block" type="button" name="dispute_';
             s += entries[i].match_id + '" value="Dispute"';
             s += 'onclick="validate_pending_match(\'dispute\',';
             s += entries[i].match_id + ')"></div>'
