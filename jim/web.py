@@ -245,7 +245,10 @@ class NewsFormHandler(GenericAdminFormHandler):
                 news_content = f.read()
         except:
             news_content = ""
-        self.generic_get('news_form.html', news_content=news_content)
+        self.generic_get('news_form.html',
+                         admin = self.current_user['admin'],
+                         player_reports_matches = _player_reports_matches,
+                         news_content=news_content)
 
     def post(self):
         self.log_request()
