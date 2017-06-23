@@ -229,6 +229,8 @@ class TournamentFormHandler(GenericAdminFormHandler):
         qualified_players = [ p for p in _database.get_roster() if p.get('tournament_qualified') ]
         _log.info("qualified players: {}".format(qualified_players))
         self.generic_get('tournament_form.html',
+                         admin = self.current_user['admin'],
+                         player_reports_matches = _player_reports_matches,
                          start_date_1 = start_date_1,
                          start_date_2 = start_date_2,
                          start_date_3 = start_date_3,

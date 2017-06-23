@@ -1,76 +1,166 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Tournament Form</title>
-<link rel="stylesheet" type="text/css" href="css/view.css" media="all">
-<script type="text/javascript" src="js/calendar.js"></script>
-<script type="text/javascript" src="js/form_handler.js"></script>
-</head>
-<body id="main_body" >
-  <img id="top" src="top.png" alt="">
-    <div id="form_container">
-      <h1><a>Tournament Form</a></h1>
-      <form id="tournament_form" class="appnitro"  method="post" action="update_tournament">
-        <div class="form_description">
-          <h2>Tournament Form</h2>
-          <h3><a href="main_menu">Main Menu</a>
-            <a href="logout">Logout</a></h3>
-        </div>
-        <input id="update_tournament" class="button_text" type="submit" name="update" value="Update">
-        <input id="reset_form" class="button_text" type="reset" name="reset" value="Reset">
-        <ul >
-          <li id="li_1" >
-            <label class="description" for="start_date">Tournament Start Date </label>
-            <span>
-              <input id="start_date_1" name="start_date_1" class="element text" size="2" maxlength="2" value="{{start_date_1}}" type="text"> /
-              <label for="start_date_1">MM</label>
-            </span>
-            <span>
-              <input id="start_date_2" name="start_date_2" class="element text" size="2" maxlength="2" value="{{start_date_2}}" type="text"> /
-              <label for="start_date_2">DD</label>
-            </span>
-            <span>
-              <input id="start_date_3" name="start_date_3" class="element text" size="4" maxlength="4" value="{{start_date_3}}" type="text">
-              <label for="start_date_3">YYYY</label>
-            </span>
-            <span id="calendar_start">
-              <img id="cal_img_start" class="datepicker" src="calendar.gif" alt="Pick a date.">
-            </span>
-            <script type="text/javascript">
-              Calendar.setup({
-              inputField         : "start_date_3",
-              baseField    : "start_date",
-              displayArea  : "calendar_start",
-              button                 : "cal_img_start",
-              ifFormat         : "%B %e, %Y",
-              onSelect         : selectDate
-              });
-            </script>
-          </li>  <li id="li_2" >
-              <label class="description" for="min_matches">Minimum matches to qualify</label>
-              <div>
-                <input id="min_matches" name="min_matches" class="element text" type="text" maxlength="8" size="8" value="{{min_matches}}"/>
-              </div>
-          </li>  <li id="li_3" >
-              <label class="description" for="min_opponents">Minimum opponents to qualify</label>
-              <div>
-                <input id="min_opponents" name="min_opponents" class="element text" type="text" maxlength="8" size="8" value="{{min_opponents}}"/>
-              </div>
-        </ul>
-	<h3>Qualified Players:</h3>
-	<ul>
-          {% for p in qualified_players %}
-            {% block p %}
-              <li>{{ p.get('first_name') }} {{ p.get('last_name') }} &nbsp; ({{ p.get('ladder').upper() }})
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Jim Improved and Modernized (J.I.M.)</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/calendar.css" rel="stylesheet">
+    <script type="text/javascript" src="js/form_handler.js"></script>
+    <script type="text/javascript" src="js/calendar.js"></script>
+  </head>
+
+  <body id="main_body">
+    <nav class="navbar navbar-expand-md navbar-inverse fixed-top bg-inverse">
+      <a class="navbar-brand" href="/">J.I.M.</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="ladder">Ladder</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="roster">Roster</a>
+          </li>
+          {% if admin %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form">Players</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="match_form">Matches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="account_form">Admins</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="season_form">Seasons</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="tournament_form">Tournaments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="news_form">News</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="player_form_restricted">My Account</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile">My Profile</a>
+            </li>
+            {% if player_reports_matches %}
+            <li class="nav-item">
+              <a class="nav-link" href="match_form_restricted">Report Match</a>
+            </li>
             {% end %}
           {% end %}
-	</ul>
-      </form>
-      <div id="footer">
-        Generated by <a href="http://www.phpform.org">pForm</a>
+        </ul>
+        <a class="nav-link" href="logout">Logout</a>
       </div>
+    </nav>
+    <div class="container-fluid">
+      <h1>Tournament Parameters</h1>
+      <main class="col-sm-12 col-md-12 pt-3" role="main">
+        <form id="tournament_form" method="post" action="update_tournament">
+          <div class="row">
+            <label for="start_date"><span style="font-weight:bold;">Tournament Start Date</span></label>
+          </div>
+          <div class="row" id="start_date">
+            <div class="form-group col-md-8">
+              <div class="row">
+                <div class="col-md-2">
+                  <label for="start_date_1">MM</label>
+                  <input id="start_date_1" name="start_date_1" class="form-control" type="text" value="{{start_date_1}}">
+                </div>
+                <div class="col-md-2">
+                  <label for="start_date_2">DD</label>
+                  <input id="start_date_2" name="start_date_2" class="form-control" type="text" value="{{start_date_2}}">
+                </div>
+                <div class="col-md-4">
+                  <label for="start_date_3">YYYY</label>
+                  <input id="start_date_3" name="start_date_3" class="form-control" type="text" value="{{start_date_3}}">
+                </div>
+                <div class="col-md-2" id="calendar_match">
+                  <div class="row">
+                    <label for="cal_img_match">&nbsp;</label>
+                  </div>
+                  <img id="cal_img_match" style="width:50px;" src="calendar-icon.png" alt="Pick a date.">
+                </div>
+                <script type="text/javascript">
+                  Calendar.setup({
+                  inputField         : "start_date_3",
+                  baseField    : "start_date",
+                  displayArea  : "calendar_match",
+                  button                 : "cal_img_match",
+                  ifFormat         : "%B %e, %Y",
+                  onSelect         : selectDate
+                  });
+                </script>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <label for="min_matches"><span style="font-weight:bold;">Minimum matches to qualify</span></label>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <input id="min_matches" name="min_matches" class="form-control" type="text" maxlength="8" value="{{min_matches}}">
+            </div>
+          </div>
+          <div class="row">
+            <label for="min_opponents"><span style="font-weight:bold;">Minimum opponents to qualify</span></label>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <input id="min_opponents" name="min_opponents" class="form-control" type="text" maxlength="8" value="{{min_opponents}}">
+            </div>
+          </div>
+          <div class="row">&nbsp;</div>
+          <div class="row">
+            <div class="col-md-3">
+              <input id="update_tournament" class="btn-block" type="submit" name="update" value="Update">
+            </div>
+            <div class="col-md-3">
+              <input id="reset_form" class="btn-block" type="reset" name="reset" value="Reset">
+            </div>
+          </div>
+          <hr>
+          <h3>Qualified Players:</h3>
+          {% for p in qualified_players %}
+            {% block p %}
+              <div class="row">
+                <div class="col-md-12">
+                  {{ p.get('first_name') }} {{ p.get('last_name') }} &nbsp; ({{ p.get('ladder').upper() }})
+                </div>
+              </div>
+            {% end %}
+          {% end %}
+        </form>
+      </main>
     </div>
-    <img id="bottom" src="bottom.png" alt="">
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.9.4/umd/popper.min.js" integrity="sha256-KTKnuJPRS70XKLm+ka+irprJFaz/MLZQKHIID7ECCmw=" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
