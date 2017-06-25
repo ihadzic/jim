@@ -407,7 +407,9 @@ class ProfileHandler(InfoBaseHandler):
         else:
             matched_inactive_players = _database.lookup_player({'player_id': player_id, 'active': '0'}, 'and')
             if len(matched_inactive_players) == 1:
-                self.render('player_profile_inactive.html')
+                self.render('player_profile_inactive.html',
+                            admin = self.current_user['admin'],
+                            player_reports_matches = _player_reports_matches)
             else:
                 self.finish_failure("player lookup failed", 404)
             return
