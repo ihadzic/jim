@@ -97,6 +97,17 @@ class RootHandler(tornado.web.RequestHandler):
         self.redirect('/login', permanent = True)
 
 class InfoBaseHandler(DynamicBaseHandler):
+    def active_player_or_admin(self):
+        if self.current_user['admin']:
+            return True;
+        else:
+            player_id = self.current_user['id']
+            check_me = _database.lookup_player({'player_id': player_id, 'active': '0'}, 'and')
+            if check_me:
+                return False
+            else:
+                return True
+
     def expand_match_record(self, match):
         winner_id = match.get('winner_id')
         challenger_id = match.get('challenger_id')
@@ -129,6 +140,11 @@ class MainMenuHandler(InfoBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
+            if not self.active_player_or_admin():
+                self.render('player_profile_inactive.html',
+                            admin = self.current_user['admin'],
+                            player_reports_matches = _player_reports_matches)
+                return
             try:
                 with open(_news, 'r') as f:
                     news_content = f.read()
@@ -163,12 +179,17 @@ class GenericAdminFormHandler(DynamicBaseHandler):
         else:
             self.redirect('/login')
 
-class PlayerFormRestrictedHandler(DynamicBaseHandler):
+class PlayerFormRestrictedHandler(InfoBaseHandler):
     def get(self):
         if self.authorized(admin = True, quiet = True):
             # admin is redirected to its own player form
             self.redirect('/player_form')
         elif self.authorized(quiet = True):
+            if not self.active_player_or_admin():
+                self.render('player_profile_inactive.html',
+                            admin = self.current_user['admin'],
+                            player_reports_matches = _player_reports_matches)
+                return
             self.render('player_form.html',
                         admin = self.current_user['admin'],
                         player_reports_matches = _player_reports_matches)
@@ -194,12 +215,17 @@ class MatchFormHandler(GenericAdminFormHandler):
                          admin = self.current_user['admin'],
                          player_reports_matches = _player_reports_matches)
 
-class MatchFormRestrictedHandler(DynamicBaseHandler):
+class MatchFormRestrictedHandler(InfoBaseHandler):
     def get(self):
         if self.authorized(admin = True, quiet = True):
             # admin is redirected to its own player form
             self.redirect('/match_form')
         elif self.authorized(quiet = True):
+            if not self.active_player_or_admin():
+                self.render('player_profile_inactive.html',
+                            admin = self.current_user['admin'],
+                            player_reports_matches = _player_reports_matches)
+                return
             player_id = self.current_user['id']
             matched_players = _database.lookup_player({'player_id': player_id}, 'and')
             assert(len(matched_players) == 1)
@@ -339,6 +365,11 @@ class DateHandler(DynamicBaseHandler):
 class LadderHandler(InfoBaseHandler):
     def get_or_post(self, args):
         _log.debug("ladder: args {}".format(args))
+        if not self.active_player_or_admin():
+            self.render('player_profile_inactive.html',
+                        admin = self.current_user['admin'],
+                        player_reports_matches = _player_reports_matches)
+            return
         today = datetime.ctime(datetime.now())
         try:
             matches_since = datetime.strptime(args['matches_since'][0], '%Y-%m-%d')
@@ -488,10 +519,15 @@ class ProfileHandler(InfoBaseHandler):
         else:
             self.redirect('/login')
 
-class RosterHandler(DynamicBaseHandler):
+class RosterHandler(InfoBaseHandler):
     def get(self):
         self.log_request()
         if self.authorized(quiet = True):
+            if not self.active_player_or_admin():
+                self.render('player_profile_inactive.html',
+                            admin = self.current_user['admin'],
+                            player_reports_matches = _player_reports_matches)
+                return
             _, _, _, season_string, _, _ = _database.get_season()
             self.render('roster.html',
                         admin = self.current_user['admin'],
