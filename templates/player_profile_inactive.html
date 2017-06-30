@@ -29,44 +29,6 @@
           <li class="nav-item">
             <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="ladder">Ladder</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="roster">Roster</a>
-          </li>
-          {% if admin %}
-            <li class="nav-item">
-              <a class="nav-link" href="player_form">Players</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="match_form">Matches</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="account_form">Admins</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="season_form">Seasons</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="tournament_form">Tournaments</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="news_form">News</a>
-            </li>
-          {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="player_form_restricted">My Account</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="profile">My Profile</a>
-            </li>
-            {% if player_reports_matches %}
-            <li class="nav-item">
-              <a class="nav-link" href="match_form_restricted">Report Match</a>
-            </li>
-            {% end %}
-          {% end %}
         </ul>
         <a class="nav-link" href="logout">Logout</a>
       </div>
