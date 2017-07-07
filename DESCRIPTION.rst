@@ -2,7 +2,7 @@ J.I.M. -- Jim Improved and Modernized
 =====================================
   
 This is a web-based match processing system for the ATTTC Tennis
-Club, which was founded founded by Jim Milloy.  This system is
+Club, which was founded by Jim Milloy.  This system is
 intended to replace an old Fox-Pro system that Jim has been using
 to process results.  Hence, the name J.I.M., for "Jim Improved and
 Modernized".
@@ -22,11 +22,12 @@ Tennis Club" (ATTTC in both cases) and new generations of players have
 joined us.
 
 The software that was used to process matches and rank players stopped
-working on modern machines, so it was decided to write a new one from
-scratch.  It is written as a web application and to run it, all you need is
-a Linux machine with a network connection to act as a server and a web
-browser to interact with the system.  More likely, you will want to install
-the server on an instance in the Amazon cloud (or a similar service).
+working on modern machines, so we decided to write a new one from
+scratch.  The system is written as a web application and to run it,
+all you need is a Linux machine with a network connection to act as a
+server and a web browser to interact with the system.  More likely,
+you will want to install the server on an instance in the Amazon cloud
+(or a similar service).
 
 License
 -------
