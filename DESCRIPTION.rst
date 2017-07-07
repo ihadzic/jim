@@ -77,9 +77,6 @@ setup:
 
    `. ~/jim_env/bin/activate`
 
-   Note: on Fedora 24, use bash, e.g., by typing `bash`, navigate to directory `jim_env` and issue
-   command `source bin/activate`
-
 4. Install using `pip`
 
    `cd jim/`
