@@ -99,7 +99,7 @@ class RootHandler(tornado.web.RequestHandler):
 class InfoBaseHandler(DynamicBaseHandler):
     def active_player_or_admin(self):
         if self.current_user['admin']:
-            return True;
+            return True
         else:
             player_id = self.current_user['id']
             check_me = _database.lookup_player({'player_id': player_id, 'active': '0'}, 'and')
@@ -153,7 +153,7 @@ class MainMenuHandler(InfoBaseHandler):
             if not news_content:
                 news_content = "No news today"
             news_content_list = news_content.split('\n')
-            pending_matches = [];
+            pending_matches = []
             if _player_reports_matches and not self.current_user['admin']:
                 player_ids = [ str(self.current_user['id']) ]
                 player_id = player_ids[0]
@@ -846,10 +846,10 @@ class UpdatePlayerHandler(PlayerBaseHandler):
         if self.authorized(admin = False, quiet = True):
             if self.authorized(admin = True, quiet = True):
                 _log.info("update_player: admin user {}".format(self.current_user['id']))
-                is_admin = True;
+                is_admin = True
             else:
                 _log.info("update_player: regular user {}".format(self.current_user['id']))
-                is_admin = False;
+                is_admin = False
         else:
             self.finish_failure('not authorized')
             return
@@ -1308,7 +1308,7 @@ class GetAccountHandler(AccountBaseHandler):
         if args == None:
             self.finish_failure("missing args", 400)
             return
-        account, err = self.parse_args(args, False, None)
+        account, _ = self.parse_args(args, False, None)
         # even an empty set is optional
         if account == None:
             account = {}
@@ -1603,7 +1603,7 @@ def run_server(ssl_options = util.test_ssl_options, http_port = 80, https_port =
     _log.info("starting server loop")
     if autoreload:
         from tornado import autoreload
-        tornado.autoreload.start();
+        tornado.autoreload.start()
         for dir, _, files in os.walk(template_root):
             [tornado.autoreload.watch(dir + '/' + f) for f in files if not f.startswith('.')]
         for dir, _, files in os.walk(html_root):

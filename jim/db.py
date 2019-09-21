@@ -128,8 +128,8 @@ class Database:
                 # promoted to A or started directly in A
                 b_prm = datetime.min
                 if c_promotion:
-                    self._log.warning("expected None for a-ladder player {}, got: c_promotion={}".format(player_id, c_promotion));
-                c_promotion = None;
+                    self._log.warning("expected None for a-ladder player {}, got: c_promotion={}".format(player_id, c_promotion))
+                c_promotion = None
             else:
                 # A-player that entered B at some point
                 b_prm = datetime.strptime(b_promotion, '%Y-%m-%d')
