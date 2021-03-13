@@ -792,8 +792,6 @@ class UpdatePlayerHandler(PlayerBaseHandler):
             player.pop('ladder')
         if player.get('initial_points') != None:
             player.pop('initial_points')
-        if player.get('active') != None:
-            player.pop('active')
         if player.get('tournament_qualified_override') != None:
             player.pop('tournament_qualified_override')
 
