@@ -615,6 +615,20 @@ function process_player_form(command)
     xhttp.send(password);
 }
 
+function process_inactive_form(selection)
+{
+    var form, query;
+    var xhttp = new XMLHttpRequest();
+    var form_name = "inactive_form";
+
+    if (selection == "yes") {
+        alert("TODO");
+    }
+    if (selection == "no") {
+        window.location.href = "logout";
+    }
+}
+
 function process_match_form(command, append, is_admin)
 {
     var form, query;

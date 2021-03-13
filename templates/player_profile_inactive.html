@@ -40,8 +40,17 @@
           <h1>Inactive Profile</h1>
           <div class="row">
             <div class="col-md-6">
-              Your profile is inactive. Please sign-up for the current season and pay your dues.
+              Your profile is inactive. Would you like to join for the new season?
             </div>.
+          </div>
+          <div class="row"><hr></div>
+          <div class="row">
+            <div class="col-md-3">
+              <input id="activate_player" class="btn btn-md btn-primary btn-block" type="button" value="Yes, I am in!" onclick="process_inactive_form('yes')" >
+            </div>
+            <div class="col-md-3">
+              <input id="cancel_activation" class="btn btn-md btn-secondary btn-block" type="button" value="No, I'll pass!" onclick="process_inactive_form('no')" >
+            </div>
           </div>
         </main>
       </div>
