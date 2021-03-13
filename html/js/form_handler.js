@@ -615,14 +615,28 @@ function process_player_form(command)
     xhttp.send(password);
 }
 
+function reload_home()
+{
+    window.location.href = "main_menu";
+}
+
 function process_inactive_form(selection)
 {
-    var form, query;
-    var xhttp = new XMLHttpRequest();
-    var form_name = "inactive_form";
-
     if (selection == "yes") {
-        alert("TODO");
+        var xhttp = new XMLHttpRequest();
+        var form_name = "inactive_form";
+        var query="/update_player?active=true";
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4) {
+                if (xhttp.status == 200) {
+                    reload_home();
+                } else {
+                    process_submit_error(xhttp.status);
+                }
+            }
+        }
+        xhttp.open("GET", query, true);
+        xhttp.send();
     }
     if (selection == "no") {
         window.location.href = "logout";
