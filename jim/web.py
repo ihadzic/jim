@@ -251,6 +251,10 @@ class TournamentFormHandler(GenericAdminFormHandler):
         # if tournament date is None, default to season-end date
         if not start_date:
             _, _ , start_date, _, _, _ = _database.get_season()
+        # if still none, then there is no active season (bootstrap), so just
+        # use today's date to prevent crashing
+        if start_date is None:
+            start_date = datetime.today().strftime('%Y-%m-%d')
         start_date_3, start_date_1, start_date_2 = tuple(start_date.split('-'))
         qualified_players = [ p for p in _database.get_roster() if p.get('tournament_qualified') ]
         _log.info("qualified players: {}".format(qualified_players))
