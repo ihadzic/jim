@@ -383,6 +383,9 @@ class Database:
 
     def kick_if_needed(self):
         _, start_date, end_date, _, prev_id, kicked  = self.get_season()
+        if start_date is None or end_date is None:
+            self._log.debug("kick_if_needed: no start/end dates, (bootstrap?)")
+            return
         present_datetime = datetime.now()
         sd = datetime.strptime(start_date, '%Y-%m-%d')
         ed = datetime.strptime(end_date, '%Y-%m-%d')
