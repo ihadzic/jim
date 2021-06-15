@@ -48,7 +48,7 @@ setup(
     ],
     keywords='tennis rankings competition database web',
     packages=find_packages(exclude=[]),
-    install_requires=['tornado', 'bcrypt', 'python-daemon', 'argparse'],
+    install_requires=['tornado', 'bcrypt', 'python-daemon', 'argparse', 'pysqlite'],
     package_data={
         'jim': ['jim.cfg']
     },
