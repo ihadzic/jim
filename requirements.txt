@@ -1,2 +1,2 @@
-tornado==4.4.3
+tornado==6.3.2
 setuptools<45
